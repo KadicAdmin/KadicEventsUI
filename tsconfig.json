@@ -16,7 +16,61 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@shared/atoms/*": [
+        "app/shared/components/atoms/*"
+      ],
+      "@shared/molecules/*": [
+        "app/shared/components/molecules/*"
+      ],
+      "@shared/organisms/*": [
+        "app/shared/components/organisms/*"
+      ],
+      "@shared/page/*": [
+        "app/shared/components/page/*"
+      ],
+      "@shared/templates/*": [
+        "app/shared/components/templates/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@core/services/*": [
+        "app/core/services/*"
+      ],
+      "@core/guards/*": [
+        "app/core/guards/*"
+      ],
+      "@core/interceptors/*": [
+        "app/core/interceptors/*"
+      ],
+      "@core/models/*": [
+        "app/core/models/*"
+      ],
+      "@core/utils/*": [
+        "app/core/utils/*"
+      ],
+      "@core/constants/*": [
+        "app/core/constants/*"
+      ],
+      "@core/tokens/*": [
+        "app/core/tokens/*"
+      ],
+      "@features/speakers/*": [
+        "app/features/speakers/*"
+      ],
+      "@features/participant/*": [
+        "app/features/participant/*"
+      ],
+      "@features/patients/*": [
+        "app/features/patients/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
