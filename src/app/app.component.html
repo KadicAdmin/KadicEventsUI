@@ -1,12 +1,18 @@
-@let currentUsers = currentUser;
-
-@if (isAuthenticated) {
+@let currentUsers = currentUser; @if (isAuthenticated) {
 <div class="min-h-screen bg-gray-50">
   <p-menubar [model]="menuItems" class="border-b">
     <ng-template pTemplate="end">
       <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-600">Welcome, {{ currentUsers?.firstName }}</span>
-        <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" pTooltip="Logout" />
+        <span class="text-sm text-gray-600"
+          >Welcome, {{ currentUsers?.firstName }}</span
+        >
+        <p-button
+          icon="pi pi-sign-out"
+          [text]="true"
+          severity="secondary"
+          (onClick)="logout()"
+          pTooltip="Logout"
+        />
       </div>
     </ng-template>
   </p-menubar>
@@ -15,6 +21,7 @@
     <router-outlet />
   </main>
 </div>
+
 } @else {
 <router-outlet />
 }

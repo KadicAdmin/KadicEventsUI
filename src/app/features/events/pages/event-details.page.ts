@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
       <h1 class="text-2xl font-bold mb-4">Event Details</h1>
       <p>Event details view coming soon...</p>
     </div>
+    
   `
 })
-export class EventDetailsPage {}
+export class EventDetailsPage {
+  
+}
