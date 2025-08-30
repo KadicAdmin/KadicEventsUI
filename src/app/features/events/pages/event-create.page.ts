@@ -6,10 +6,21 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
+import { DatePicker } from 'primeng/datepicker';
+import { Fluid } from 'primeng/fluid';
+import { MessageService } from 'primeng/api';
+import { FileUpload } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { FileUploadEvent } from 'primeng/fileupload';
 
 interface modality {
   name: string;
   code: string;
+}
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
 }
 
 @Component({
@@ -23,9 +34,13 @@ interface modality {
     InputTextModule,
     FloatLabel,
     Select,
+    DatePicker,
+    FileUpload,
+    ToastModule,
   ],
 
   templateUrl: './event-create.page.html',
+  providers: [MessageService],
 })
 export class EventCreatePage {
   modalities: modality[] | undefined;
@@ -39,7 +54,10 @@ export class EventCreatePage {
       { name: 'Online', code: 'On' },
       { name: 'Offline', code: 'Of' },
     ];
-  };
-  
-  
+  }
+  datetime12h: Date[] | undefined;
+
+  onUpload(event: FileUploadEvent) {
+    console.log(event.files); // aquí tienes los archivos
+  }
 }

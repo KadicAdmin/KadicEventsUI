@@ -1,6 +1,5 @@
 <div class="p-6 text-center">
   <h1 class="text-2xl font-bold mb-4">Create Event</h1>
-  <p>Event creation form coming soon...<</p>
 </div>
 
 <div class="card flex flex-col items-center">
@@ -9,7 +8,7 @@
       <p-step>STEP 1</p-step>
       <p-step-panel>
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="flex flex-col h-100 w-105">
+          <div class="flex flex-col h-130 w-105">
             <h1 class="font-bold size-10">Information</h1>
             <div
               class="flex-auto flex justify-center items-start font-medium flex-col gap-4"
@@ -53,6 +52,15 @@
                 <label for="on_label">Select an option:</label>
               </p-floatlabel>
 
+              <label for="calendar-12h" class="block mb-2"> Start Date </label>
+              <p-datepicker
+                class="w-100"
+                inputId="calendar-12h"
+                [(ngModel)]="datetime12h"
+                [showTime]="true"
+                [hourFormat]="'12'"
+              />
+
               <label for="on_label">Virtual platform link:</label>
               <div class="card flex justify-center">
                 <input
@@ -75,11 +83,50 @@
       <p-step>STEP 2</p-step>
       <p-step-panel>
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="flex flex-col h-48">
-            <div
-              class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium"
-            >
-              Content II
+          <div class="flex flex-col h-130 w-105">
+            <h1 class="font-bold size-10">Address</h1>
+            <div class="flex justify-center font-medium flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <label for="on_label">Adress:</label>
+                <p-floatlabel variant="on">
+                  <input
+                    class="w-100"
+                    pInputText
+                    id="on_label"
+                    [(ngModel)]="value3"
+                    autocomplete="off"
+                  />
+
+                  <label for="on_label">Add address</label>
+                </p-floatlabel>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="on_label">Postal Code:</label>
+                <p-floatlabel variant="on">
+                  <input
+                    class="w-100"
+                    pInputText
+                    id="on_label"
+                    [(ngModel)]="value3"
+                    autocomplete="off"
+                  />
+
+                  <label for="on_label">Add Postal Code</label>
+                </p-floatlabel>
+
+                <div>
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30269.54826686587!2d-69.94329599999999!3d18.497535999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sdo!4v1756506924924!5m2!1ses-419!2sdo"
+                    width="400"
+                    height="300"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </div>
             </div>
           </div>
           <div class="flex py-6 gap-2">
@@ -98,11 +145,25 @@
       <p-step>STEP 3</p-step>
       <p-step-panel>
         <ng-template #content let-activateCallback="activateCallback">
-          <div class="flex flex-col h-48">
-            <div
-              class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium"
-            >
-              Content III
+          <div class="flex flex-col h-130 w-105">
+            <h1 class="font-bold size-10">Image</h1>
+            <div class="flex-auto flex justify-center items-center font-medium">
+              <div class="card">
+                <p-toast />
+                <p-fileupload
+                  name="demo[]"
+                  url="https://www.primefaces.org/cdn/api/upload.php"
+                  (onUpload)="onUpload($event)"
+                  [multiple]="true"
+                  accept="image/*"
+                  maxFileSize="1000000"
+                  mode="advanced"
+                >
+                  <ng-template #empty>
+                    <div>Drag and drop files to here to upload.</div>
+                  </ng-template>
+                </p-fileupload>
+              </div>
             </div>
           </div>
           <div class="py-6">
