@@ -143,10 +143,12 @@
 
     <p-step-item [value]="3">
       <p-step>STEP 3</p-step>
+
       <p-step-panel>
         <ng-template #content let-activateCallback="activateCallback">
           <div class="flex flex-col h-130 w-105">
             <h1 class="font-bold size-10">Image</h1>
+
             <div class="flex-auto flex justify-center items-center font-medium">
               <div class="card">
                 <p-toast />
@@ -166,12 +168,17 @@
               </div>
             </div>
           </div>
-          <div class="py-6">
+          <div class="flex-auto flex py-6 gap-60">
             <p-button
               label="Back"
               severity="secondary"
               (onClick)="activateCallback(2)"
             />
+
+            <button pButton>
+              <i class="pi pi-check" pButtonIcon></i>
+              <span pButtonLabel>Save</span>
+            </button>
           </div>
         </ng-template>
       </p-step-panel>
