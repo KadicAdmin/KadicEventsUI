@@ -1,8 +1,13 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
-import { DataViewComponent, DataViewAction, DataViewConfig } from '../../../shared/components/organisms/data-view/data-view.component';
+import {
+  DataViewComponent,
+  DataViewAction,
+  DataViewConfig,
+} from '../../../shared/components/organisms/data-view/data-view.component';
 import { CardComponent } from '../../../shared/components/molecules/card/card.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { EventService } from '../services/event.service';
@@ -18,7 +23,8 @@ import { ToastModule } from 'primeng/toast';
     DataViewComponent,
     CardComponent,
     ButtonComponent,
-    ToastModule
+    ToastModule,
+    ButtonModule,
   ],
   providers: [MessageService],
   template: `
@@ -45,7 +51,6 @@ import { ToastModule } from 'primeng/toast';
             />
           </div>
         </div>
-
         <app-data-view
           [data]="events()"
           [actions]="actions()"
@@ -57,9 +62,9 @@ import { ToastModule } from 'primeng/toast';
         />
       </app-card>
     </div>
-    
+
     <p-toast />
-  `
+  `,
 })
 export class EventsListPage {
   private readonly eventService = inject(EventService);
@@ -77,7 +82,7 @@ export class EventsListPage {
     rows: 6,
     showLayoutOptions: true,
     sortField: 'name',
-    sortOrder: 1
+    sortOrder: 1,
   });
 
   readonly actions = signal<DataViewAction[]>([
@@ -85,20 +90,20 @@ export class EventsListPage {
       icon: 'pi pi-eye',
       label: 'View',
       severity: 'info',
-      action: (event: Event) => this.viewEvent(event.id)
+      action: (event: Event) => this.viewEvent(event.id),
     },
     {
       icon: 'pi pi-pencil',
       label: 'Edit',
       severity: 'secondary',
-      action: (event: Event) => this.editEvent(event.id)
+      action: (event: Event) => this.editEvent(event.id),
     },
     {
       icon: 'pi pi-trash',
       label: 'Delete',
       severity: 'danger',
-      action: (event: Event) => this.deleteEvent(event.id)
-    }
+      action: (event: Event) => this.deleteEvent(event.id),
+    },
   ]);
 
   readonly emptyMessage = computed(() => {
@@ -121,27 +126,27 @@ export class EventsListPage {
       next: (response) => {
         if (response.data && Array.isArray(response.data)) {
           // Transformar los datos para que coincidan con la tabla
-          const eventsWithLocation = response.data.map(event => ({
+          const eventsWithLocation = response.data.map((event) => ({
             ...event,
             location: this.getEventLocation(event),
             startDate: new Date(event.startDate), // Mantener como Date object
-            endDate: new Date(event.endDate),     // Mantener como Date object
-            eventType: event.eventType || '-',    // Mostrar "-" si está vacío
-            modality: event.modality || '-'       // Mostrar "-" si está vacío
+            endDate: new Date(event.endDate), // Mantener como Date object
+            eventType: event.eventType || '-', // Mostrar "-" si está vacío
+            modality: event.modality || '-', // Mostrar "-" si está vacío
           }));
 
           this.events.set(eventsWithLocation);
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: `Loaded ${response.data.length} events successfully`
+            detail: `Loaded ${response.data.length} events successfully`,
           });
         } else {
           this.error.set('Invalid response format');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Invalid response format from server'
+            detail: 'Invalid response format from server',
           });
         }
         this.loading.set(false);
@@ -153,19 +158,26 @@ export class EventsListPage {
         this.messageService.add({
           severity: 'error',
           summary: 'Connection Error',
-          detail: 'Failed to connect to the server. Please check your connection and try again.'
+          detail:
+            'Failed to connect to the server. Please check your connection and try again.',
         });
-      }
+      },
     });
   }
 
   private getEventLocation(event: Event): string {
     if (event.addresses && event.addresses.length > 0) {
       const address = event.addresses[0];
-      return `${address.city || ''}, ${address.country || ''}`.replace(/^,\s*|,\s*$/g, '') || 'No location';
+      return (
+        `${address.city || ''}, ${address.country || ''}`.replace(
+          /^,\s*|,\s*$/g,
+          ''
+        ) || 'No location'
+      );
     }
     return event.virtualPlatformLink ? 'Virtual Event' : 'No location';
-  } createEvent(): void {
+  }
+  createEvent(): void {
     this.router.navigate(['/events/create']);
   }
 
@@ -178,7 +190,11 @@ export class EventsListPage {
   }
 
   deleteEvent(id: number): void {
-    if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+    if (
+      confirm(
+        'Are you sure you want to delete this event? This action cannot be undone.'
+      )
+    ) {
       this.loading.set(true);
 
       this.eventService.delete(id).subscribe({
@@ -186,7 +202,7 @@ export class EventsListPage {
           this.messageService.add({
             severity: 'success',
             summary: 'Deleted',
-            detail: 'Event deleted successfully'
+            detail: 'Event deleted successfully',
           });
           this.loadEvents(); // Recargar la lista
           this.loading.set(false);
@@ -196,20 +212,21 @@ export class EventsListPage {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to delete event. Please try again.'
+            detail: 'Failed to delete event. Please try again.',
           });
           this.loading.set(false);
-        }
+        },
       });
     }
-  } refreshEvents(): void {
+  }
+  refreshEvents(): void {
     this.loadEvents();
   }
 
   onLayoutChange(layout: 'list' | 'grid'): void {
-    this.dataViewConfig.update(config => ({
+    this.dataViewConfig.update((config) => ({
       ...config,
-      layout: layout
+      layout: layout,
     }));
   }
 }

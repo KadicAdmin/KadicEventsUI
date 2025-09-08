@@ -10,6 +10,6 @@ import { CommonModule } from '@angular/common';
       <h1 class="text-2xl font-bold mb-4">Edit Event</h1>
       <p>Event edit form coming soon...</p>
     </div>
-  `
+  `,
 })
 export class EventEditPage {}
