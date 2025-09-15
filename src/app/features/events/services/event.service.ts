@@ -2,36 +2,53 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../../../core/config/api.config';
-import { Event, CreateEventRequest, UpdateEventRequest } from '../../../core/models';
-import { ApiListResponse } from '../../../core/models';
+import { Event, UpdateEventRequest } from '../../../core/models';
+import {} from '../../../core/models';
+import { EventRequestDto, EventResp } from '../models/events.interfaces';
+
+
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class EventService {
-    private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-    private get baseUrl(): string {
-        return `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.base}`;
-    }
+  private get baseUrl(): string {
+    return `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.base}`;
+  }
 
-    getAll(): Observable<ApiListResponse<Event>> {
-        return this.http.get<ApiListResponse<Event>>(this.baseUrl);
-    }
+  // getAll(): Observable<ApiListResponse<Event>> {
+  //     return this.http.get<ApiListResponse<Event>>(this.baseUrl);
+  // }
 
-    getById(id: number): Observable<Event> {
-        return this.http.get<Event>(`${this.baseUrl}/${id}`);
-    }
+  /**
+   * Otros métodos del servicio si los necesitas
+   */
+  getAll(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}`);
+  }
 
-    create(data: CreateEventRequest): Observable<Event> {
-        return this.http.post<Event>(this.baseUrl, data);
-    }
+  getById(id: number): Observable<Event> {
+    return this.http.get<Event>(`${this.baseUrl}/${id}`);
+  }
 
-    update(id: number, data: UpdateEventRequest): Observable<Event> {
-        return this.http.put<Event>(`${this.baseUrl}/${id}`, data);
-    }
+  // create(data: CreateEventRequest): Observable<Event> {
+  //     return this.http.post<Event>(this.baseUrl, data);
+  // }
 
-    delete(id: number): Observable<any> {
-        return this.http.delete(`${this.baseUrl}/${id}`);
-    }
+  /**
+   * Crear un evento enviando FormData (datos + imagen)
+   */
+  create(event:  EventRequestDto): Observable<EventResp> {
+    return this.http.post<EventResp>(`${this.baseUrl}`, event);
+  }
+
+  update(id: number, data: UpdateEventRequest): Observable<Event> {
+    return this.http.put<Event>(`${this.baseUrl}/${id}`, data);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }
