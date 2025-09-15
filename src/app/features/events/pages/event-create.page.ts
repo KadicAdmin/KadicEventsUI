@@ -1,3 +1,5 @@
+// 
+import { EventService } from '../../../core/services/event.service';
 import { Component, effect, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StepperModule } from 'primeng/stepper';
@@ -18,12 +20,12 @@ import { ToastModule } from 'primeng/toast';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { DatePicker } from 'primeng/datepicker';
 
-interface modality {
+interface Modality {
   name: string;
   code: string;
 }
 
-interface Event {
+interface EventModel {
   name: string;
   type: string;
   modality: string;
@@ -49,35 +51,32 @@ interface Event {
     ReactiveFormsModule,
     DatePicker,
   ],
-
   templateUrl: './event-create.page.html',
   providers: [MessageService],
 })
 export class EventCreatePage {
-  // private fb = inject(FormBuilder);
-
-  // myForm = this.fb.group({
-  //   eventName: ['', [Validators.required, Validators.minLength(3)]],
-  //   eventType: ['', Validators.required],
-  //   eventModality: ['', Validators.required],
-  // });
-
-  // myForm = new FormGroup({
-  //   name: new FormControl(''),
-  //   type: new FormControl(''),
-  //   modality: new FormControl(''),
-  //   address: new FormControl(''),
-  // });
-
-  /// Declaramos el form sin inicializar
   myForm!: FormGroup;
+  private eventService = inject(EventService);
+
+  event = signal<EventModel>({
+    name: '',
+    type: '',
+    modality: '',
+    startDate: null,
+    link: '',
+    address: '',
+    image: null,
+  });
+
+  modalities = signal<Modality[]>([
+    { name: 'Online', code: 'On' },
+    { name: 'Offline', code: 'Off' },
+  ]);
 
   constructor() {
-    // Aquí sí hay contexto de inyector
     const fb = inject(FormBuilder);
 
     effect(() => {
-      // Se ejecuta cuando el componente ya está dentro del inyector
       this.myForm = fb.group({
         eventName: ['', Validators.required],
         eventType: ['', Validators.required],
@@ -92,28 +91,37 @@ export class EventCreatePage {
     });
   }
 
-  event = signal<Event>({
-    name: '',
-    type: '',
-    modality: '',
-    startDate: null,
-    link: '',
-    address: '',
-    image: null,
-  });
-
-  modalities = signal<modality[]>([
-    { name: 'Online', code: 'On' },
-    { name: 'Offline', code: 'Off' },
-  ]);
-
-  datetime12h: Date[] | undefined;
-
   onUpload(event: FileUploadEvent) {
-    console.log(event.files); // aquí tienes los archivos
+    const file = event.files[0];
+    this.myForm.patchValue({ image: file });
   }
 
   onSubmit() {
-    console.log(this.myForm.value);
+    if (!this.myForm.valid) {
+      this.myForm.markAllAsTouched();
+      return;
+    }
+
+    // FormData para enviar datos + imagen
+    const formData = new FormData();
+    formData.append('name', this.myForm.value.eventName);
+    formData.append('modalityId', this.myForm.value.modality);
+    formData.append('startDate', this.myForm.value.startDate.toISOString());
+    formData.append('endDate', this.myForm.value.endDate.toISOString());
+    formData.append('addresses', this.myForm.value.address);
+    formData.append('eventTypeId', '0');
+
+    if (this.myForm.value.image) {
+      formData.append('image', this.myForm.value.image);
+    }
+
+    this.eventService.create(formData).subscribe({
+      next: (res) => {
+        console.log('Evento creado:', res);
+      },
+      error: (err) => {
+        console.error('Error creando evento:', err);
+      },
+    });
   }
 }
