@@ -19,7 +19,7 @@ export class EventService {
    * Obtener todos los eventos
    */
   getAll(): Observable<any> {
-    const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.base}/`;
+    const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.getAll}/`;
     console.log('URL para getAll:', url);
     return this.http.get<any>(url);
   }
