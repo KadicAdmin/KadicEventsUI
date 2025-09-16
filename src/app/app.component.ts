@@ -29,7 +29,19 @@ export class AppComponent {
     {
       label: 'Events',
       icon: 'pi pi-calendar',
-      routerLink: '/events'
+      routerLink: '/events',
+      items: [
+        {
+          label: 'All Events',
+          icon: 'pi pi-list',
+          routerLink: '/events'
+        },
+        {
+          label: 'Create Event',
+          icon: 'pi pi-plus',
+          routerLink: '/events/create'
+        }
+      ]
     },
     {
       label: 'Participants',
