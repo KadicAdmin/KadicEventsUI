@@ -1,4 +1,4 @@
-// 
+//
 import { EventService } from '../../../core/services/event.service';
 import { Component, effect, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -115,13 +115,13 @@ export class EventCreatePage {
       formData.append('image', this.myForm.value.image);
     }
 
-    this.eventService.create(formData).subscribe({
-      next: (res) => {
-        console.log('Evento creado:', res);
-      },
-      error: (err) => {
-        console.error('Error creando evento:', err);
-      },
-    });
+    // this.eventService.create(formData).subscribe({
+    //   next: (res) => {
+    //     console.log('Evento creado:', res);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error creando evento:', err);
+    //   },
+    // });
   }
 }
