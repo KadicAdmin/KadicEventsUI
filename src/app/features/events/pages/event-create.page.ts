@@ -1,6 +1,6 @@
-// 
-import { EventService } from '../../../core/services/event.service';
-import { Component, effect, signal, inject } from '@angular/core';
+import { EventService } from '../services/event.service';
+import { EventRequestDto, EventResp } from '../models/events.interfaces';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
@@ -11,28 +11,20 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import { MessageService } from 'primeng/api';
-import { FileUpload } from 'primeng/fileupload';
+import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { FileUploadEvent } from 'primeng/fileupload';
 import { DatePicker } from 'primeng/datepicker';
 
 interface Modality {
   name: string;
-  code: string;
-}
-
-interface EventModel {
-  name: string;
-  type: string;
-  modality: string;
-  startDate: Date | null;
-  link: string;
-  address: string;
-  image: File | null;
+  code: 'On' | 'Off';
+  id: number; // Mapea al ModalityId del backend
 }
 
 @Component({
@@ -56,72 +48,152 @@ interface EventModel {
 })
 export class EventCreatePage {
   myForm!: FormGroup;
+  private fb = inject(FormBuilder);
   private eventService = inject(EventService);
+  private messageService = inject(MessageService);
 
-  event = signal<EventModel>({
-    name: '',
-    type: '',
-    modality: '',
-    startDate: null,
-    link: '',
-    address: '',
-    image: null,
-  });
-
-  modalities = signal<Modality[]>([
-    { name: 'Online', code: 'On' },
-    { name: 'Offline', code: 'Off' },
+  // Modalidades disponibles (ajusta los IDs según tu catálogo)
+  readonly modalities = signal<Modality[]>([
+    { name: 'Online', code: 'On', id: 1 },
+    { name: 'Offline', code: 'Off', id: 2 },
   ]);
 
-  constructor() {
-    const fb = inject(FormBuilder);
+  // Tipos de eventos disponibles (ajusta los IDs según tu catálogo)
+  readonly eventTypes = signal<{ name: string; id: number }[]>([
+    { name: 'Conference', id: 1 },
+    { name: 'Workshop', id: 2 },
+    { name: 'Seminar', id: 3 },
+    { name: 'Webinar', id: 4 },
+    { name: 'Meeting', id: 5 },
+  ]);
 
-    effect(() => {
-      this.myForm = fb.group({
+  // ====== Inicialización del formulario ======
+  constructor() {
+    this.myForm = this.fb.group(
+      {
+        // UI fields
         eventName: ['', Validators.required],
-        eventType: ['', Validators.required],
-        modality: ['', Validators.required],
-        startDate: ['', Validators.required],
-        endDate: ['', Validators.required],
-        eventLink: ['', Validators.required],
-        address: ['', Validators.required],
+        eventTypeId: [null, Validators.required], // <- usa un select/number real
+        modality: [null, Validators.required],    // guardará el id numérico de la modalidad
+        startDate: [null, Validators.required],
+        endDate: [null, Validators.required],
+        eventLink: [''], // se vuelve requerido si modalidad === Online
+        addressLine1: ['', Validators.required],
+        addressLine2: [''],
         postalCode: [''],
-        image: [null],
-      });
+
+        // archivo único (si quieres múltiples, cambia a arreglo)
+        image: [null], // File
+        imageCaption: [''],
+        imageIsMain: [true],
+      },
+      { validators: [this.dateRangeValidator] }
+    );
+
+    // Requerir eventLink solo cuando modalidad sea Online (id de Online)
+    this.myForm.get('modality')!.valueChanges.subscribe((modalityId: number | null) => {
+      const linkCtrl = this.myForm.get('eventLink')!;
+      const isOnline = modalityId === this.modalities().find(m => m.code === 'On')?.id;
+      if (isOnline) {
+        linkCtrl.addValidators([Validators.required]);
+      } else {
+        linkCtrl.clearValidators();
+        linkCtrl.setValue(''); // opcional: limpia el link cuando es offline
+      }
+      linkCtrl.updateValueAndValidity({ emitEvent: false });
     });
   }
 
-  onUpload(event: FileUploadEvent) {
-    const file = event.files[0];
-    this.myForm.patchValue({ image: file });
+  // ====== Validadores ======
+  private dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+    const start = group.get('startDate')?.value as Date | null;
+    const end = group.get('endDate')?.value as Date | null;
+    if (!start || !end) return null;
+    return start < end ? null : { dateRange: 'StartDate must be before EndDate' };
   }
 
+  // ====== Carga de archivo ======
+  onUpload(ev: FileUploadEvent) {
+    const file = ev.files?.[0];
+    if (file) {
+      this.myForm.patchValue({ image: file });
+    }
+  }
+
+  // ====== Builder de EventRequestDto ======
+  private buildEventRequest(): EventRequestDto {
+    const v = this.myForm.value;
+
+    const eventRequest: EventRequestDto = {
+      Name: String(v.eventName),
+      EventTypeId: Number(v.eventTypeId ?? 0),
+      ModalityId: Number(v.modality ?? 0),
+      VirtualPlatformLink: v.eventLink ?? null,
+      StartDate: v.startDate instanceof Date ? v.startDate.toISOString() : new Date(v.startDate!).toISOString(),
+      EndDate: v.endDate instanceof Date ? v.endDate.toISOString() : new Date(v.endDate!).toISOString(),
+      AddressesNew: [
+        {
+          Line1: v.addressLine1 ?? '',
+          Line2: v.addressLine2 ?? null,
+          CityId: 1, // TODO: Necesitas obtener el CityId real desde un selector o campo
+        }
+      ],
+      AddressesToDelete: [], // Para nuevos eventos, no hay addresses que eliminar
+      ImagesNew: [],
+      ImagesToDelete: [], // Para nuevos eventos, no hay imágenes que eliminar
+    };
+
+    // Agregar imagen si existe
+    if (v.image) {
+      eventRequest.ImagesNew.push({
+        File: v.image as File,
+        Caption: v.imageCaption ?? null,
+        IsMain: !!v.imageIsMain,
+      });
+    }
+
+    return eventRequest;
+  }
+
+  // ====== Submit ======
   onSubmit() {
-    if (!this.myForm.valid) {
+    if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Formulario incompleto',
+        detail: 'Revisa los campos requeridos.',
+      });
       return;
     }
 
-    // FormData para enviar datos + imagen
-    const formData = new FormData();
-    formData.append('name', this.myForm.value.eventName);
-    formData.append('modalityId', this.myForm.value.modality);
-    formData.append('startDate', this.myForm.value.startDate.toISOString());
-    formData.append('endDate', this.myForm.value.endDate.toISOString());
-    formData.append('addresses', this.myForm.value.address);
-    formData.append('eventTypeId', '0');
+    const eventRequest = this.buildEventRequest();
+    console.log('Datos a enviar:', eventRequest);
 
-    if (this.myForm.value.image) {
-      formData.append('image', this.myForm.value.image);
-    }
-
-    this.eventService.create(formData).subscribe({
-      next: (res) => {
-        console.log('Evento creado:', res);
+    this.eventService.create(eventRequest).subscribe({
+      next: (res: EventResp) => {
+        console.log('Respuesta del servidor:', res);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Evento creado correctamente.',
+        });
+        // Opcional: reset limpia también el FileUpload si lo referencias por @ViewChild
+        this.myForm.reset({
+          imageIsMain: true,
+        });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error creando evento:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo crear el evento.',
+        });
       },
+      complete: () => {
+        console.log('Petición completada');
+      }
     });
   }
 }

@@ -126,7 +126,7 @@ export class EventsListPage {
       next: (response) => {
         if (response.data && Array.isArray(response.data)) {
           // Transformar los datos para que coincidan con la tabla
-          const eventsWithLocation = response.data.map((event) => ({
+          const eventsWithLocation = response.data.map((event: Event) => ({
             ...event,
             location: this.getEventLocation(event),
             startDate: new Date(event.startDate), // Mantener como Date object

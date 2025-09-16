@@ -3,10 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../../../core/config/api.config';
 import { Event, UpdateEventRequest } from '../../../core/models';
-import {} from '../../../core/models';
 import { EventRequestDto, EventResp } from '../models/events.interfaces';
-
-
 
 @Injectable({
   providedIn: 'root',
@@ -18,37 +15,99 @@ export class EventService {
     return `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.base}`;
   }
 
-  // getAll(): Observable<ApiListResponse<Event>> {
-  //     return this.http.get<ApiListResponse<Event>>(this.baseUrl);
-  // }
-
   /**
-   * Otros métodos del servicio si los necesitas
+   * Obtener todos los eventos
    */
   getAll(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}`);
+    const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.base}/`;
+    console.log('URL para getAll:', url);
+    return this.http.get<any>(url);
   }
 
+  /**
+   * Obtener evento por ID
+   */
   getById(id: number): Observable<Event> {
     return this.http.get<Event>(`${this.baseUrl}/${id}`);
   }
 
-  // create(data: CreateEventRequest): Observable<Event> {
-  //     return this.http.post<Event>(this.baseUrl, data);
-  // }
-
   /**
    * Crear un evento enviando FormData (datos + imagen)
    */
-  create(event:  EventRequestDto): Observable<EventResp> {
-    return this.http.post<EventResp>(`${this.baseUrl}`, event);
+  create(event: EventRequestDto): Observable<EventResp> {
+    // Convertir EventRequestDto a FormData para envío de archivos
+    const formData = this.convertToFormData(event);
+    const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.createOrUpdate()}`;
+
+    console.log('URL de creación:', url);
+    console.log('FormData keys:', Array.from(formData.keys()));
+
+    return this.http.post<EventResp>(url, formData);
   }
 
+  /**
+   * Actualizar evento
+   */
   update(id: number, data: UpdateEventRequest): Observable<Event> {
     return this.http.put<Event>(`${this.baseUrl}/${id}`, data);
   }
 
+  /**
+   * Eliminar evento
+   */
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  /**
+   * Convierte EventRequestDto a FormData para envío de archivos
+   */
+  private convertToFormData(event: EventRequestDto): FormData {
+    const formData = new FormData();
+
+    // Datos básicos
+    formData.append('Name', event.Name);
+    formData.append('EventTypeId', event.EventTypeId.toString());
+    formData.append('ModalityId', event.ModalityId.toString());
+
+    if (event.VirtualPlatformLink) {
+      formData.append('VirtualPlatformLink', event.VirtualPlatformLink);
+    }
+
+    // Fechas
+    const startDate = event.StartDate instanceof Date ? event.StartDate.toISOString() : event.StartDate;
+    const endDate = event.EndDate instanceof Date ? event.EndDate.toISOString() : event.EndDate;
+    formData.append('StartDate', startDate);
+    formData.append('EndDate', endDate);
+
+    // Direcciones nuevas
+    event.AddressesNew.forEach((address, index) => {
+      formData.append(`AddressesNew[${index}].Line1`, address.Line1);
+      if (address.Line2) {
+        formData.append(`AddressesNew[${index}].Line2`, address.Line2);
+      }
+      formData.append(`AddressesNew[${index}].CityId`, address.CityId.toString());
+    });
+
+    // Direcciones a eliminar
+    event.AddressesToDelete.forEach((id, index) => {
+      formData.append(`AddressesToDelete[${index}]`, id.toString());
+    });
+
+    // Imágenes nuevas
+    event.ImagesNew.forEach((image, index) => {
+      formData.append(`ImagesNew[${index}].File`, image.File);
+      if (image.Caption) {
+        formData.append(`ImagesNew[${index}].Caption`, image.Caption);
+      }
+      formData.append(`ImagesNew[${index}].IsMain`, (image.IsMain ?? false).toString());
+    });
+
+    // Imágenes a eliminar
+    event.ImagesToDelete.forEach((id, index) => {
+      formData.append(`ImagesToDelete[${index}]`, id.toString());
+    });
+
+    return formData;
   }
 }

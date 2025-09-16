@@ -15,72 +15,41 @@
               <div class="flex-auto flex flex-col mt-2 gap-6">
                 <!-- Event Name -->
                 <p-floatlabel>
-                  <input
-                    pInputText
-                    id="eventName"
-                    formControlName="eventName"
-                    class="w-100"
-                  />
+                  <input pInputText id="eventName" formControlName="eventName" class="w-100" />
                   <label for="eventName">Event Name</label>
                 </p-floatlabel>
 
                 <!-- Event Type -->
                 <p-floatlabel>
-                  <p-select
-                    inputId="eventType"
-                    [options]="modalities()"
-                    optionLabel="name"
-                    formControlName="eventType"
-                    class="w-100"
-                  />
-                  <label for="eventType">Event Type</label>
+                  <p-select inputId="eventTypeId" [options]="eventTypes()" optionLabel="name" optionValue="id"
+                    formControlName="eventTypeId" class="w-100" />
+                  <label for="eventTypeId">Event Type</label>
                 </p-floatlabel>
 
                 <!-- Modality -->
                 <p-floatlabel>
-                  <p-select
-                    inputId="modality"
-                    [options]="modalities()"
-                    optionLabel="name"
-                    formControlName="modality"
-                    class="w-100"
-                  />
+                  <p-select inputId="modality" [options]="modalities()" optionLabel="name" optionValue="id"
+                    formControlName="modality" class="w-100" />
                   <label for="modality">Modality</label>
                 </p-floatlabel>
 
                 <!-- Start Date -->
                 <p-floatlabel>
-                  <p-datepicker
-                    formControlName="startDate"
-                    class="w-100"
-                    inputId="startDate"
-                    showIcon
-                    iconDisplay="input"
-                  />
+                  <p-datepicker formControlName="startDate" class="w-100" inputId="startDate" showIcon
+                    iconDisplay="input" />
                   <label for="startDate">Start Date</label>
                 </p-floatlabel>
 
                 <p-floatlabel>
-                  <p-datepicker
-                    formControlName="endDate"
-                    class="w-100"
-                    inputId="endDate"
-                    showIcon
-                    iconDisplay="input"
-                  />
+                  <p-datepicker formControlName="endDate" class="w-100" inputId="endDate" showIcon
+                    iconDisplay="input" />
                   <label for="endDate">End Date</label>
                 </p-floatlabel>
 
                 @if (myForm.get('modality')?.value?.name !== 'Offline') {
                 <!-- Event Link -->
                 <p-floatlabel>
-                  <input
-                    type="text"
-                    pInputText
-                    id="eventLink"
-                    formControlName="eventLink"
-                    class="w-100"
-                  />
+                  <input type="text" pInputText id="eventLink" formControlName="eventLink" class="w-100" />
                   <label for="eventLink">Virtual platform link</label>
                 </p-floatlabel>
                 }
@@ -103,43 +72,29 @@
               <div class="flex flex-col gap-6">
                 <!-- Address -->
                 <p-floatlabel>
-                  <input
-                    pInputText
-                    id="address"
-                    formControlName="address"
-                    class="w-100"
-                  />
-                  <label for="address">Address</label>
+                  <input pInputText id="addressLine1" formControlName="addressLine1" class="w-100" />
+                  <label for="addressLine1">Address Line 1</label>
+                </p-floatlabel>
+
+                <!-- Address Line 2 -->
+                <p-floatlabel>
+                  <input pInputText id="addressLine2" formControlName="addressLine2" class="w-100" />
+                  <label for="addressLine2">Address Line 2 (Optional)</label>
                 </p-floatlabel>
 
                 <!-- Postal Code -->
                 <p-floatlabel>
-                  <input
-                    pInputText
-                    id="postalCode"
-                    formControlName="postalCode"
-                    class="w-100"
-                  />
+                  <input pInputText id="postalCode" formControlName="postalCode" class="w-100" />
                   <label for="postalCode">Postal Code</label>
                 </p-floatlabel>
 
                 <!-- Google Map -->
-                <iframe
-                  src="https://www.google.com/maps/embed?..."
-                  width="400"
-                  height="300"
-                  style="border: 0"
-                  allowfullscreen=""
-                  loading="lazy"
-                ></iframe>
+                <iframe src="https://www.google.com/maps/embed?..." width="400" height="300" style="border: 0"
+                  allowfullscreen="" loading="lazy"></iframe>
               </div>
             </div>
             <div class="flex py-6 gap-2">
-              <p-button
-                label="Back"
-                severity="secondary"
-                (onClick)="activateCallback(1)"
-              />
+              <p-button label="Back" severity="secondary" (onClick)="activateCallback(1)" />
               <p-button label="Next" (onClick)="activateCallback(3)" />
             </div>
           </ng-template>
@@ -154,26 +109,11 @@
             <div class="flex flex-col h-100 w-105">
               <h1 class="font-bold size-10">Image</h1>
 
-              <p-fileupload
-                flex-auto
-                flex
-                flex-col
-                mt-2
-                name="files"
-                type="file"
-                (onUpload)="onUpload($event)"
-                [multiple]="true"
-                accept="image/*"
-                maxFileSize="1000000"
-                mode="advanced"
-              ></p-fileupload>
+              <p-fileupload flex-auto flex flex-col mt-2 name="files" type="file" (onUpload)="onUpload($event)"
+                [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced"></p-fileupload>
             </div>
             <div class="flex py-6 gap-60">
-              <p-button
-                label="Back"
-                severity="secondary"
-                (onClick)="activateCallback(2)"
-              />
+              <p-button label="Back" severity="secondary" (onClick)="activateCallback(2)" />
               <button pButton type="submit" onclick="onsubmit">
                 <i class="pi pi-check"></i>
                 <span>Save</span>
