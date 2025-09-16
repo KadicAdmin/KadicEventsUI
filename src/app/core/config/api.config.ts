@@ -11,10 +11,11 @@ export const API_CONFIG = {
     },
     // Event
     events: {
-      base: '/Event/GetAll',
+      base: '/Event',
       getAll: '/Event/GetAll',
       getById: (id: number) => `/Event/${id}`,
-      create: '/Event',
+      create: '/Event/create',
+      createOrUpdate: (id?: number) => id ? `/Event/create-update-event/${id}` : '/Event/create-update-event/0',
       update: (id: number) => `/Event/${id}`,
       delete: (id: number) => `/Event/${id}`,
       search: '/Event/search'
