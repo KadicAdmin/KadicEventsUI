@@ -1,68 +1,24 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-
-import {
-  DataViewComponent,
-  DataViewAction,
-  DataViewConfig,
-} from '../../../shared/components/organisms/data-view/data-view.component';
-import { CardComponent } from '../../../shared/components/molecules/card/card.component';
-import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { EventService } from '../services/event.service';
-import { Event } from '../../../core/models';
+import { EventService } from '../../services/event.service';
+import { Event } from '../../../../core/models';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { EventListTemplate } from "../../components/templates/event-list-template/event-list-template";
+
 
 @Component({
   selector: 'app-events-list',
   standalone: true,
   imports: [
     CommonModule,
-    DataViewComponent,
-    CardComponent,
-    ButtonComponent,
     ToastModule,
-    ButtonModule,
+    EventListTemplate
   ],
   providers: [MessageService],
   template: `
-    <div class="p-6">
-      <app-card>
-        <div slot="header" class="flex justify-between items-center p-4">
-          <div>
-            <h1 class="text-2xl font-bold">Events Management</h1>
-            <p class="text-gray-600 mt-1">Manage all your events from here</p>
-          </div>
-          <div class="flex gap-2">
-            <app-button
-              label="Refresh"
-              icon="pi pi-refresh"
-              variant="secondary"
-              [outlined]="true"
-              (clicked)="refreshEvents()"
-              [loading]="loading()"
-            />
-            <app-button
-              label="New Event"
-              icon="pi pi-plus"
-              (clicked)="createEvent()"
-            />
-          </div>
-        </div>
-        <app-data-view
-          [data]="events()"
-          [actions]="actions()"
-          [loading]="loading()"
-          [emptyMessage]="emptyMessage()"
-          [title]="'Events'"
-          [config]="dataViewConfig()"
-          (layoutChange)="onLayoutChange($event)"
-        />
-      </app-card>
-    </div>
-
+    <app-event-list-template />
     <p-toast />
   `,
 })
@@ -76,35 +32,6 @@ export class EventsListPage {
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
-  readonly dataViewConfig = signal<DataViewConfig>({
-    layout: 'list',
-    paginator: true,
-    rows: 6,
-    showLayoutOptions: true,
-    sortField: 'name',
-    sortOrder: 1,
-  });
-
-  readonly actions = signal<DataViewAction[]>([
-    {
-      icon: 'pi pi-eye',
-      label: 'View',
-      severity: 'info',
-      action: (event: Event) => this.viewEvent(event.id),
-    },
-    {
-      icon: 'pi pi-pencil',
-      label: 'Edit',
-      severity: 'secondary',
-      action: (event: Event) => this.editEvent(event.id),
-    },
-    {
-      icon: 'pi pi-trash',
-      label: 'Delete',
-      severity: 'danger',
-      action: (event: Event) => this.deleteEvent(event.id),
-    },
-  ]);
 
   readonly emptyMessage = computed(() => {
     const err = this.error();
@@ -223,10 +150,4 @@ export class EventsListPage {
     this.loadEvents();
   }
 
-  onLayoutChange(layout: 'list' | 'grid'): void {
-    this.dataViewConfig.update((config) => ({
-      ...config,
-      layout: layout,
-    }));
-  }
 }

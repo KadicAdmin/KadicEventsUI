@@ -1,0 +1,34 @@
+<div>
+    <section>
+        <app-slideshows />
+    </section>
+    <section>
+        <app-nav-tab [activeTab]="activeTab()" (tabChanged)="onTabChanged($event)" />
+        @switch (activeTab()) {
+        @case ('all') {
+        <div class="p-4">
+            <h2 class="text-2xl font-bold mb-4">Todos los Eventos</h2>
+            <p>Aquí se mostrarán todos los eventos disponibles.</p>
+        </div>
+        }
+        @case ('upcoming') {
+        <div class="p-4">
+            <h2 class="text-2xl font-bold mb-4">Próximos Eventos</h2>
+            <p>Aquí se mostrarán los eventos próximos a realizarse.</p>
+        </div>
+        }
+        @case ('online') {
+        <div class="p-4">
+            <h2 class="text-2xl font-bold mb-4">Eventos Online</h2>
+            <p>Aquí se mostrarán los eventos que se realizan de forma virtual.</p>
+        </div>
+        }
+        @case ('weekend') {
+        <div class="p-4">
+            <h2 class="text-2xl font-bold mb-4">Eventos de Este Fin de Semana</h2>
+            <p>Aquí se mostrarán los eventos programados para este fin de semana.</p>
+        </div>
+        }
+        }
+    </section>
+</div>

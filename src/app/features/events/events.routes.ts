@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const eventsRoutes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/events-list.page').then(m => m.EventsListPage)
+    loadComponent: () => import('./pages/event-list/events-list.page').then(m => m.EventsListPage)
   },
   {
     path: 'create',

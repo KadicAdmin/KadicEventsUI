@@ -1,0 +1,13 @@
+<p-tabs [value]="activeTab()">
+    <p-tablist>
+        @for(tab of tabs(); track tab.id){
+        <p-tab [value]="tab.id" (click)="tabChanged.emit(tab.id)" [class]="activeTab() === tab.id ? 'active' : ''"
+            class="flex items-center !gap-2 text-inherit cursor-pointer">
+            @if (tab.icon) {
+            <i [class]="tab.icon"></i>
+            }
+            <span>{{ tab.label }}</span>
+        </p-tab>
+        }
+    </p-tablist>
+</p-tabs>
