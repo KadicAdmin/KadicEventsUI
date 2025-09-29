@@ -8,14 +8,14 @@
         (onIndexChange)="onIndexChange($event)" class="w-full h-full galleria-container">
 
         <ng-template #item let-item>
-            <div class="relative w-full h-full overflow-hidden">
+            <div class="relative w-full h-full overflow-hidden" (click)="onImageClick(item)">
                 <img [src]="item.url" [alt]="item.alt || 'Slide image'"
                     class="w-full h-full object-cover transition-all duration-800 ease-out group-hover:scale-105"
-                    [attr.data-image-index]="activeIndex" (click)="onImageClick(item)" />
+                    [attr.data-image-index]="activeIndex" />
                 <div
-                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-800 shimmer-effect"
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-800 shimmer-effect pointer-events-none"
                     [class.opacity-100]="true">
                 </div>
             </div>
