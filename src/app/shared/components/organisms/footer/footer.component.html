@@ -1,0 +1,74 @@
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Sección principal del footer -->
+        <div class="footer-main">
+            <!-- Información de la empresa -->
+            <div class="footer-section">
+                <div class="footer-brand">
+                    <h3 class="footer-title">{{ companyInfo.name }}</h3>
+                    <p class="footer-description">{{ companyInfo.description }}</p>
+                </div>
+                <div class="footer-contact">
+                    <div class="contact-item">
+                        <i class="pi pi-envelope"></i>
+                        <span>{{ companyInfo.email }}</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="pi pi-phone"></i>
+                        <span>{{ companyInfo.phone }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enlaces de navegación -->
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Navegación</h4>
+                <ul class="footer-links">
+                    @for (link of navigationLinks; track link.route) {
+                    <li>
+                        <a [routerLink]="link.route" class="footer-link">{{ link.label }}</a>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Enlaces legales -->
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Legal</h4>
+                <ul class="footer-links">
+                    @for (link of legalLinks; track link.route) {
+                    <li>
+                        <a [routerLink]="link.route" class="footer-link">{{ link.label }}</a>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Redes sociales -->
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Síguenos</h4>
+                <div class="social-links">
+                    @for (social of socialLinks; track social.name) {
+                    <a [href]="social.url" target="_blank" rel="noopener noreferrer" class="social-link"
+                        [title]="social.name">
+                        <i [class]="social.icon"></i>
+                    </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Línea divisoria -->
+        <div class="footer-divider"></div>
+
+        <!-- Sección inferior del footer -->
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; {{ currentYear }} {{ companyInfo.name }}. Todos los derechos reservados.</p>
+            </div>
+            <div class="footer-version">
+                <span class="version-text">v1.0.0</span>
+            </div>
+        </div>
+    </div>
+</footer>
