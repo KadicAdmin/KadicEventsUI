@@ -1,3 +1,10 @@
 
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
+
+
+.full-width-element {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
