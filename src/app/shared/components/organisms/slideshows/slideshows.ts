@@ -16,10 +16,8 @@ import { IMAGES_SLIDESHOW } from '@core/constants/core.contans';
 })
 export class Slideshows {
   @ViewChild('galleria') galleria!: Galleria;
-
-  clickedImage = output<number>();
+  clickedImage = output<ImgProps>();
   images = input<ImgProps[]>(IMAGES_SLIDESHOW);
-
   height = input<string>('70vh');
   minHeight = input<string>('500px');
   autoPlay = input<boolean>(true);
@@ -65,9 +63,8 @@ export class Slideshows {
   }
 
   onImageClick(item: ImgProps): void {
-    this.clickedImage.emit(item.id);
+    this.clickedImage.emit(item);
   }
-
 
   onIndexChange(event: any): void {
     const newIndex = event.index || 0;
