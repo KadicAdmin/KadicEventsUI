@@ -1,0 +1,19 @@
+<div class="mb-4 p-4 flex items-center justify-center">
+  <div
+    class="w-72 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-xl"
+    (click)="onCardClick()"
+  >
+    <!-- Imagen con overlays -->
+    <div class="relative">
+      <ui-product-image />
+
+      <!-- Contenido -->
+      <div class="p-4">
+        <app-ui-product-tittle />
+        <app-ui-text-date />
+        <app-ui-text-location />
+        <app-ui-text-price />
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,13 @@
 import { Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 
-export type ButtonVariant = 'secondary' | 'success' | 'info' | 'warn' | 'help' | 'danger';
+export type ButtonVariant =
+  | 'secondary'
+  | 'success'
+  | 'info'
+  | 'warn'
+  | 'help'
+  | 'danger';
 export type ButtonSize = 'small' | 'large';
 
 @Component({
@@ -24,11 +30,13 @@ export type ButtonSize = 'small' | 'large';
       [class]="customClass()"
     />
   `,
-  styles: [`
-    :host {
-      display: inline-block;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: inline-block;
+      }
+    `,
+  ],
 })
 export class ButtonComponent {
   // Inputs using signals
