@@ -37,7 +37,9 @@ export class EventService {
   create(event: EventRequestDto): Observable<EventResp> {
     // Convertir EventRequestDto a FormData para envío de archivos
     const formData = this.convertToFormData(event);
-    const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.createOrUpdate()}`;
+    const url = `${
+      API_CONFIG.baseUrl
+    }${API_CONFIG.endpoints.events.createOrUpdate()}`;
 
     console.log('URL de creación:', url);
     console.log('FormData keys:', Array.from(formData.keys()));
@@ -75,24 +77,30 @@ export class EventService {
     }
 
     // Fechas
-    const startDate = event.StartDate instanceof Date ? event.StartDate.toISOString() : event.StartDate;
-    const endDate = event.EndDate instanceof Date ? event.EndDate.toISOString() : event.EndDate;
+    const startDate =
+      event.StartDate instanceof Date
+        ? event.StartDate.toISOString()
+        : event.StartDate;
+    const endDate =
+      event.EndDate instanceof Date
+        ? event.EndDate.toISOString()
+        : event.EndDate;
     formData.append('StartDate', startDate);
     formData.append('EndDate', endDate);
 
     // Direcciones nuevas
-    event.AddressesNew.forEach((address, index) => {
-      formData.append(`AddressesNew[${index}].Line1`, address.Line1);
-      if (address.Line2) {
-        formData.append(`AddressesNew[${index}].Line2`, address.Line2);
-      }
-      formData.append(`AddressesNew[${index}].CityId`, address.CityId.toString());
-    });
+    // event.AddressesNew.forEach((address, index) => {
+    //   formData.append(`AddressesNew[${index}].Line1`, address.Line1);
+    //   if (address.Line2) {
+    //     formData.append(`AddressesNew[${index}].Line2`, address.Line2);
+    //   }
+    //   formData.append(`AddressesNew[${index}].CityId`, address.CityId.toString());
+    // });
 
-    // Direcciones a eliminar
-    event.AddressesToDelete.forEach((id, index) => {
-      formData.append(`AddressesToDelete[${index}]`, id.toString());
-    });
+    // // Direcciones a eliminar
+    // event.AddressesToDelete.forEach((id, index) => {
+    //   formData.append(`AddressesToDelete[${index}]`, id.toString());
+    // });
 
     // Imágenes nuevas
     event.ImagesNew.forEach((image, index) => {
@@ -100,7 +108,10 @@ export class EventService {
       if (image.Caption) {
         formData.append(`ImagesNew[${index}].Caption`, image.Caption);
       }
-      formData.append(`ImagesNew[${index}].IsMain`, (image.IsMain ?? false).toString());
+      formData.append(
+        `ImagesNew[${index}].IsMain`,
+        (image.IsMain ?? false).toString()
+      );
     });
 
     // Imágenes a eliminar

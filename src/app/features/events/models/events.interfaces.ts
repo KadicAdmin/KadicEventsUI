@@ -5,8 +5,8 @@ export interface EventRequestDto {
   VirtualPlatformLink?: string | null;
   StartDate: string | Date; // ISO string o Date
   EndDate: string | Date; // ISO string o Date
-  AddressesNew: AddressDto[];
-  AddressesToDelete: number[];
+  // AddressesNew: AddressDto[];
+  // AddressesToDelete: number[];
   ImagesNew: UploadImage[];
   ImagesToDelete: number[];
 }

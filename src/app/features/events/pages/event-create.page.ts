@@ -61,8 +61,8 @@ export class EventCreatePage {
   private router = inject(Router);
 
   readonly modalities = signal<Modality[]>([
-    { name: 'Online', code: 'On', id: 1 },
-    { name: 'Offline', code: 'Off', id: 2 },
+    { name: 'Online', code: 'On', id: 2 }, // id: 1 changed to id:2 and id:2 changed to id:5
+    { name: 'Offline', code: 'Off', id: 5 },
   ]);
 
   readonly eventTypes = signal<{ name: string; id: number }[]>([
@@ -92,17 +92,20 @@ export class EventCreatePage {
       { validators: [this.dateRangeValidator] }
     );
 
-    this.myForm.get('modality')!.valueChanges.subscribe((modalityId: number | null) => {
-      const linkCtrl = this.myForm.get('eventLink')!;
-      const isOnline = modalityId === this.modalities().find(m => m.code === 'On')?.id;
-      if (isOnline) {
-        linkCtrl.addValidators([Validators.required]);
-      } else {
-        linkCtrl.clearValidators();
-        linkCtrl.setValue('');
-      }
-      linkCtrl.updateValueAndValidity({ emitEvent: false });
-    });
+    this.myForm
+      .get('modality')!
+      .valueChanges.subscribe((modalityId: number | null) => {
+        const linkCtrl = this.myForm.get('eventLink')!;
+        const isOnline =
+          modalityId === this.modalities().find((m) => m.code === 'On')?.id;
+        if (isOnline) {
+          linkCtrl.addValidators([Validators.required]);
+        } else {
+          linkCtrl.clearValidators();
+          linkCtrl.setValue('');
+        }
+        linkCtrl.updateValueAndValidity({ emitEvent: false });
+      });
 
     this.setupRealtimeValidation();
   }
@@ -115,10 +118,10 @@ export class EventCreatePage {
       'startDate',
       'endDate',
       'eventLink',
-      'addressLine1'
+      'addressLine1',
     ];
 
-    fieldsToValidate.forEach(fieldName => {
+    fieldsToValidate.forEach((fieldName) => {
       const control = this.myForm.get(fieldName);
       if (control) {
         control.valueChanges.subscribe(() => {
@@ -152,8 +155,8 @@ export class EventCreatePage {
         dateRange: {
           message: 'La fecha de inicio debe ser anterior a la fecha de fin',
           startDate: startDate.toLocaleDateString(),
-          endDate: endDate.toLocaleDateString()
-        }
+          endDate: endDate.toLocaleDateString(),
+        },
       };
     }
 
@@ -164,8 +167,8 @@ export class EventCreatePage {
       return {
         dateRange: {
           message: 'La fecha de inicio no puede ser en el pasado',
-          startDate: startDate.toLocaleDateString()
-        }
+          startDate: startDate.toLocaleDateString(),
+        },
       };
     }
 
@@ -175,7 +178,7 @@ export class EventCreatePage {
   private getFormErrors(): any {
     let formErrors: any = {};
 
-    Object.keys(this.myForm.controls).forEach(key => {
+    Object.keys(this.myForm.controls).forEach((key) => {
       const controlErrors = this.myForm.get(key)?.errors;
       if (controlErrors) {
         formErrors[key] = controlErrors;
@@ -229,7 +232,7 @@ export class EventCreatePage {
       startDate: 'La fecha de inicio es requerida',
       endDate: 'La fecha de fin es requerida',
       eventLink: 'El enlace de la plataforma virtual es requerido',
-      addressLine1: 'La dirección es requerida',
+      // addressLine1: 'La dirección es requerida',
     };
 
     return messages[fieldName] || 'Este campo es requerido';
@@ -266,7 +269,10 @@ export class EventCreatePage {
     console.log('Archivo seleccionado:', file);
     if (file) {
       this.myForm.patchValue({ image: file });
-      console.log('Archivo guardado en el formulario:', this.myForm.get('image')?.value);
+      console.log(
+        'Archivo guardado en el formulario:',
+        this.myForm.get('image')?.value
+      );
     }
   }
 
@@ -283,16 +289,22 @@ export class EventCreatePage {
       EventTypeId: Number(v.eventTypeId ?? 0),
       ModalityId: Number(v.modality ?? 0),
       VirtualPlatformLink: v.eventLink ?? null,
-      StartDate: v.startDate instanceof Date ? v.startDate.toISOString() : new Date(v.startDate!).toISOString(),
-      EndDate: v.endDate instanceof Date ? v.endDate.toISOString() : new Date(v.endDate!).toISOString(),
-      AddressesNew: [
-        {
-          Line1: v.addressLine1 ?? '',
-          Line2: v.addressLine2 ?? null,
-          CityId: 1,
-        }
-      ],
-      AddressesToDelete: [],
+      StartDate:
+        v.startDate instanceof Date
+          ? v.startDate.toISOString()
+          : new Date(v.startDate!).toISOString(),
+      EndDate:
+        v.endDate instanceof Date
+          ? v.endDate.toISOString()
+          : new Date(v.endDate!).toISOString(),
+      // AddressesNew: [
+      //   {
+      //     Line1: v.addressLine1 ?? '',
+      //     Line2: v.addressLine2 ?? null,
+      //     CityId: 1,
+      //   },
+      // ],
+      // AddressesToDelete: [],
       ImagesNew: [],
       ImagesToDelete: [],
     };
@@ -337,7 +349,7 @@ export class EventCreatePage {
         severity: 'warn',
         summary: 'Formulario incompleto',
         detail: errorMessage,
-        life: 5000
+        life: 5000,
       });
       return;
     }
@@ -349,7 +361,7 @@ export class EventCreatePage {
       severity: 'info',
       summary: 'Procesando...',
       detail: 'Creando el evento, por favor espera.',
-      life: 3000
+      life: 3000,
     });
 
     this.eventService.create(eventRequest).subscribe({
@@ -363,7 +375,8 @@ export class EventCreatePage {
         });
 
         this.confirmationService.confirm({
-          message: '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
+          message:
+            '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
           header: '✅ Evento Creado',
           icon: 'pi pi-check-circle',
           acceptIcon: 'pi pi-check',
@@ -380,9 +393,9 @@ export class EventCreatePage {
               severity: 'info',
               summary: 'Listo para otro evento',
               detail: 'Puedes crear un nuevo evento.',
-              life: 3000
+              life: 3000,
             });
-          }
+          },
         });
       },
       error: (err: any) => {
@@ -404,12 +417,12 @@ export class EventCreatePage {
           severity: 'error',
           summary: 'Error al crear evento',
           detail: errorMessage,
-          life: 7000
+          life: 7000,
         });
       },
       complete: () => {
         console.log('Petición completada');
-      }
+      },
     });
   }
 }
