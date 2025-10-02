@@ -1,0 +1,105 @@
+---
+alwaysApply: true
+
+---
+
+Este proyecto utiliza Angular 19 y TypeScript 5+.
+
+Por favor, al sugerir código, tener en cuenta las siguientes directrices y prácticas modernas:
+
+=====================
+🎯 Características Clave de Angular 19
+=====================
+-Tratar de siempre usar ToSignal en vez de subscribe
+- Utilizar **standalone components** (componentes independientes), evitando NgModules cuando sea posible.
+- Usar la función **inject()** para la inyección de dependencias, en lugar de usar el constructor.
+- Aplicar **Angular Signals** (`signal()`, `computed()`, `effect()`) para manejo de estado reactivo, en vez de usar `RxJS` como `BehaviorSubject` o `EventEmitter`, cuando sea posible.
+- Uso de nuevas APIs de control de flujo reactivo con señales (`input()` con señales, etc.).
+- Usar `@Component({ standalone: true })` por defecto.
+- No usar @Input y @Output, utiliza input y output
+- Utilizar las directivas y pipes modernas basadas en señales.
+- Evitar patrones obsoletos como `ngOnInit` en favor de `effect()` u observadores reactivos.
+- Usar @for y @if Ejemplo: @for (item of items; track item.name) {
+<li>{{ item.name }}</li>
+} @empty {
+<li>There are no items.</li>
+}
+
+
+
+==========================================
+Estructura Base por feature
+==========================================
+
+src/app/features/{feature-name}/
+├── components/                    # Componentes UI organizados por Atomic Design
+│   ├── atoms/                    # Componentes básicos reutilizables
+│   │   ├── buttons/
+│   │   ├── inputs/
+│   │   ├── icons/
+│   │   └── indicators/
+│   ├── molecules/                # Combinaciones de átomos
+│   │   ├── form-fields/
+│   │   ├── search-bars/
+│   │   └── card-headers/
+│   ├── organisms/                # Componentes complejos de negocio
+│   │   ├── {feature}-list/
+│   │   │   ├── {feature}-list.component.ts
+│   │   │   ├── {feature}-list.component.html
+│   │   │   └── {feature}-list.component.css
+│   │   ├── {feature}-form/
+│   │   │   ├── {feature}-form.component.ts
+│   │   │   ├── {feature}-form.component.html
+│   │   │   └── {feature}-form.component.css
+│   │   └── {feature}-details/
+│   └── templates/                # Layouts de página
+│       ├── {feature}-list-template/
+│       ├── {feature}-form-template/
+│       └── {feature}-details-template/
+├── pages/                        # Páginas (Smart Components)
+│   ├── {feature}-list.page.ts
+│   ├── {feature}-create.page.ts
+│   ├── {feature}-edit.page.ts
+│   ├── {feature}-details.page.ts
+│   ├── {feature}-list.page.html
+│   ├── {feature}-create.page.html
+│   ├── {feature}-edit.page.html
+│   ├── {feature}-details.page.html
+│   └── index.ts                  # Exportaciones públicas
+├── services/                     # Servicios del dominio
+│   ├── {feature}.service.ts      # Servicio principal de API
+│   ├── {feature}-state.service.ts # Gestión de estado con Signals
+│   ├── {feature}-data.service.ts # Transformación de datos
+│   ├── {feature}-search.service.ts # Lógica de búsqueda
+│   ├── {feature}-validation.service.ts # Validaciones
+│   └── index.ts
+
+
+
+
+=====================
+🛠️ Estructura y Estilo
+=====================
+
+- Componentes organizados de forma modular, preferiblemente en formato standalone.
+= Utilizar la arquitectura Atomic
+- Nombre con $ cuando viene de un Observable
+- Proyecto utiliza la libreria de diseño Primeng
+- Proyecto trabaja con Tailwind
+= El proyecto tiene la arquitectura Core
+- Uso de rutas definidas con `Route[]` y `loadComponent()` para lazy loading.
+- Preferencia por `ControlFlow` basado en señales y observables transformados con `toSignal()` si se usa RxJS.
+- Evitar imports innecesarios de `CommonModule`, usar `importProvidersFrom` solo si es necesario.
+- Utilizar `provideHttpClient` y otras funciones modernas del `@angular/core` para configuración.
+
+=====================
+📦 Stack Tecnológico
+=====================
+
+- Angular 20
+- Atomic Design
+- Primeng
+
+=====================
+💡 Notas Finales
+=====================
