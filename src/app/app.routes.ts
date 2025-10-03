@@ -1,7 +1,4 @@
 import { Routes } from '@angular/router';
-import { CardsListComponent } from '@shared/components/organisms/event-card.component/event.card.component.component';
-import { ProductCardComponent } from '@shared/components/molecules/card/product-card-component/product.card.component';
-import { CategoryCardComponent } from '@shared/components/organisms/category-card/category-card.component';
 // import { authGuard, adminGuard, guestGuard } from './core'; // Temporalmente desactivado
 
 export const routes: Routes = [
@@ -61,17 +58,26 @@ export const routes: Routes = [
 
   {
     path: 'productcard',
-    component: ProductCardComponent, //Esta ruta es solo para probar el Card2ComponentComponent
+    loadComponent: () =>
+      import('@shared/components/molecules/card/product-card-component/product.card.component').then(
+        (m) => m.ProductCardComponent
+      ),
   },
 
   {
     path: 'event cards',
-    component: CardsListComponent, //Esta ruta es solo para probar el DivCardComponentComponent
+    loadComponent: () =>
+      import('@shared/components/organisms/event-card.component/event.card.component.component').then(
+        (m) => m.CardsListComponent
+      ),
   },
 
   {
     path: 'category-event',
-    component: CategoryCardComponent, //Esta ruta es solo para probar el CategoryCardComponent
+    loadComponent: () =>
+      import('@shared/components/organisms/category-card/category-card.component').then(
+        (m) => m.CategoryCardComponent
+      ),
   },
 
   {

@@ -1,13 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
-import { AuthService } from './core';
 import { MENU_ITEMS } from '@core/constants/core.contans';
 import { FooterComponent } from './shared/components/organisms/footer/footer.component';
 
@@ -19,9 +18,6 @@ import { FooterComponent } from './shared/components/organisms/footer/footer.com
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  // private readonly authService = inject(AuthService);
-  // private readonly router = inject(Router);
-
   title = 'kadic events';
 
   menuItems: MenuItem[] = MENU_ITEMS;
