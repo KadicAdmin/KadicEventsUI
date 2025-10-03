@@ -42,7 +42,7 @@ export class EventsListPage {
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly activeTab = signal<string>('all');
-  
+
   // Mock data signals
   readonly slideshowImages = signal<ImgProps[]>(MOCK_SLIDESHOW_IMAGES);
   readonly tabs = signal<Tab[]>(MOCK_TABS);

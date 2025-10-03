@@ -114,15 +114,9 @@
     <!-- Eventos Destacados -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <app-event-carousel
-                [events]="events()"
-                title="Eventos Destacados"
-                subtitle="Los eventos más populares y recomendados"
-                [numVisible]="4"
-                [circular]="true"
-                [autoplayInterval]="5000"
-                [showViewAll]="true"
-                (eventClicked)="onEventClick($event)"
+            <app-event-carousel [events]="events()" title="Eventos Destacados"
+                subtitle="Los eventos más populares y recomendados" [numVisible]="4" [circular]="true"
+                [autoplayInterval]="5000" [showViewAll]="true" (eventClicked)="onEventClick($event)"
                 (viewAllClicked)="onViewAllClick()" />
         </div>
     </section>
