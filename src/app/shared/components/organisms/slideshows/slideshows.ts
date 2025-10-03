@@ -38,6 +38,7 @@ export class Slideshows implements OnInit {
     console.log('Transition Interval:', this.transitionInterval());
   }
 
+
   get galleriaConfig() {
     return {
       showThumbnails: false,

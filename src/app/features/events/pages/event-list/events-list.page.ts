@@ -171,4 +171,5 @@ export class EventsListPage {
     this.activeTab.set(tabId);
   }
 
+
 }
