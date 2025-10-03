@@ -1,27 +1,30 @@
 @let currentUsers = currentUser; @if (isAuthenticated) {
-<div class="min-h-screen bg-gray-50">
-  <p-menubar [model]="menuItems" class="border-b">
-    <ng-template pTemplate="end">
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <p-menubar [model]="menuItems" class="border-b fixed-nav">
+    <ng-template #start>
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold text-primary">Kadic Events</h1>
+      </div>
+    </ng-template>
+
+    <ng-template #end>
       <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-600"
-          >Welcome, {{ currentUsers?.firstName }}</span
-        >
-        <p-button
-          icon="pi pi-sign-out"
-          [text]="true"
-          severity="secondary"
-          (onClick)="logout()"
-          pTooltip="Logout"
-        />
+        <input type="text" pInputText placeholder="Buscar..." class="w-36" />
+        <span class="text-sm text-gray-600">Welcome, {{ currentUsers?.firstName }}</span>
+        <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" pTooltip="Logout" />
       </div>
     </ng-template>
   </p-menubar>
-
-  <main class="container mx-auto">
+  <main class="container mx-auto flex-1 pt-20">
     <router-outlet />
   </main>
+  <app-footer></app-footer>
 </div>
-
 } @else {
-<router-outlet />
+<div class="min-h-screen flex flex-col">
+  <main class="">
+    <router-outlet />
+  </main>
+  <app-footer></app-footer>
+</div>
 }

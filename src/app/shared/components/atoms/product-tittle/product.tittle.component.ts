@@ -4,10 +4,11 @@ import { Component, input } from '@angular/core';
   selector: 'app-ui-product-tittle',
   template: `
     <h3 class="text-base font-bold uppercase leading-tight">
-      Titulo de ejemplo
+      {{ title() || 'Título no disponible' }}
     </h3>
   `,
+  standalone: true
 })
 export class UiProductTittleComponent {
-  tittle = input<string>('');
+  readonly title = input<string>('');
 }

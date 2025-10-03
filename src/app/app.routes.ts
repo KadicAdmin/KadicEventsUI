@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { EventCardComponent } from '@shared/components/organisms/event-card.component/event.card.component.component';
+import { CardsListComponent } from '@shared/components/organisms/event-card.component/event.card.component.component';
 import { ProductCardComponent } from '@shared/components/molecules/card/product-card-component/product.card.component';
 import { CategoryCardComponent } from '@shared/components/organisms/category-card/category-card.component';
 // import { authGuard, adminGuard, guestGuard } from './core'; // Temporalmente desactivado
@@ -66,7 +66,7 @@ export const routes: Routes = [
 
   {
     path: 'event cards',
-    component: EventCardComponent, //Esta ruta es solo para probar el DivCardComponentComponent
+    component: CardsListComponent, //Esta ruta es solo para probar el DivCardComponentComponent
   },
 
   {

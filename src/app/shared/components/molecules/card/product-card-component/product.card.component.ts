@@ -1,25 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { UiProductImgeComponent } from '@shared/components/atoms/image-card/ui.product.imge.component';
-import { UiTextDateComponent } from '@shared/components/atoms/date-card/ui.text.date.component';
-import { UiProductTittleComponent } from '@shared/components/atoms/product-tittle/product.tittle.component';
-import { UiTextLocationComponent } from '@shared/components/atoms/location-card/ui.text.location';
-import { UiTextPriceComponent } from '@shared/components/atoms/ui-price/ui.text.price.component';
-// import { CardModule } from 'primeng/card';
-// import { ButtonModule } from 'primeng/button';
+import { Event } from '../../../../../core/models';
 
 @Component({
   selector: 'app-product-card',
   imports: [
     UiProductImgeComponent,
-    UiTextDateComponent,
-    UiTextLocationComponent,
-    UiTextPriceComponent,
-    UiProductTittleComponent,
   ],
   templateUrl: './product.card.component.html',
+  standalone: true
 })
 export class ProductCardComponent {
+  readonly event = input<Event | null>(null);
+
   onCardClick() {
     throw new Error('Method not implemented.');
+  }
+
+  formatDate(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('es-ES', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

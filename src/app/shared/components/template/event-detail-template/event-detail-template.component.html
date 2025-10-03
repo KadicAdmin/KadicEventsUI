@@ -1,0 +1,82 @@
+<div class="min-h-screen bg-gray-50">
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content Skeleton -->
+            <div class="lg:col-span-2 space-y-6">
+                <ui-skeleton type="rectangular" width="100%" height="400px" />
+                <ui-skeleton type="rectangular" width="100%" height="200px" />
+                <ui-skeleton type="rectangular" width="100%" height="200px" />
+                <ui-skeleton type="rectangular" width="100%" height="200px" />
+            </div>
+
+            <!-- Sidebar Skeleton -->
+            <div class="space-y-6">
+                <ui-skeleton type="rectangular" width="100%" height="300px" />
+                <ui-skeleton type="rectangular" width="100%" height="150px" />
+            </div>
+        </div>
+    </div>
+    } @else {
+    <!-- Hero Section -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-8">
+            <event-hero [title]="eventData()?.event?.name || ''" [description]="eventData()?.event?.description || ''"
+                [slideshowImages]="getSlideshowImages()" [badgeText]="getBadgeText()"
+                [badgeSeverity]="getBadgeSeverity()" [organizerName]="getOrganizerName()"
+                [organizerAvatarUrl]="getOrganizerAvatar()" [organizerFollowerCount]="getOrganizerFollowers()"
+                [price]="getEventPrice()" [currency]="'$'" [priceBadgeText]="getPriceBadge()"
+                (buyTicketsClicked)="onBuyTickets()" (shareEventClicked)="onShareEvent()"
+                (saveEventClicked)="onSaveEvent()" (followOrganizerClicked)="onFollowOrganizer()" />
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Date and Time -->
+                <event-datetime [startDate]="getStartDate()" [endDate]="getEndDate()" [timezone]="'GMT-4'"
+                    [duration]="getEventDuration()" [recurrence]="'Evento único'" />
+
+                <!-- Location -->
+                <event-location [isVirtual]="isVirtualEvent()" [fullAddress]="getFullAddress()"
+                    [venueName]="getVenueName()" [virtualPlatform]="getVirtualPlatform()"
+                    [virtualLink]="eventData()?.event?.virtualPlatformLink || ''"
+                    [parkingInfo]="'Estacionamiento disponible en el lugar'"
+                    [publicTransport]="'Línea 2 del Metro, Estación Centro'" [showMap]="true" />
+
+                <!-- Important Information -->
+                <event-good-to-know [stats]="eventData()?.eventStats || []" [policies]="eventData()?.policies || []" />
+
+                <!-- About Event -->
+                <event-about [description]="eventData()?.event?.description || ''" [artists]="getEventArtists()" />
+
+                <!-- Tags -->
+                <event-tags [tags]="getEventTags()" [clickable]="true" (tagClicked)="onTagClick($event)" />
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Organizer Card -->
+                <organizer-card [name]="getOrganizerName()" [bio]="getOrganizerBio()" [avatarUrl]="getOrganizerAvatar()"
+                    [isFollowing]="isFollowingOrganizer()" [stats]="eventData()?.organizerStats || []"
+                    [socialLinks]="getOrganizerSocialLinks()" (contactClicked)="onContactOrganizer()"
+                    (followClicked)="onFollowOrganizer()" (unfollowClicked)="onUnfollowOrganizer()" />
+
+                <!-- Report Event -->
+                <report-event (reportClicked)="onReportEvent()" />
+            </div>
+        </div>
+
+        <!-- Related Events Carousel Section -->
+        <div class="mt-16">
+            <app-event-carousel [events]="getRelatedEventsAsEvents()" title="Eventos Similares"
+                subtitle="Descubre otros eventos que podrían interesarte" [numVisible]="3" [circular]="true"
+                [autoplayInterval]="3000" (eventClicked)="onRelatedEventClick($event)" />
+        </div>
+    </div>
+    }
+</div>

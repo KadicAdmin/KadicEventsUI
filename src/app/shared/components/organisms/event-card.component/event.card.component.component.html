@@ -1,13 +1,5 @@
-<h1 class="text-2xl text-shadow-2xs text-center mt-7">Eventos</h1>
-
-<!-- Events -->
 <div class="mt-20 p-4 max-w-8xl mx-auto flex flex-wrap justify-center">
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
-  <app-product-card />
+  @for (event of events(); track event.id) {
+  <app-product-card [event]="event" />
+  }
 </div>

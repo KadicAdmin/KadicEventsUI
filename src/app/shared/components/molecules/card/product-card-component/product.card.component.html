@@ -1,18 +1,23 @@
 <div class="mb-4 p-4 flex items-center justify-center">
   <div
     class="w-72 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-xl"
-    (click)="onCardClick()"
-  >
+    (click)="onCardClick()">
     <!-- Imagen con overlays -->
     <div class="relative">
-      <ui-product-image />
+      <ui-product-image [image]="event()?.images?.[0]" />
 
       <!-- Contenido -->
       <div class="p-4">
-        <app-ui-product-tittle />
-        <app-ui-text-date />
-        <app-ui-text-location />
-        <app-ui-text-price />
+        <h3 class="text-base font-bold uppercase leading-tight">
+          {{ event()?.name || 'Título no disponible' }}
+        </h3>
+        <p class="text-sm text-gray-600 mt-1">
+          {{ event()?.startDate ? formatDate(event()!.startDate) : 'Fecha no disponible' }}
+        </p>
+        <p class="text-sm text-gray-600">
+          {{ event()?.location || 'Ubicación no disponible' }}
+        </p>
+        <p class="text-sm font-semibold mt-2">Precio no disponible</p>
       </div>
     </div>
   </div>

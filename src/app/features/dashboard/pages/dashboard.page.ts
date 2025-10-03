@@ -50,27 +50,6 @@ import { CardComponent } from '../../../shared/components/molecules/card/card.co
         </app-card>
       </div>
     </div>
-
-    <footer class="bg-gray-800 text-white py-6 mt-38 w-full ">
-      <div
-        class="container mx-auto flex flex-col md:flex-row justify-between items-center px-4"
-      >
-        <!-- Logo + texto -->
-        <div class="text-center md:text-left mb-4 md:mb-0">
-          <h1 class="text-xl font-bold">Kadic</h1>
-          <p class="text-sm text-gray-400">
-            © 2025 Kadic. Todos los derechos reservados.
-          </p>
-        </div>
-
-        <!-- Enlaces -->
-        <ul class="flex gap-6 text-sm">
-          <li><a href="#" class="hover:text-gray-300">Privacy Policy</a></li>
-          <li><a href="#" class="hover:text-gray-300">Terms of Service</a></li>
-          <li><a href="#" class="hover:text-gray-300">Contact Us</a></li>
-        </ul>
-      </div>
-    </footer>
   `,
 })
-export class DashboardPage {}
+export class DashboardPage { }

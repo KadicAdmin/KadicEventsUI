@@ -1,0 +1,243 @@
+/* Estilos para personalizar los indicadores de PrimeNG Galleria */
+:host ::ng-deep .p-galleria-indicators {
+  position: absolute !important;
+  bottom: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 50 !important;
+  display: flex !important;
+  gap: 0.75rem !important;
+  pointer-events: auto !important;
+}
+
+:host ::ng-deep .p-galleria-indicator {
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+:host ::ng-deep .p-galleria-indicator::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: white !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition: all 0.3s ease !important;
+}
+
+:host ::ng-deep .p-galleria-indicator.p-highlight {
+  border-color: white !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+:host ::ng-deep .p-galleria-indicator.p-highlight::before {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+:host ::ng-deep .p-galleria-indicator:hover {
+  border-color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.2) !important;
+}
+
+/* Ocultar thumbnails si están habilitados */
+:host ::ng-deep .p-galleria-thumbnails {
+  display: none !important;
+}
+
+/* Asegurar que los indicadores sean visibles */
+:host ::ng-deep .p-galleria {
+  position: relative !important;
+}
+
+:host ::ng-deep .p-galleria .p-galleria-indicators {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Forzar visibilidad de los indicadores */
+:host ::ng-deep .p-galleria-indicators > * {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Efectos de transición modernos para el slideshow */
+:host ::ng-deep .p-galleria-item {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-origin: center !important;
+}
+
+:host ::ng-deep .p-galleria-item img {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-origin: center !important;
+}
+
+/* Efecto de fade con zoom sutil */
+:host ::ng-deep .p-galleria-item-enter {
+  opacity: 0 !important;
+  transform: scale(1.05) !important;
+}
+
+:host ::ng-deep .p-galleria-item-enter-active {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+:host ::ng-deep .p-galleria-item-exit {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+:host ::ng-deep .p-galleria-item-exit-active {
+  opacity: 0 !important;
+  transform: scale(0.95) !important;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Efecto de slide horizontal suave */
+:host ::ng-deep .p-galleria-content {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-galleria-item {
+  position: relative !important;
+}
+
+/* Efecto de parallax sutil */
+:host ::ng-deep .p-galleria-item img {
+  will-change: transform, opacity !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+/* Animaciones de transición modernas */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Efectos que se activan cuando cambia el contenido */
+h1[data-index], p[data-index] {
+  animation: none;
+}
+
+h1[data-index] {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+p[data-index] {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both !important;
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideOutToLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.98);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Efecto shimmer que se activa en cada cambio */
+.shimmer-effect {
+  animation: shimmer 0.8s ease-out;
+}
+
+/* Efectos que se activan cuando cambia la imagen */
+img[data-image-index] {
+  animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Efecto de brillo durante la transición */
+:host ::ng-deep .p-galleria-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+:host ::ng-deep .p-galleria-item:hover::before {
+  transform: translateX(100%);
+}
+
+/* Estados de carga para imágenes */
+.hero-image {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Mejoras de accesibilidad */
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

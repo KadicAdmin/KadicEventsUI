@@ -69,3 +69,4 @@ export interface Modality extends BaseEntity {
   description?: string;
   isActive: boolean;
 }
+
