@@ -3,6 +3,8 @@ export interface ImgProps {
     alt?: string;
     name?: string;
     id: number;
+    title?: string;
+    description?: string;
 }
 
 export interface Tab {
