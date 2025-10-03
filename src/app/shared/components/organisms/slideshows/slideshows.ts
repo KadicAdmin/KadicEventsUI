@@ -1,4 +1,4 @@
-import { Component, input, output, signal, ViewChild } from '@angular/core';
+import { Component, input, output, signal, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GalleriaModule } from 'primeng/galleria';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +14,7 @@ import { IMAGES_SLIDESHOW } from '@core/constants/core.contans';
   templateUrl: './slideshows.html',
   styleUrl: './slideshows.css'
 })
-export class Slideshows {
+export class Slideshows implements OnInit {
   @ViewChild('galleria') galleria!: Galleria;
   clickedImage = output<ImgProps>();
   images = input<ImgProps[]>(IMAGES_SLIDESHOW);
@@ -32,6 +32,12 @@ export class Slideshows {
   isHovering = signal(false);
   activeIndex = 0;
 
+  ngOnInit() {
+    console.log('Slideshow images:', this.images());
+    console.log('AutoPlay:', this.autoPlay());
+    console.log('Transition Interval:', this.transitionInterval());
+  }
+
   get galleriaConfig() {
     return {
       showThumbnails: false,
@@ -40,7 +46,7 @@ export class Slideshows {
       transitionInterval: this.transitionInterval(),
       autoPlay: this.autoPlay(),
       circular: true,
-      numVisible: 5,
+      numVisible: 1,
       transitionOptions: {
         easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
         duration: 800
@@ -48,11 +54,11 @@ export class Slideshows {
       responsiveOptions: [
         {
           breakpoint: '1024px',
-          numVisible: 3
+          numVisible: 1
         },
         {
           breakpoint: '768px',
-          numVisible: 2
+          numVisible: 1
         },
         {
           breakpoint: '560px',

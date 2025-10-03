@@ -4,6 +4,8 @@ import { RouterOutlet, Router } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './core';
 import { MENU_ITEMS } from '@core/constants/core.contans';
@@ -12,7 +14,7 @@ import { FooterComponent } from './shared/components/organisms/footer/footer.com
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenubarModule, ButtonModule, TooltipModule, FooterComponent],
+  imports: [CommonModule, RouterOutlet, MenubarModule, ButtonModule, TooltipModule, InputTextModule, AvatarModule, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

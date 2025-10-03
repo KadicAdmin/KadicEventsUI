@@ -1,8 +1,8 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
     <!-- Hero Section con Carousel -->
     <section class="full-width-element">
-        <!-- Componente slideshows original -->
-        <app-slideshows />
+        <!-- Componente slideshows con datos del page -->
+        <app-slideshows [images]="slideshowImages()" />
     </section>
 
     <!-- Sección de Categorías -->
@@ -17,21 +17,8 @@
                 </p>
             </div>
 
-            <!-- Grid de categorías - Espacio para componente de cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Placeholder para cards de categorías -->
-                @for (category of [1,2,3,4,5,6,7,8]; track category) {
-                <div
-                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 hover:border-blue-200 group cursor-pointer">
-                    <div
-                        class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-white text-2xl">📅</span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Categoría {{category}}</h3>
-                    <p class="text-gray-600 text-sm">Descripción de la categoría</p>
-                </div>
-                }
-            </div>
+            <!-- Componente Category Card -->
+            <app-category-card />
         </div>
     </section>
 
@@ -40,7 +27,7 @@
         <div class="container mx-auto px-4">
             <!-- Navegación por tabs -->
             <div class="bg-white rounded-2xl shadow-sm p-2 mb-8">
-                <app-nav-tab [activeTab]="activeTab()" (tabChanged)="onTabChanged($event)" />
+                <app-nav-tab [tabs]="tabs()" [activeTab]="activeTab()" (tabChanged)="onTabChanged($event)" />
             </div>
 
             <!-- Barra de búsqueda y filtros -->
@@ -86,37 +73,8 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Todos los Eventos</h2>
                     <p class="text-gray-600 text-lg">Descubre todos los eventos disponibles</p>
                 </div>
-
-                <!-- Grid de eventos - Espacio para componente de lista de eventos -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @for (event of [1,2,3,4,5,6]; track event) {
-                    <div
-                        class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer">
-                        <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 relative">
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                            <div class="absolute top-4 right-4">
-                                <span
-                                    class="bg-white bg-opacity-90 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
-                                    Evento {{event}}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3
-                                class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                Título del Evento {{event}}
-                            </h3>
-                            <p class="text-gray-600 mb-4 line-clamp-2">
-                                Descripción del evento que se mostrará aquí...
-                            </p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-blue-600 font-medium">Ver detalles</span>
-                                <span class="text-gray-500 text-sm">Hace 2 días</span>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                </div>
+                <!-- Lista de eventos usando CardsList -->
+                <app-card-list [events]="events()" />
             </div>
             }
             @case ('upcoming') {
@@ -125,18 +83,8 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Próximos Eventos</h2>
                     <p class="text-gray-600 text-lg">Eventos que están por venir</p>
                 </div>
-                <!-- Espacio para componente de eventos próximos -->
-                <div class="bg-white rounded-2xl shadow-sm p-8 text-center">
-                    <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Componente de Eventos Próximos</h3>
-                    <p class="text-gray-600">Aquí se mostrarán los eventos próximos a realizarse</p>
-                </div>
+                <!-- Lista de eventos próximos -->
+                <app-card-list [events]="events()" />
             </div>
             }
             @case ('online') {
@@ -145,18 +93,8 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Eventos Online</h2>
                     <p class="text-gray-600 text-lg">Eventos virtuales disponibles</p>
                 </div>
-                <!-- Espacio para componente de eventos online -->
-                <div class="bg-white rounded-2xl shadow-sm p-8 text-center">
-                    <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Componente de Eventos Online</h3>
-                    <p class="text-gray-600">Aquí se mostrarán los eventos que se realizan de forma virtual</p>
-                </div>
+                <!-- Lista de eventos online -->
+                <app-card-list [events]="events()" />
             </div>
             }
             @case ('weekend') {
@@ -165,20 +103,27 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Eventos de Este Fin de Semana</h2>
                     <p class="text-gray-600 text-lg">Eventos programados para el fin de semana</p>
                 </div>
-                <!-- Espacio para componente de eventos de fin de semana -->
-                <div class="bg-white rounded-2xl shadow-sm p-8 text-center">
-                    <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Componente de Eventos de Fin de Semana</h3>
-                    <p class="text-gray-600">Aquí se mostrarán los eventos programados para este fin de semana</p>
-                </div>
+                <!-- Lista de eventos de fin de semana -->
+                <app-card-list [events]="events()" />
             </div>
             }
             }
+        </div>
+    </section>
+
+    <!-- Eventos Destacados -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <app-event-carousel
+                [events]="events()"
+                title="Eventos Destacados"
+                subtitle="Los eventos más populares y recomendados"
+                [numVisible]="4"
+                [circular]="true"
+                [autoplayInterval]="5000"
+                [showViewAll]="true"
+                (eventClicked)="onEventClick($event)"
+                (viewAllClicked)="onViewAllClick()" />
         </div>
     </section>
 

@@ -14,7 +14,6 @@ import { TextLabelComponent } from '@shared/components/atoms/text-label/text-lab
   selector: 'app-category-chip',
   imports: [OvalIconComponent, TextLabelComponent],
   templateUrl: './category-chip.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryChipComponent {
   category = input.required<Category>();

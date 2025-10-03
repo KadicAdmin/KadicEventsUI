@@ -7,6 +7,7 @@ import { TabsModule } from 'primeng/tabs';
   selector: 'app-nav-tab',
   imports: [TabsModule],
   templateUrl: './nav-tab.html',
+  standalone: true
 })
 export class NavTab {
   readonly tabs = input<Tab[]>(TABS);

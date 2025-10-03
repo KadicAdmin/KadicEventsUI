@@ -6,6 +6,10 @@ import { Event } from '../../../../core/models';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { EventListTemplate } from "../../components/templates/event-list-template/event-list-template";
+import { MOCK_EVENTS } from "../../mock-data/events-mock-data";
+import { MOCK_SLIDESHOW_IMAGES } from "../../mock-data/events-mock-data";
+import { MOCK_TABS } from "../../mock-data/events-mock-data";
+import { ImgProps, Tab } from "../../../../core/models/core.models";
 
 
 @Component({
@@ -18,7 +22,13 @@ import { EventListTemplate } from "../../components/templates/event-list-templat
   ],
   providers: [MessageService],
   template: `
-    <app-event-list-template />
+    <app-event-list-template 
+      [events]="events()" 
+      [slideshowImages]="slideshowImages()" 
+      [tabs]="tabs()" 
+      [loading]="loading()"
+      [activeTab]="activeTab()"
+      (tabChanged)="onTabChanged($event)" />
     <p-toast />
   `,
 })
@@ -31,6 +41,11 @@ export class EventsListPage {
   readonly events = signal<Event[]>([]);
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
+  readonly activeTab = signal<string>('all');
+  
+  // Mock data signals
+  readonly slideshowImages = signal<ImgProps[]>(MOCK_SLIDESHOW_IMAGES);
+  readonly tabs = signal<Tab[]>(MOCK_TABS);
 
 
   readonly emptyMessage = computed(() => {
@@ -43,6 +58,8 @@ export class EventsListPage {
 
   constructor() {
     this.loadEvents();
+    // Inicializar con datos mock si no hay datos del servidor
+    this.events.set(MOCK_EVENTS);
   }
 
   private loadEvents(): void {
@@ -148,6 +165,10 @@ export class EventsListPage {
   }
   refreshEvents(): void {
     this.loadEvents();
+  }
+
+  onTabChanged(tabId: string): void {
+    this.activeTab.set(tabId);
   }
 
 }
