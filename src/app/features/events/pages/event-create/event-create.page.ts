@@ -57,6 +57,40 @@ export class EventCreatePage {
     { name: 'Meeting', id: 5 },
   ]);
 
+  readonly academicTitles = signal<{ name: string; id: number }[]>([
+    { name: 'Dr.', id: 1 },
+    { name: 'PhD', id: 2 },
+    { name: 'MSc', id: 3 },
+    { name: 'BSc', id: 4 },
+    { name: 'Ing.', id: 5 },
+    { name: 'Lic.', id: 6 },
+  ]);
+
+  readonly academicLevels = signal<{ name: string; id: number }[]>([
+    { name: 'Doctorado', id: 1 },
+    { name: 'Maestría', id: 2 },
+    { name: 'Licenciatura', id: 3 },
+    { name: 'Técnico Superior', id: 4 },
+    { name: 'Técnico', id: 5 },
+  ]);
+
+  readonly studyAreas = signal<{ name: string; id: number }[]>([
+    { name: 'Ingeniería de Software', id: 1 },
+    { name: 'Ciencias de la Computación', id: 2 },
+    { name: 'Sistemas de Información', id: 3 },
+    { name: 'Inteligencia Artificial', id: 4 },
+    { name: 'Ciberseguridad', id: 5 },
+    { name: 'Redes y Telecomunicaciones', id: 6 },
+  ]);
+
+  readonly educationalInstitutions = signal<{ name: string; id: number }[]>([
+    { name: 'Universidad Autónoma de Santo Domingo (UASD)', id: 1 },
+    { name: 'Pontificia Universidad Católica Madre y Maestra (PUCMM)', id: 2 },
+    { name: 'Instituto Tecnológico de Santo Domingo (INTEC)', id: 3 },
+    { name: 'Universidad Iberoamericana (UNIBE)', id: 4 },
+    { name: 'Universidad APEC (UNAPEC)', id: 5 },
+  ]);
+
   constructor() {
     this.initializeForm();
     this.setupRealtimeValidation();
@@ -69,6 +103,7 @@ export class EventCreatePage {
       maxParticipants: [null],
       eventTypeId: [null, Validators.required],
       mainImage: [null],
+      images: [[]],
       eventDates: this.fb.array([this.createEventDateGroup()]),
     });
   }
@@ -159,8 +194,16 @@ export class EventCreatePage {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imageUrl: [''],
+      phoneNumber: [''],
       bio: [''],
+      profileImageUrl: [''],
+      linkedInUrl: [''],
+      twitterUrl: [''],
+      websiteUrl: [''],
+      academicTitleId: [null],
+      academicLevelId: [null],
+      studyAreaId: [null],
+      educationalInstitutionId: [null],
     });
   }
 
@@ -319,6 +362,16 @@ export class EventCreatePage {
 
   onFileRemove(event: any) {
     this.myForm.patchValue({ mainImage: null });
+  }
+
+  onImagesChange(images: any[]) {
+    console.log('Images changed:', images);
+    this.myForm.patchValue({ images: images });
+  }
+
+  onMainImageChange(mainImage: any) {
+    console.log('Main image changed:', mainImage);
+    this.myForm.patchValue({ mainImage: mainImage?.file || null });
   }
 
   // Submit

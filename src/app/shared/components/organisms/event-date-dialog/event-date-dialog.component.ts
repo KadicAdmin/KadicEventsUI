@@ -6,11 +6,11 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePicker } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
-import { FileUpload } from 'primeng/fileupload';
 import { TabsModule } from 'primeng/tabs';
 import { LocationCardComponent } from '@shared/components/molecules/location-card';
 import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
+import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 
 interface Modality {
   name: string;
@@ -29,11 +29,11 @@ interface Modality {
     InputTextModule,
     DatePicker,
     CheckboxModule,
-    FileUpload,
     TabsModule,
     LocationCardComponent,
     EmptyStateComponent,
     LocationDialogComponent,
+    ImageGalleryUploadComponent,
   ],
   template: `
     <p-dialog [visible]="visible()" (visibleChange)="onVisibleChange.emit($event)" [modal]="true" [style]="{width: '700px'}" [draggable]="false"
@@ -78,9 +78,10 @@ interface Modality {
 
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Imagen del Día</label>
-            <p-fileupload name="image" [multiple]="false" accept="image/*" maxFileSize="3000000" 
-              mode="basic" [auto]="false" chooseLabel="Seleccionar Imagen" chooseIcon="pi pi-image" class="w-full">
-            </p-fileupload>
+            <app-image-gallery-upload
+              [allowMultiple]="false"
+              (onMainImageChange)="handleImageChange($event)"
+            />
           </div>
         </div>
 
@@ -160,6 +161,7 @@ export class EventDateDialogComponent {
   readonly onVisibleChange = output<boolean>();
 
   showLocationDialog = signal(false);
+  previewUrl = signal<string | null>(null);
 
   openLocationDialog() {
     this.showLocationDialog.set(true);
@@ -171,6 +173,16 @@ export class EventDateDialogComponent {
 
   getCurrentLocationForm(): FormGroup | undefined {
     return this.location();
+  }
+
+  handleImageChange(image: any) {
+    if (image) {
+      this.previewUrl.set(image.url);
+      this.eventDateForm()?.patchValue({ mainImage: image.file });
+    } else {
+      this.previewUrl.set(null);
+      this.eventDateForm()?.patchValue({ mainImage: null });
+    }
   }
 }
 

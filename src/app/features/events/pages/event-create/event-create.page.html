@@ -1,12 +1,14 @@
 <app-event-create-template [form]="myForm" [modalities]="modalities()" [eventTypes]="eventTypes()"
-  [isFieldInvalid]="isFieldInvalid.bind(this)" [getFieldErrorMessage]="getFieldErrorMessage.bind(this)"
-  [hasFormLevelErrors]="hasFormLevelErrors.bind(this)" [getFormLevelErrors]="getFormLevelErrors.bind(this)"
-  [getEventDates]="eventDatesArray" [getEventDateLocation]="getEventDateLocation.bind(this)"
-  [getSpeakers]="getSpeakersForEventDate.bind(this)" [getTalks]="getTalksForEventDate.bind(this)"
-  (addEventDate)="addEventDate()" (removeEventDate)="removeEventDate($event)" (editLocation)="editLocation($event)"
+  [academicTitles]="academicTitles()" [academicLevels]="academicLevels()" [studyAreas]="studyAreas()"
+  [educationalInstitutions]="educationalInstitutions()" [isFieldInvalid]="isFieldInvalid.bind(this)"
+  [getFieldErrorMessage]="getFieldErrorMessage.bind(this)" [hasFormLevelErrors]="hasFormLevelErrors.bind(this)"
+  [getFormLevelErrors]="getFormLevelErrors.bind(this)" [getEventDates]="eventDatesArray"
+  [getEventDateLocation]="getEventDateLocation.bind(this)" [getSpeakers]="getSpeakersForEventDate.bind(this)"
+  [getTalks]="getTalksForEventDate.bind(this)" (addEventDate)="addEventDate()"
+  (removeEventDate)="removeEventDate($event)" (editLocation)="editLocation($event)"
   (clearLocation)="clearLocation($event)" (addSpeaker)="addSpeakerToEventDate($event)"
   (removeSpeaker)="removeSpeakerFromEventDate($event.eventDateIndex, $event.speakerIndex)"
   (addTalk)="addTalkToEventDate($event)" (removeTalk)="removeTalkFromEventDate($event.eventDateIndex, $event.talkIndex)"
   (onUpload)="onUpload($event)" (onFileSelect)="onFileSelect($event)" (onFileRemove)="onFileRemove($event)"
-  (onSubmit)="onSubmit()">
+  (onImagesChange)="onImagesChange($event)" (onMainImageChange)="onMainImageChange($event)" (onSubmit)="onSubmit()">
 </app-event-create-template>

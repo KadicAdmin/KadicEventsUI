@@ -4,7 +4,7 @@ import { FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
+import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Message } from 'primeng/message';
@@ -18,6 +18,7 @@ import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
 import { SpeakerCardComponent } from '@shared/components/molecules/speaker-card';
 import { TalkCardComponent } from '@shared/components/molecules/talk-card';
 import { LocationCardComponent } from '@shared/components/molecules/location-card';
+import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 import { EventDateDialogComponent } from '@shared/components/organisms/event-date-dialog';
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
@@ -38,7 +39,6 @@ interface Modality {
     ButtonModule,
     InputTextModule,
     Select,
-    FileUpload,
     ToastModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
@@ -52,6 +52,7 @@ interface Modality {
     SpeakerCardComponent,
     TalkCardComponent,
     LocationCardComponent,
+    ImageGalleryUploadComponent,
     EventDateDialogComponent,
     SpeakerDialogComponent,
     TalkDialogComponent,
@@ -65,6 +66,10 @@ export class EventCreateTemplateComponent {
   readonly form = input.required<FormGroup>();
   readonly modalities = input.required<Modality[]>();
   readonly eventTypes = input.required<{ name: string; id: number }[]>();
+  readonly academicTitles = input<any[]>([]);
+  readonly academicLevels = input<any[]>([]);
+  readonly studyAreas = input<any[]>([]);
+  readonly educationalInstitutions = input<any[]>([]);
   readonly isFieldInvalid = input.required<(fieldName: string) => boolean>();
   readonly getFieldErrorMessage = input.required<(fieldName: string) => string>();
   readonly hasFormLevelErrors = input.required<() => boolean>();
@@ -87,6 +92,8 @@ export class EventCreateTemplateComponent {
   readonly onUpload = output<FileUploadEvent>();
   readonly onFileSelect = output<any>();
   readonly onFileRemove = output<any>();
+  readonly onImagesChange = output<any[]>();
+  readonly onMainImageChange = output<any>();
   readonly onSubmit = output<void>();
 
   showEventDateDialog = signal(false);
@@ -111,6 +118,11 @@ export class EventCreateTemplateComponent {
     this.currentEventDateIndexForSpeaker.set(eventDateIndex);
     this.editingSpeakerIndex.set(null);
     this.speakerImagePreview.set('');
+    this.addSpeaker.emit(eventDateIndex);
+
+    const speakers = this.getSpeakers()(eventDateIndex);
+    this.editingSpeakerIndex.set(speakers.length - 1);
+
     this.showSpeakerDialog.set(true);
   }
 
@@ -118,6 +130,11 @@ export class EventCreateTemplateComponent {
     this.currentEventDateIndexForTalk.set(eventDateIndex);
     this.editingTalkIndex.set(null);
     this.talkImagePreview.set('');
+    this.addTalk.emit(eventDateIndex);
+
+    const talks = this.getTalks()(eventDateIndex);
+    this.editingTalkIndex.set(talks.length - 1);
+
     this.showTalkDialog.set(true);
   }
 
@@ -167,21 +184,51 @@ export class EventCreateTemplateComponent {
   }
 
   saveSpeaker() {
-    const eventDateIndex = this.currentEventDateIndexForSpeaker();
-    if (eventDateIndex !== null && this.editingSpeakerIndex() === null) {
-      this.addSpeaker.emit(eventDateIndex);
-    }
     this.showSpeakerDialog.set(false);
     this.currentEventDateIndexForSpeaker.set(null);
+    this.editingSpeakerIndex.set(null);
+  }
+
+  cancelSpeaker() {
+    const eventDateIndex = this.currentEventDateIndexForSpeaker();
+    const speakerIndex = this.editingSpeakerIndex();
+
+    if (eventDateIndex !== null && speakerIndex !== null) {
+      const speakers = this.getSpeakers()(eventDateIndex);
+      const speakerForm = speakers[speakerIndex] as FormGroup;
+
+      if (!speakerForm.value.firstName && !speakerForm.value.lastName) {
+        this.removeSpeaker.emit({ eventDateIndex, speakerIndex });
+      }
+    }
+
+    this.showSpeakerDialog.set(false);
+    this.currentEventDateIndexForSpeaker.set(null);
+    this.editingSpeakerIndex.set(null);
   }
 
   saveTalk() {
-    const eventDateIndex = this.currentEventDateIndexForTalk();
-    if (eventDateIndex !== null && this.editingTalkIndex() === null) {
-      this.addTalk.emit(eventDateIndex);
-    }
     this.showTalkDialog.set(false);
     this.currentEventDateIndexForTalk.set(null);
+    this.editingTalkIndex.set(null);
+  }
+
+  cancelTalk() {
+    const eventDateIndex = this.currentEventDateIndexForTalk();
+    const talkIndex = this.editingTalkIndex();
+
+    if (eventDateIndex !== null && talkIndex !== null) {
+      const talks = this.getTalks()(eventDateIndex);
+      const talkForm = talks[talkIndex] as FormGroup;
+
+      if (!talkForm.value.title) {
+        this.removeTalk.emit({ eventDateIndex, talkIndex });
+      }
+    }
+
+    this.showTalkDialog.set(false);
+    this.currentEventDateIndexForTalk.set(null);
+    this.editingTalkIndex.set(null);
   }
 
   editEventDateLocation(eventDateIndex: number) {

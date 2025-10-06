@@ -1,10 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { FileUpload } from 'primeng/fileupload';
+import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 
 @Component({
   selector: 'app-talk-dialog',
@@ -15,7 +15,7 @@ import { FileUpload } from 'primeng/fileupload';
     DialogModule,
     ButtonModule,
     InputTextModule,
-    FileUpload,
+    ImageGalleryUploadComponent,
   ],
   template: `
     <p-dialog [visible]="visible()" (visibleChange)="onVisibleChange.emit($event)" [modal]="true" [style]="{width: '500px'}" [draggable]="false"
@@ -36,21 +36,13 @@ import { FileUpload } from 'primeng/fileupload';
 
       @if (talkForm()) {
       <form [formGroup]="talkForm()!" class="space-y-6 pt-4">
-        <!-- Imagen Preview -->
-        @if (imagePreview()) {
-        <div class="flex justify-center">
-          <img [src]="imagePreview()" alt="Talk" 
-            class="w-full h-32 rounded-xl object-cover border-2 border-pink-100" />
-        </div>
-        }
-
         <!-- Imagen -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">Imagen de la Charla</label>
-          <p-fileupload name="image" (onSelect)="onImageSelect.emit($event)" [multiple]="false" 
-            accept="image/*" maxFileSize="3000000" mode="basic" [auto]="false" 
-            chooseLabel="Seleccionar Imagen" chooseIcon="pi pi-image" class="w-full">
-          </p-fileupload>
+          <app-image-gallery-upload
+            [allowMultiple]="false"
+            (onMainImageChange)="handleImageChange($event)"
+          />
         </div>
 
         <!-- Título -->
@@ -95,5 +87,16 @@ export class TalkDialogComponent {
   readonly onCancel = output<void>();
   readonly onImageSelect = output<any>();
   readonly onVisibleChange = output<boolean>();
+
+  previewUrl = signal<string | null>(null);
+
+  handleImageChange(image: any) {
+    if (image) {
+      this.previewUrl.set(image.url);
+      this.onImageSelect.emit({ files: [image.file] });
+    } else {
+      this.previewUrl.set(null);
+    }
+  }
 }
 

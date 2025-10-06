@@ -64,13 +64,10 @@
                             class="w-full" placeholder="100" min="1" />
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-gray-700">Imagen Principal</label>
-                        <p-fileupload name="mainImage" (onSelect)="onFileSelect.emit($event)"
-                            (onRemove)="onFileRemove.emit($event)" [multiple]="false" accept="image/*"
-                            maxFileSize="5000000" mode="basic" [auto]="false" chooseLabel="Seleccionar"
-                            chooseIcon="pi pi-image" class="w-full">
-                        </p-fileupload>
+                    <div class="space-y-2 md:col-span-2">
+                        <label class="text-sm font-medium text-gray-700">Imágenes del Evento</label>
+                        <app-image-gallery-upload [allowMultiple]="true" (onImagesChange)="onImagesChange.emit($event)"
+                            (onMainImageChange)="onMainImageChange.emit($event)" />
                     </div>
                 </div>
             </div>
@@ -256,12 +253,14 @@
             (onCancel)="showEventDateDialog.set(false)" (onClearLocation)="clearCurrentEventDateLocation()" />
 
         <app-speaker-dialog [visible]="showSpeakerDialog()" [isEditing]="editingSpeakerIndex() !== null"
-            [speakerForm]="getCurrentSpeakerForm()" [imagePreview]="speakerImagePreview()" (onSave)="saveSpeaker()"
-            (onCancel)="showSpeakerDialog.set(false)" (onImageSelect)="onSpeakerImageSelect($event)" />
+            [speakerForm]="getCurrentSpeakerForm()" [imagePreview]="speakerImagePreview()"
+            [academicTitles]="academicTitles()" [academicLevels]="academicLevels()" [studyAreas]="studyAreas()"
+            [educationalInstitutions]="educationalInstitutions()" (onSave)="saveSpeaker()" (onCancel)="cancelSpeaker()"
+            (onImageSelect)="onSpeakerImageSelect($event)" />
 
         <app-talk-dialog [visible]="showTalkDialog()" [isEditing]="editingTalkIndex() !== null"
             [talkForm]="getCurrentTalkForm()" [imagePreview]="talkImagePreview()" (onSave)="saveTalk()"
-            (onCancel)="showTalkDialog.set(false)" (onImageSelect)="onTalkImageSelect($event)" />
+            (onCancel)="cancelTalk()" (onImageSelect)="onTalkImageSelect($event)" />
 
         <app-location-dialog [visible]="showLocationDialog()" [isEditing]="editingLocationEventDateIndex() !== null"
             [locationForm]="getCurrentLocationForm()" (onSave)="saveLocation()"
