@@ -3,23 +3,67 @@ import { Speaker } from './speaker.models';
 import { Participant } from './participant.models';
 
 export interface Event extends BaseEntity {
-  name: string; // La API usa 'name' en lugar de 'title'
+  name: string;
   description?: string;
-  startDate: Date | string; // Permitir tanto Date como string
-  endDate: Date | string;   // Permitir tanto Date como string
-  addresses: Address[]; // La API usa 'addresses' en lugar de 'location'
   maxParticipants?: number;
   currentParticipants?: number;
   isActive?: boolean;
   images?: EventImage[];
   eventTypeId: number;
-  modalityId: number;
-  eventType?: string; // La API devuelve string en lugar de objeto
-  modality?: string;   // La API devuelve string en lugar de objeto
-  virtualPlatformLink?: string;
-  speakers?: Speaker[];
+  eventType?: string;
+  eventDates: EventDate[];
   participants?: Participant[];
-  location?: string; // Agregamos location para uso en la tabla
+  address: Address;
+}
+
+export interface EventDate {
+  id?: number;
+  date: Date | string;
+  talks: Talk[];
+  speakers: Speaker[];
+  schedules: Schedule[];
+  modalities: EventModality[];
+  locations: EventLocation[];
+}
+
+export interface Talk {
+  id?: number;
+  title: string;
+  description?: string;
+  duration: number;
+  speakerId: number;
+  speaker?: Speaker;
+  startTime?: Date | string;
+  endTime?: Date | string;
+}
+
+export interface Schedule {
+  id?: number;
+  startTime: Date | string;
+  endTime: Date | string;
+  talkId?: number;
+  talk?: Talk;
+  isBreak?: boolean;
+  breakDescription?: string;
+}
+
+export interface EventModality {
+  id?: number;
+  modalityId: number;
+  modality?: string;
+  isOnline: boolean;
+  isInPerson: boolean;
+  virtualPlatformLink?: string;
+}
+
+export interface EventLocation {
+  id?: number;
+  address: Address;
+  isOnline: boolean;
+  isInPerson: boolean;
+  virtualPlatformLink?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Address {
@@ -43,15 +87,53 @@ export interface EventImage {
 export interface CreateEventRequest {
   name: string;
   description?: string;
-  startDate: Date | string; // Permitir tanto Date como string
-  endDate: Date | string;   // Permitir tanto Date como string
-  addresses: Address[];
   maxParticipants?: number;
   images?: EventImage[];
   eventTypeId: number;
+  address: Address;
+  eventDates: CreateEventDateRequest[];
+}
+
+export interface CreateEventDateRequest {
+  date: Date | string;
+  talks: CreateTalkRequest[];
+  speakerIds: number[];
+  schedules: CreateScheduleRequest[];
+  modalities: CreateEventModalityRequest[];
+  locations: CreateEventLocationRequest[];
+}
+
+export interface CreateTalkRequest {
+  title: string;
+  description?: string;
+  duration: number;
+  speakerId: number;
+  startTime?: Date | string;
+  endTime?: Date | string;
+}
+
+export interface CreateScheduleRequest {
+  startTime: Date | string;
+  endTime: Date | string;
+  talkId?: number;
+  isBreak?: boolean;
+  breakDescription?: string;
+}
+
+export interface CreateEventModalityRequest {
   modalityId: number;
+  isOnline: boolean;
+  isInPerson: boolean;
   virtualPlatformLink?: string;
-  speakerIds?: number[];
+}
+
+export interface CreateEventLocationRequest {
+  address: Address;
+  isOnline: boolean;
+  isInPerson: boolean;
+  virtualPlatformLink?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UpdateEventRequest extends Partial<CreateEventRequest> {

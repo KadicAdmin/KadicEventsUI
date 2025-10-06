@@ -166,7 +166,6 @@ export class DataTableComponent {
   readonly sort = output<any>();
 
   constructor() {
-    // Constructor vacío por ahora
   }
 
   onLazyLoad(event: any): void {

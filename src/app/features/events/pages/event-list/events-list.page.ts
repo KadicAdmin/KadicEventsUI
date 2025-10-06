@@ -58,7 +58,6 @@ export class EventsListPage {
 
   constructor() {
     this.loadEvents();
-    // Inicializar con datos mock si no hay datos del servidor
     this.events.set(MOCK_EVENTS);
   }
 
@@ -69,14 +68,15 @@ export class EventsListPage {
     this.eventService.getAll().subscribe({
       next: (response) => {
         if (response.data && Array.isArray(response.data)) {
-          // Transformar los datos para que coincidan con la tabla
           const eventsWithLocation = response.data.map((event: Event) => ({
             ...event,
             location: this.getEventLocation(event),
-            startDate: new Date(event.startDate), // Mantener como Date object
-            endDate: new Date(event.endDate), // Mantener como Date object
-            eventType: event.eventType || '-', // Mostrar "-" si está vacío
-            modality: event.modality || '-', // Mostrar "-" si está vacío
+            startDate: this.getEventStartDate(event),
+            endDate: this.getEventEndDate(event),
+            eventType: event.eventType || '-',
+            modality: this.getEventModality(event),
+            speakers: this.getEventSpeakers(event),
+            talks: this.getEventTalks(event)
           }));
 
           this.events.set(eventsWithLocation);
@@ -110,8 +110,8 @@ export class EventsListPage {
   }
 
   private getEventLocation(event: Event): string {
-    if (event.addresses && event.addresses.length > 0) {
-      const address = event.addresses[0];
+    if (event.address) {
+      const address = event.address;
       return (
         `${address.city || ''}, ${address.country || ''}`.replace(
           /^,\s*|,\s*$/g,
@@ -119,7 +119,54 @@ export class EventsListPage {
         ) || 'No location'
       );
     }
-    return event.virtualPlatformLink ? 'Virtual Event' : 'No location';
+    return 'No location';
+  }
+
+  private getEventStartDate(event: Event): Date | string {
+    if (event.eventDates && event.eventDates.length > 0) {
+      const dates = event.eventDates.map(eventDate => new Date(eventDate.date));
+      return new Date(Math.min(...dates.map(date => date.getTime())));
+    }
+    return new Date();
+  }
+
+  private getEventEndDate(event: Event): Date | string {
+    if (event.eventDates && event.eventDates.length > 0) {
+      const dates = event.eventDates.map(eventDate => new Date(eventDate.date));
+      return new Date(Math.max(...dates.map(date => date.getTime())));
+    }
+    return new Date();
+  }
+
+  private getEventModality(event: Event): string {
+    if (event.eventDates && event.eventDates.length > 0) {
+      const modalities = event.eventDates.flatMap(eventDate => eventDate.modalities);
+      const hasOnline = modalities.some(mod => mod.isOnline);
+      const hasInPerson = modalities.some(mod => mod.isInPerson);
+
+      if (hasOnline && hasInPerson) {
+        return 'Híbrido';
+      } else if (hasOnline) {
+        return 'Online';
+      } else if (hasInPerson) {
+        return 'Presencial';
+      }
+    }
+    return '-';
+  }
+
+  private getEventSpeakers(event: Event): any[] {
+    if (event.eventDates && event.eventDates.length > 0) {
+      return event.eventDates.flatMap(eventDate => eventDate.speakers);
+    }
+    return [];
+  }
+
+  private getEventTalks(event: Event): any[] {
+    if (event.eventDates && event.eventDates.length > 0) {
+      return event.eventDates.flatMap(eventDate => eventDate.talks);
+    }
+    return [];
   }
   createEvent(): void {
     this.router.navigate(['/events/create']);

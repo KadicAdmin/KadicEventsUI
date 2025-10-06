@@ -20,7 +20,6 @@ export class EventService {
    */
   getAll(): Observable<any> {
     const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.getAll}/`;
-    console.log('URL para getAll:', url);
     return this.http.get<any>(url);
   }
 
@@ -35,15 +34,9 @@ export class EventService {
    * Crear un evento enviando FormData (datos + imagen)
    */
   create(event: EventRequestDto): Observable<EventResp> {
-    // Convertir EventRequestDto a FormData para envío de archivos
     const formData = this.convertToFormData(event);
-    const url = `${
-      API_CONFIG.baseUrl
-    }${API_CONFIG.endpoints.events.createOrUpdate()}`;
-
-    console.log('URL de creación:', url);
-    console.log('FormData keys:', Array.from(formData.keys()));
-
+    const url = `${API_CONFIG.baseUrl
+      }${API_CONFIG.endpoints.events.createOrUpdate()}`;
     return this.http.post<EventResp>(url, formData);
   }
 
@@ -66,8 +59,6 @@ export class EventService {
    */
   private convertToFormData(event: EventRequestDto): FormData {
     const formData = new FormData();
-
-    // Datos básicos
     formData.append('Name', event.Name);
     formData.append('EventTypeId', event.EventTypeId.toString());
     formData.append('ModalityId', event.ModalityId.toString());
@@ -88,7 +79,6 @@ export class EventService {
     formData.append('StartDate', startDate);
     formData.append('EndDate', endDate);
 
-    // Direcciones nuevas
     // event.AddressesNew.forEach((address, index) => {
     //   formData.append(`AddressesNew[${index}].Line1`, address.Line1);
     //   if (address.Line2) {
@@ -102,7 +92,6 @@ export class EventService {
     //   formData.append(`AddressesToDelete[${index}]`, id.toString());
     // });
 
-    // Imágenes nuevas
     event.ImagesNew.forEach((image, index) => {
       formData.append(`ImagesNew[${index}].File`, image.File);
       if (image.Caption) {

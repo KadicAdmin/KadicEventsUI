@@ -12,10 +12,10 @@
           {{ event()?.name || 'Título no disponible' }}
         </h3>
         <p class="text-sm text-gray-600 mt-1">
-          {{ event()?.startDate ? formatDate(event()!.startDate) : 'Fecha no disponible' }}
+          {{ getEventStartDate() }}
         </p>
         <p class="text-sm text-gray-600">
-          {{ event()?.location || 'Ubicación no disponible' }}
+          {{ getEventLocation() }}
         </p>
         <p class="text-sm font-semibold mt-2">Precio no disponible</p>
       </div>
