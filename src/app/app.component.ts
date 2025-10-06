@@ -33,6 +33,6 @@ export class AppComponent {
   logout(): void {
     // this.authService.logout(); // Temporalmente desactivado
     // this.router.navigate(['/auth/login']); // Temporalmente desactivado
-    console.log('Logout clicked - funcionalidad temporalmente desactivada');
+   
   }
 }

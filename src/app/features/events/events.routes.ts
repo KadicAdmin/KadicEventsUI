@@ -7,11 +7,11 @@ export const eventsRoutes: Routes = [
   },
   {
     path: 'create',
-    loadComponent: () => import('./pages/event-create.page').then(m => m.EventCreatePage)
+    loadComponent: () => import('./pages/event-create/event-create.page').then(m => m.EventCreatePage)
   },
   {
     path: 'edit/:id',
-    loadComponent: () => import('./pages/event-edit.page').then(m => m.EventEditPage)
+    loadComponent: () => import('./pages/event-edit/event-edit.page').then(m => m.EventEditPage)
   },
   {
     path: ':id',

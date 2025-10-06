@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { EventService } from '../../services/event.service';
 import { Event } from '../../../../core/models';
 import { EventDetailTemplateComponent, EventDetailData } from '../../../../shared/components/template/event-detail-template/event-detail-template.component';
+import { MOCK_EVENTS } from '../../mock-data/events-mock-data';
 
 @Component({
     selector: 'app-event-detail',
@@ -60,55 +61,84 @@ export class EventDetailPage implements OnInit {
         this.loading.set(true);
         this.error.set(null);
 
-        this.eventService.getById(+eventId).subscribe({
-            next: (response) => {
-                if (response) {
-                    this.prepareEventData(response);
-                } else {
-                    this.error.set('Evento no encontrado');
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'No se pudo encontrar el evento solicitado'
-                    });
-                }
-                this.loading.set(false);
-            },
-            error: (error) => {
-                console.error('Error loading event:', error);
-                this.error.set('Error al cargar el evento');
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'No se pudo cargar la información del evento'
-                });
-                this.loading.set(false);
-            }
-        });
+        // Use mock data for now
+        const mockEvent = MOCK_EVENTS.find(event => event.id === +eventId);
+
+        if (mockEvent) {
+            console.log('Using mock event:', mockEvent);
+            this.prepareEventData(mockEvent);
+        } else {
+            this.error.set('Evento no encontrado');
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No se pudo encontrar el evento solicitado'
+            });
+        }
+
+        this.loading.set(false);
     }
 
-  private prepareEventData(event: Event): void {
-    const relatedEvents = this.getMockRelatedEvents();
-    console.log('Related events generated:', relatedEvents);
-    console.log('Related events count:', relatedEvents.length);
-    
-    const eventDetailData: EventDetailData = {
-      event: {
-        ...event,
-        startDate: new Date(event.startDate),
-        endDate: new Date(event.endDate)
-      },
-      relatedEvents: relatedEvents,
-      organizerStats: this.getOrganizerStats(event),
-      policies: this.getEventPolicies(event),
-      eventStats: this.getEventStats(event)
-    };
+    private prepareEventData(event: Event): void {
+        const relatedEvents = this.getMockRelatedEvents();
+        console.log('Related events generated:', relatedEvents);
+        console.log('Related events count:', relatedEvents.length);
 
-    console.log('Event detail data prepared:', eventDetailData);
-    console.log('Related events in eventDetailData:', eventDetailData.relatedEvents);
-    
-    this.eventData.set(eventDetailData);
-  }
+        const eventDetailData: EventDetailData = {
+            event: event as any,
+            relatedEvents: relatedEvents,
+            organizerStats: this.getOrganizerStats(event),
+            policies: this.getEventPolicies(event),
+            eventStats: this.getEventStats(event)
+        };
+
+        console.log('Event detail data prepared:', eventDetailData);
+        console.log('Related events in eventDetailData:', eventDetailData.relatedEvents);
+        console.log('Event in eventDetailData:', eventDetailData.event);
+
+        this.eventData.set(eventDetailData);
+        console.log('eventData signal set to:', this.eventData());
+    }
+
+    private getEventStartDate(event: Event): Date {
+        if (event.eventDates && event.eventDates.length > 0) {
+            const dates = event.eventDates.map(eventDate => new Date(eventDate.date));
+            return new Date(Math.min(...dates.map(date => date.getTime())));
+        }
+        return new Date();
+    }
+
+    private getEventEndDate(event: Event): Date {
+        if (event.eventDates && event.eventDates.length > 0) {
+            const dates = event.eventDates.map(eventDate => new Date(eventDate.date));
+            return new Date(Math.max(...dates.map(date => date.getTime())));
+        }
+        return new Date();
+    }
+
+    private getEventModality(event: Event): string {
+        if (event.eventDates && event.eventDates.length > 0) {
+            const modalities = event.eventDates.flatMap(eventDate => eventDate.modalities);
+            const hasOnline = modalities.some(mod => mod.isOnline);
+            const hasInPerson = modalities.some(mod => mod.isInPerson);
+
+            if (hasOnline && hasInPerson) {
+                return 'Híbrido';
+            } else if (hasOnline) {
+                return 'Online';
+            } else if (hasInPerson) {
+                return 'Presencial';
+            }
+        }
+        return 'No especificada';
+    }
+
+    private getEventSpeakers(event: Event): any[] {
+        if (event.eventDates && event.eventDates.length > 0) {
+            return event.eventDates.flatMap(eventDate => eventDate.speakers);
+        }
+        return [];
+    }
 
     private getMockRelatedEvents(): Event[] {
         // Mock related events - in real app, this would come from API
@@ -117,23 +147,21 @@ export class EventDetailPage implements OnInit {
                 id: 2,
                 name: 'Conferencia de Desarrollo Web',
                 description: 'Aprende las últimas tecnologías web, frameworks modernos y mejores prácticas de desarrollo.',
-                startDate: new Date('2024-04-15T09:00:00.000Z'),
-                endDate: new Date('2024-04-15T17:00:00.000Z'),
-                addresses: [
-                    {
-                        id: 2,
-                        street: 'Av. Tecnológica 456',
-                        city: 'Santo Domingo',
-                        state: 'Distrito Nacional',
-                        country: 'República Dominicana',
-                        zipCode: '10102',
-                        latitude: 18.4861,
-                        longitude: -69.9312
-                    }
-                ],
-                maxParticipants: 100,
-                currentParticipants: 45,
+                maxParticipants: 200,
+                currentParticipants: 150,
                 isActive: true,
+                eventTypeId: 1,
+                eventType: 'Conferencia',
+                address: {
+                    id: 2,
+                    street: 'Av. Tecnológica 456',
+                    city: 'Santo Domingo',
+                    state: 'Distrito Nacional',
+                    country: 'República Dominicana',
+                    zipCode: '10102',
+                    latitude: 18.4861,
+                    longitude: -69.9312
+                },
                 images: [
                     {
                         id: 11,
@@ -142,27 +170,35 @@ export class EventDetailPage implements OnInit {
                         isPrimary: true
                     }
                 ],
-                eventTypeId: 1,
-                modalityId: 1,
-                eventType: 'Conference',
-                modality: 'Online',
-                virtualPlatformLink: 'https://teams.microsoft.com/l/meetup-join/123456789',
-                location: 'Santo Domingo, República Dominicana',
-                speakers: [],
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
+                eventDates: [
+                    {
+                        id: 1,
+                        date: '2024-04-15',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
+                participants: []
             },
             {
                 id: 3,
                 name: 'Workshop de React Avanzado',
                 description: 'Domina React con hooks, context, y patrones avanzados de desarrollo.',
-                startDate: new Date('2024-04-20T10:00:00.000Z'),
-                endDate: new Date('2024-04-20T16:00:00.000Z'),
-                addresses: [],
                 maxParticipants: 50,
                 currentParticipants: 23,
                 isActive: true,
+                eventTypeId: 2,
+                eventType: 'Workshop',
+                address: {
+                    id: 3,
+                    street: 'Virtual',
+                    city: 'Online',
+                    state: 'Online',
+                    country: 'Online'
+                },
                 images: [
                     {
                         id: 12,
@@ -171,125 +207,18 @@ export class EventDetailPage implements OnInit {
                         isPrimary: true
                     }
                 ],
-                eventTypeId: 2,
-                modalityId: 1,
-                eventType: 'Workshop',
-                modality: 'Online',
-                virtualPlatformLink: 'https://zoom.us/j/123456789',
-                location: 'Evento Virtual',
-                speakers: [],
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 4,
-                name: 'Seminario de Angular 20',
-                description: 'Descubre las nuevas características de Angular 20 y mejores prácticas.',
-                startDate: new Date('2024-05-10T14:00:00.000Z'),
-                endDate: new Date('2024-05-10T18:00:00.000Z'),
-                addresses: [
+                eventDates: [
                     {
-                        id: 3,
-                        street: 'Calle Principal 789',
-                        city: 'Santiago',
-                        state: 'Santiago',
-                        country: 'República Dominicana',
-                        zipCode: '51000',
-                        latitude: 19.4517,
-                        longitude: -70.6970
+                        id: 2,
+                        date: '2024-04-20',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
                     }
                 ],
-                maxParticipants: 80,
-                currentParticipants: 67,
-                isActive: true,
-                images: [
-                    {
-                        id: 13,
-                        url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop',
-                        description: 'Seminario de Angular',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 1,
-                modalityId: 5,
-                eventType: 'Seminar',
-                modality: 'Offline',
-                virtualPlatformLink: undefined,
-                location: 'Santiago, República Dominicana',
-                speakers: [],
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 5,
-                name: 'Hackathon de Innovación',
-                description: 'Competencia de programación para crear soluciones innovadoras.',
-                startDate: new Date('2024-05-25T08:00:00.000Z'),
-                endDate: new Date('2024-05-26T20:00:00.000Z'),
-                addresses: [
-                    {
-                        id: 4,
-                        street: 'Av. Innovación 321',
-                        city: 'Santo Domingo',
-                        state: 'Distrito Nacional',
-                        country: 'República Dominicana',
-                        zipCode: '10103',
-                        latitude: 18.4861,
-                        longitude: -69.9312
-                    }
-                ],
-                maxParticipants: 200,
-                currentParticipants: 156,
-                isActive: true,
-                images: [
-                    {
-                        id: 14,
-                        url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop',
-                        description: 'Hackathon de innovación',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 3,
-                modalityId: 5,
-                eventType: 'Hackathon',
-                modality: 'Offline',
-                virtualPlatformLink: undefined,
-                location: 'Santo Domingo, República Dominicana',
-                speakers: [],
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 6,
-                name: 'Meetup de JavaScript',
-                description: 'Encuentro mensual de desarrolladores JavaScript para networking y aprendizaje.',
-                startDate: new Date('2024-06-05T19:00:00.000Z'),
-                endDate: new Date('2024-06-05T21:00:00.000Z'),
-                addresses: [],
-                maxParticipants: 60,
-                currentParticipants: 42,
-                isActive: true,
-                images: [
-                    {
-                        id: 15,
-                        url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
-                        description: 'Meetup de JavaScript',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 4,
-                modalityId: 2,
-                eventType: 'Meetup',
-                modality: 'Hybrid',
-                virtualPlatformLink: 'https://meet.google.com/abc-defg-hij',
-                location: 'Evento Híbrido',
-                speakers: [],
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
+                participants: []
             }
         ];
     }
@@ -353,15 +282,15 @@ export class EventDetailPage implements OnInit {
             },
             {
                 label: 'Modalidad',
-                value: event.modality || 'No especificada',
+                value: this.getEventModality(event),
                 icon: 'pi pi-desktop'
             }
         ];
     }
 
     private calculateEventDuration(event: Event): string {
-        const start = new Date(event.startDate);
-        const end = new Date(event.endDate);
+        const start = this.getEventStartDate(event);
+        const end = this.getEventEndDate(event);
         const diffMs = end.getTime() - start.getTime();
         const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
 
@@ -456,8 +385,18 @@ export class EventDetailPage implements OnInit {
 
     onContactOrganizer(): void {
         const event = this.eventData()?.event;
-        if (event?.speakers?.[0]?.email) {
-            window.open(`mailto:${event.speakers[0].email}`, '_blank');
+        if (!event) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Contactar',
+                detail: 'Información de contacto no disponible'
+            });
+            return;
+        }
+
+        const speakers = this.getEventSpeakers(event);
+        if (speakers && speakers.length > 0 && speakers[0].email) {
+            window.open(`mailto:${speakers[0].email}`, '_blank');
         } else {
             this.messageService.add({
                 severity: 'info',

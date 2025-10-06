@@ -23,12 +23,12 @@
     <div class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-4 py-8">
             <event-hero [title]="eventData()?.event?.name || ''" [description]="eventData()?.event?.description || ''"
-                [slideshowImages]="getSlideshowImages()" [badgeText]="getBadgeText()"
-                [badgeSeverity]="getBadgeSeverity()" [organizerName]="getOrganizerName()"
-                [organizerAvatarUrl]="getOrganizerAvatar()" [organizerFollowerCount]="getOrganizerFollowers()"
-                [price]="getEventPrice()" [currency]="'$'" [priceBadgeText]="getPriceBadge()"
-                (buyTicketsClicked)="onBuyTickets()" (shareEventClicked)="onShareEvent()"
-                (saveEventClicked)="onSaveEvent()" (followOrganizerClicked)="onFollowOrganizer()" />
+                [slideshowImages]="slideshowImages()" [badgeText]="getBadgeText()" [badgeSeverity]="getBadgeSeverity()"
+                [organizerName]="getOrganizerName()" [organizerAvatarUrl]="getOrganizerAvatar()"
+                [organizerFollowerCount]="organizerFollowersSig()" [price]="eventPriceSig()" [currency]="'$'"
+                [priceBadgeText]="getPriceBadge()" (buyTicketsClicked)="onBuyTickets()"
+                (shareEventClicked)="onShareEvent()" (saveEventClicked)="onSaveEvent()"
+                (followOrganizerClicked)="onFollowOrganizer()" />
         </div>
     </div>
 
@@ -37,6 +37,35 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Column -->
             <div class="lg:col-span-2 space-y-8">
+                <!-- Event Dates Overview -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Fechas del Evento</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @for (eventDate of getEventDates(); track eventDate.id) {
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-center gap-3 mb-3">
+                                <i class="pi pi-calendar text-blue-600"></i>
+                                <h4 class="font-semibold text-gray-900">{{ formatEventDate(eventDate.date) }}</h4>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="pi pi-users text-green-600"></i>
+                                    <span>{{ eventDate.speakers.length }} Speakers</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="pi pi-microphone text-purple-600"></i>
+                                    <span>{{ eventDate.talks.length }} Charlas</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="pi pi-clock text-orange-600"></i>
+                                    <span>{{ eventDate.schedules.length }} Horarios</span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
                 <!-- Date and Time -->
                 <event-datetime [startDate]="getStartDate()" [endDate]="getEndDate()" [timezone]="'GMT-4'"
                     [duration]="getEventDuration()" [recurrence]="'Evento único'" />
@@ -44,12 +73,69 @@
                 <!-- Location -->
                 <event-location [isVirtual]="isVirtualEvent()" [fullAddress]="getFullAddress()"
                     [venueName]="getVenueName()" [virtualPlatform]="getVirtualPlatform()"
-                    [virtualLink]="eventData()?.event?.virtualPlatformLink || ''"
-                    [parkingInfo]="'Estacionamiento disponible en el lugar'"
-                    [publicTransport]="'Línea 2 del Metro, Estación Centro'" [showMap]="true" />
+                    [virtualLink]="getVirtualPlatformLink()" [parkingInfo]="'Estacionamiento disponible en el lugar'"
+                    [publicTransport]="'Línea 2 del Metro, Estación Centro'" [showMap]="true"
+                    [latitude]="getEventLatitude()" [longitude]="getEventLongitude()" />
 
                 <!-- Important Information -->
                 <event-good-to-know [stats]="eventData()?.eventStats || []" [policies]="eventData()?.policies || []" />
+
+                <!-- Speakers Section -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Speakers del Evento</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @for (speaker of getEventSpeakers(eventData()?.event); track speaker.id) {
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="pi pi-user text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">{{ speaker.firstName }} {{ speaker.lastName
+                                        }}</h4>
+                                    <p class="text-sm text-gray-600">{{ speaker.email }}</p>
+                                </div>
+                            </div>
+                            @if (speaker.bio) {
+                            <p class="text-sm text-gray-600">{{ speaker.bio }}</p>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Talks Section -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Charla del Evento</h3>
+                    <div class="space-y-4">
+                        @for (talk of getAllTalks(); track talk.id) {
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-start gap-3">
+                                <div
+                                    class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="pi pi-microphone text-purple-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-900 mb-1">{{ talk.title }}</h4>
+                                    @if (talk.description) {
+                                    <p class="text-sm text-gray-600 mb-2">{{ talk.description }}</p>
+                                    }
+                                    <div class="flex items-center gap-4 text-sm text-gray-500">
+                                        <span class="flex items-center gap-1">
+                                            <i class="pi pi-clock"></i>
+                                            {{ talk.duration }} min
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i class="pi pi-calendar"></i>
+                                            {{ formatTalkTime(talk.startTime) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
 
                 <!-- About Event -->
                 <event-about [description]="eventData()?.event?.description || ''" [artists]="getEventArtists()" />

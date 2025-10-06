@@ -1,5 +1,5 @@
-import { EventService } from '../services/event.service';
-import { EventRequestDto, EventResp } from '../models/events.interfaces';
+import { EventService } from '../../services/event.service';
+import { EventRequestDto, EventResp } from '../../models/events.interfaces';
 import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -266,7 +266,6 @@ export class EventCreatePage {
 
   onFileSelect(event: any) {
     const file = event.files?.[0];
-    console.log('Archivo seleccionado:', file);
     if (file) {
       this.myForm.patchValue({ image: file });
       console.log(
@@ -277,7 +276,6 @@ export class EventCreatePage {
   }
 
   onFileRemove(event: any) {
-    console.log('Archivo removido');
     this.myForm.patchValue({ image: null });
   }
 
@@ -310,7 +308,6 @@ export class EventCreatePage {
     };
 
     if (v.image) {
-      console.log('Agregando imagen al request:', v.image);
       eventRequest.ImagesNew.push({
         File: v.image as File,
         Caption: v.imageCaption || 'Event Image',

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Event } from '../../../../core/models';
 
@@ -58,9 +58,60 @@ export class EventDetailTemplateComponent {
     readonly eventData = input<EventDetailData | null>(null);
     readonly loading = input<boolean>(false);
 
+    // Cache for stable slideshow images to avoid ExpressionChanged errors
+    readonly slideshowImages = signal<ImgProps[]>([]);
+    readonly organizerFollowersSig = signal<number>(0);
+    readonly eventPriceSig = signal<number>(0);
+
     constructor() {
         // Debug logs
         console.log('EventDetailTemplateComponent initialized');
+
+        // Keep slideshow images stable across change detection cycles
+        effect(() => {
+            const data = this.eventData();
+            const event = data?.event;
+            if (!event?.images || event.images.length === 0) {
+                this.slideshowImages.set([
+                    {
+                        id: 1,
+                        url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
+                        alt: event?.name || 'Evento',
+                        title: event?.name || 'Evento',
+                        description: event?.description || 'Imagen del evento'
+                    }
+                ]);
+            } else {
+                this.slideshowImages.set(
+                    event.images.map((img: any, index: number) => ({
+                        id: img.id || index + 1,
+                        url: img.url,
+                        alt: img.description || event.name,
+                        title: event.name,
+                        description: img.description || event.description
+                    }))
+                );
+            }
+        });
+
+        // Initialize stable values that were previously computed on every CD
+        effect(() => {
+            const data = this.eventData();
+            const event = data?.event;
+            // Followers placeholder (stable per event load)
+            this.organizerFollowersSig.set(Math.floor(Math.random() * 1000) + 100);
+            // Price placeholder (stable per event load)
+            this.eventPriceSig.set(Math.floor(Math.random() * 100) + 20);
+
+            // Cache coordinates to prevent constant recalculation
+            if (event?.address) {
+                this.eventLatitudeSig.set(event.address.latitude || null);
+                this.eventLongitudeSig.set(event.address.longitude || null);
+            } else {
+                this.eventLatitudeSig.set(null);
+                this.eventLongitudeSig.set(null);
+            }
+        });
     }
 
 
@@ -116,7 +167,7 @@ export class EventDetailTemplateComponent {
             id: event.id,
             title: event.name,
             imageUrl: event.images?.[0]?.url,
-            date: event.startDate,
+            date: this.getEventStartDate(event),
             location: this.getEventLocationFromEvent(event),
             price: Math.floor(Math.random() * 100) + 20,
             currency: '$'
@@ -134,12 +185,53 @@ export class EventDetailTemplateComponent {
     // Helper methods
     getStartDate(): Date {
         const event = this.eventData()?.event;
-        return event?.startDate ? (typeof event.startDate === 'string' ? new Date(event.startDate) : event.startDate) : new Date();
+        return this.getEventStartDate(event);
     }
 
     getEndDate(): Date {
         const event = this.eventData()?.event;
-        return event?.endDate ? (typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate) : new Date();
+        return this.getEventEndDate(event);
+    }
+
+    getEventStartDate(event: any): Date {
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return new Date();
+        }
+        const dates = event.eventDates.map((eventDate: any) => new Date(eventDate.date));
+        return new Date(Math.min(...dates.map((date: Date) => date.getTime())));
+    }
+
+    getEventEndDate(event: any): Date {
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return new Date();
+        }
+        const dates = event.eventDates.map((eventDate: any) => new Date(eventDate.date));
+        return new Date(Math.max(...dates.map((date: Date) => date.getTime())));
+    }
+
+    getEventSpeakers(event: any): any[] {
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return [];
+        }
+        return event.eventDates.flatMap((eventDate: any) => eventDate.speakers || []);
+    }
+
+    getEventModality(event: any): string {
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return 'No especificada';
+        }
+        const modalities = event.eventDates.flatMap((eventDate: any) => eventDate.modalities || []);
+        const hasOnline = modalities.some((mod: any) => mod.isOnline);
+        const hasInPerson = modalities.some((mod: any) => mod.isInPerson);
+
+        if (hasOnline && hasInPerson) {
+            return 'Híbrido';
+        } else if (hasOnline) {
+            return 'Online';
+        } else if (hasInPerson) {
+            return 'Presencial';
+        }
+        return 'No especificada';
     }
 
     getHeroImage(): string {
@@ -175,30 +267,30 @@ export class EventDetailTemplateComponent {
 
     getOrganizerName(): string {
         const event = this.eventData()?.event;
-        const firstName = event?.speakers?.[0]?.firstName || '';
-        const lastName = event?.speakers?.[0]?.lastName || '';
-        return `${firstName} ${lastName}`.trim() || 'Organizador';
+        const speakers = this.getEventSpeakers(event);
+        if (speakers && speakers.length > 0) {
+            const speaker = speakers[0];
+            return `${speaker.firstName || ''} ${speaker.lastName || ''}`.trim() || 'Organizador';
+        }
+        return 'Organizador';
     }
 
     getOrganizerAvatar(): string {
-        // Placeholder - you might want to add avatar to Speaker interface
         return '';
     }
 
     getOrganizerBio(): string {
         const event = this.eventData()?.event;
-        return event?.speakers?.[0]?.bio || 'Sin biografía disponible';
+        const speakers = this.getEventSpeakers(event);
+        if (speakers && speakers.length > 0) {
+            return speakers[0].bio || 'Sin biografía disponible';
+        }
+        return 'Sin biografía disponible';
     }
 
-    getOrganizerFollowers(): number {
-        // Placeholder - you might want to add followers to organizer data
-        return Math.floor(Math.random() * 1000) + 100;
-    }
+    // getOrganizerFollowers(): number { return this.organizerFollowersSig(); }
 
-    getEventPrice(): number {
-        // Placeholder - you might want to add price to Event interface
-        return Math.floor(Math.random() * 100) + 20;
-    }
+    // getEventPrice(): number { return this.eventPriceSig(); }
 
     getPriceBadge(): string {
         return '';
@@ -213,8 +305,8 @@ export class EventDetailTemplateComponent {
         const event = this.eventData()?.event;
         if (!event) return '';
 
-        const start = new Date(event.startDate);
-        const end = new Date(event.endDate);
+        const start = this.getEventStartDate(event);
+        const end = this.getEventEndDate(event);
         const diffMs = end.getTime() - start.getTime();
         const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
 
@@ -229,14 +321,18 @@ export class EventDetailTemplateComponent {
 
     isVirtualEvent(): boolean {
         const event = this.eventData()?.event;
-        return !!event?.virtualPlatformLink;
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return false;
+        }
+        const modalities = event.eventDates.flatMap((eventDate: any) => eventDate.modalities || []);
+        return modalities.some((mod: any) => mod.isOnline && mod.virtualPlatformLink);
     }
 
     getFullAddress(): string {
         const event = this.eventData()?.event;
-        if (!event?.addresses || event.addresses.length === 0) return '';
+        if (!event?.address) return '';
 
-        const address = event.addresses[0];
+        const address = event.address;
         return `${address.street || ''}, ${address.city || ''}, ${address.country || ''}`.replace(/^,\s*|,\s*$/g, '');
     }
 
@@ -247,22 +343,130 @@ export class EventDetailTemplateComponent {
 
     getVirtualPlatform(): string {
         const event = this.eventData()?.event;
-        if (!event?.virtualPlatformLink) return '';
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return '';
+        }
 
-        if (event.virtualPlatformLink.includes('teams')) return 'Microsoft Teams';
-        if (event.virtualPlatformLink.includes('zoom')) return 'Zoom';
-        if (event.virtualPlatformLink.includes('meet')) return 'Google Meet';
+        const modalities = event.eventDates.flatMap((eventDate: any) => eventDate.modalities || []);
+        const onlineModality = modalities.find((mod: any) => mod.isOnline && mod.virtualPlatformLink);
+
+        if (!onlineModality || !onlineModality.virtualPlatformLink) {
+            return '';
+        }
+
+        const link = onlineModality.virtualPlatformLink;
+        if (link.includes('teams')) return 'Microsoft Teams';
+        if (link.includes('zoom')) return 'Zoom';
+        if (link.includes('meet')) return 'Google Meet';
 
         return 'Plataforma Virtual';
     }
 
+    getVirtualPlatformLink(): string {
+        const event = this.eventData()?.event;
+        if (!event || !event.eventDates || event.eventDates.length === 0) {
+            return '';
+        }
+
+        const modalities = event.eventDates.flatMap((eventDate: any) => eventDate.modalities || []);
+        const onlineModality = modalities.find((mod: any) => mod.isOnline && mod.virtualPlatformLink);
+
+        return onlineModality?.virtualPlatformLink || '';
+    }
+
+    // Cached coordinates to prevent constant recalculation
+    private eventLatitudeSig = signal<number | null>(null);
+    private eventLongitudeSig = signal<number | null>(null);
+
+    getEventLatitude(): number | null {
+        return this.eventLatitudeSig();
+    }
+
+    getEventLongitude(): number | null {
+        return this.eventLongitudeSig();
+    }
+
+    getEventDates(): any[] {
+        const event = this.eventData()?.event;
+        return event?.eventDates || [];
+    }
+
+    getEventDatesInfo(): any[] {
+        const event = this.eventData()?.event;
+        if (!event || !event.eventDates) {
+            return [];
+        }
+
+        return event.eventDates.map((eventDate: any) => ({
+            id: eventDate.id,
+            date: eventDate.date,
+            speakersCount: eventDate.speakers?.length || 0,
+            talksCount: eventDate.talks?.length || 0,
+            schedulesCount: eventDate.schedules?.length || 0
+        }));
+    }
+
+    getTotalSpeakers(): number {
+        const event = this.eventData()?.event;
+        if (!event || !event.eventDates) {
+            return 0;
+        }
+
+        const allSpeakers = event.eventDates.flatMap((eventDate: any) => eventDate.speakers || []);
+        const uniqueSpeakers = new Set(allSpeakers.map((speaker: any) => speaker.id));
+        return uniqueSpeakers.size;
+    }
+
+    getTotalTalks(): number {
+        const event = this.eventData()?.event;
+        if (!event || !event.eventDates) {
+            return 0;
+        }
+
+        return event.eventDates.reduce((total: number, eventDate: any) => {
+            return total + (eventDate.talks?.length || 0);
+        }, 0);
+    }
+
+    getAllTalks(): any[] {
+        const event = this.eventData()?.event;
+        if (!event || !event.eventDates) {
+            return [];
+        }
+
+        return event.eventDates.flatMap((eventDate: any) => eventDate.talks || []);
+    }
+
+    formatEventDate(date: any): string {
+        if (!date) return '';
+
+        const eventDate = new Date(date);
+        return eventDate.toLocaleDateString('es-ES', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    formatTalkTime(time: any): string {
+        if (!time) return '';
+
+        const talkTime = new Date(time);
+        return talkTime.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
     getEventArtists() {
         const event = this.eventData()?.event;
-        return event?.speakers?.map(speaker => ({
+        const speakers = this.getEventSpeakers(event);
+        return speakers.map((speaker: any) => ({
             name: `${speaker.firstName} ${speaker.lastName}`,
             role: 'Ponente',
             bio: speaker.bio || ''
-        })) || [];
+        }));
     }
 
     getEventTags(): string[] {
@@ -270,7 +474,8 @@ export class EventDetailTemplateComponent {
         const tags: string[] = [];
 
         if (event?.eventType) tags.push(event.eventType);
-        if (event?.modality) tags.push(event.modality);
+        const modality = this.getEventModality(event);
+        if (modality && modality !== 'No especificada') tags.push(modality);
 
         return tags;
     }
@@ -281,48 +486,41 @@ export class EventDetailTemplateComponent {
     }
 
     getEventLocationFromEvent(event: any): string {
-        if (event?.addresses && event.addresses.length > 0) {
-            const address = event.addresses[0];
+        if (event?.address) {
+            const address = event.address;
             return `${address.city || ''}, ${address.country || ''}`.replace(/^,\s*|,\s*$/g, '') || 'Sin ubicación';
         }
-        return event?.virtualPlatformLink ? 'Evento Virtual' : 'Sin ubicación';
+        const hasVirtualLink = this.isVirtualEvent();
+        return hasVirtualLink ? 'Evento Virtual' : 'Sin ubicación';
     }
 
-    getSlideshowImages(): ImgProps[] {
-        const event = this.eventData()?.event;
-        if (!event?.images || event.images.length === 0) {
-            // Return default slideshow images if no event images
-            return [
-                {
-                    id: 1,
-                    url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
-                    alt: 'Evento',
-                    title: event?.name || 'Evento',
-                    description: event?.description || 'Imagen del evento'
-                }
-            ];
-        }
-
-        // Transform event images to ImgProps format
-        return event.images.map((img: any, index: number) => ({
-            id: img.id || index + 1,
-            url: img.url,
-            alt: img.description || event.name,
-            title: event.name,
-            description: img.description || event.description
-        }));
-    }
+    // getSlideshowImages is no longer needed because we use a cached signal
 
     getRelatedEventsAsEvents(): Event[] {
-        // Datos falsos estáticos para mostrar el carrusel
+        // Static mock data for carousel display
         return [
             {
                 id: 2,
                 name: 'Conferencia de Desarrollo Web',
                 description: 'Aprende las últimas tecnologías web',
-                startDate: new Date('2024-04-15T09:00:00.000Z'),
-                endDate: new Date('2024-04-15T17:00:00.000Z'),
-                addresses: [],
+                address: {
+                    id: 1,
+                    street: 'Virtual',
+                    city: 'Online',
+                    state: 'Online',
+                    country: 'Online'
+                },
+                eventDates: [
+                    {
+                        id: 1,
+                        date: '2024-04-15',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
                 maxParticipants: 100,
                 currentParticipants: 45,
                 isActive: true,
@@ -335,12 +533,7 @@ export class EventDetailTemplateComponent {
                     }
                 ],
                 eventTypeId: 1,
-                modalityId: 1,
                 eventType: 'Conference',
-                modality: 'Online',
-                virtualPlatformLink: 'https://teams.microsoft.com/l/meetup-join/123456789',
-                location: 'Evento Virtual',
-                speakers: [],
                 participants: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -349,9 +542,24 @@ export class EventDetailTemplateComponent {
                 id: 3,
                 name: 'Workshop de React Avanzado',
                 description: 'Domina React con hooks y context',
-                startDate: new Date('2024-04-20T10:00:00.000Z'),
-                endDate: new Date('2024-04-20T16:00:00.000Z'),
-                addresses: [],
+                address: {
+                    id: 2,
+                    street: 'Virtual',
+                    city: 'Online',
+                    state: 'Online',
+                    country: 'Online'
+                },
+                eventDates: [
+                    {
+                        id: 2,
+                        date: '2024-04-20',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
                 maxParticipants: 50,
                 currentParticipants: 23,
                 isActive: true,
@@ -364,12 +572,7 @@ export class EventDetailTemplateComponent {
                     }
                 ],
                 eventTypeId: 2,
-                modalityId: 1,
                 eventType: 'Workshop',
-                modality: 'Online',
-                virtualPlatformLink: 'https://zoom.us/j/123456789',
-                location: 'Evento Virtual',
-                speakers: [],
                 participants: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -378,9 +581,27 @@ export class EventDetailTemplateComponent {
                 id: 4,
                 name: 'Seminario de Angular 20',
                 description: 'Descubre las nuevas características de Angular 20',
-                startDate: new Date('2024-05-10T14:00:00.000Z'),
-                endDate: new Date('2024-05-10T18:00:00.000Z'),
-                addresses: [],
+                address: {
+                    id: 3,
+                    street: 'Calle Principal 789',
+                    city: 'Santiago',
+                    state: 'Santiago',
+                    country: 'República Dominicana',
+                    zipCode: '51000',
+                    latitude: 19.4517,
+                    longitude: -70.6970
+                },
+                eventDates: [
+                    {
+                        id: 3,
+                        date: '2024-05-10',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
                 maxParticipants: 80,
                 currentParticipants: 67,
                 isActive: true,
@@ -393,12 +614,7 @@ export class EventDetailTemplateComponent {
                     }
                 ],
                 eventTypeId: 1,
-                modalityId: 5,
                 eventType: 'Seminar',
-                modality: 'Offline',
-                virtualPlatformLink: undefined,
-                location: 'Santiago, República Dominicana',
-                speakers: [],
                 participants: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -407,9 +623,27 @@ export class EventDetailTemplateComponent {
                 id: 5,
                 name: 'Hackathon de Innovación',
                 description: 'Competencia de programación para crear soluciones innovadoras',
-                startDate: new Date('2024-05-25T08:00:00.000Z'),
-                endDate: new Date('2024-05-26T20:00:00.000Z'),
-                addresses: [],
+                address: {
+                    id: 4,
+                    street: 'Av. Innovación 321',
+                    city: 'Santo Domingo',
+                    state: 'Distrito Nacional',
+                    country: 'República Dominicana',
+                    zipCode: '10103',
+                    latitude: 18.4861,
+                    longitude: -69.9312
+                },
+                eventDates: [
+                    {
+                        id: 4,
+                        date: '2024-05-25',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
                 maxParticipants: 200,
                 currentParticipants: 156,
                 isActive: true,
@@ -422,12 +656,7 @@ export class EventDetailTemplateComponent {
                     }
                 ],
                 eventTypeId: 3,
-                modalityId: 5,
                 eventType: 'Hackathon',
-                modality: 'Offline',
-                virtualPlatformLink: undefined,
-                location: 'Santo Domingo, República Dominicana',
-                speakers: [],
                 participants: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -436,9 +665,24 @@ export class EventDetailTemplateComponent {
                 id: 6,
                 name: 'Meetup de JavaScript',
                 description: 'Encuentro mensual de desarrolladores JavaScript',
-                startDate: new Date('2024-06-05T19:00:00.000Z'),
-                endDate: new Date('2024-06-05T21:00:00.000Z'),
-                addresses: [],
+                address: {
+                    id: 5,
+                    street: 'Virtual',
+                    city: 'Online',
+                    state: 'Online',
+                    country: 'Online'
+                },
+                eventDates: [
+                    {
+                        id: 5,
+                        date: '2024-06-05',
+                        talks: [],
+                        speakers: [],
+                        schedules: [],
+                        modalities: [],
+                        locations: []
+                    }
+                ],
                 maxParticipants: 60,
                 currentParticipants: 42,
                 isActive: true,
@@ -451,12 +695,7 @@ export class EventDetailTemplateComponent {
                     }
                 ],
                 eventTypeId: 4,
-                modalityId: 2,
                 eventType: 'Meetup',
-                modality: 'Hybrid',
-                virtualPlatformLink: 'https://meet.google.com/abc-defg-hij',
-                location: 'Evento Híbrido',
-                speakers: [],
                 participants: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
