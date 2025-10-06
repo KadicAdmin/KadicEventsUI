@@ -1,0 +1,270 @@
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-semibold text-gray-900 mb-1">Crear Evento</h1>
+                    <p class="text-gray-500">Completa la información de tu evento</p>
+                </div>
+                <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+                    <i class="pi pi-calendar-plus text-3xl text-blue-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <p-toast></p-toast>
+        <p-confirmDialog></p-confirmDialog>
+
+        <form autocomplete="off" [formGroup]="form()" (ngSubmit)="onSubmit.emit()">
+            <!-- Información Básica -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
+                <app-section-header icon="pi-info-circle" title="Información Básica"
+                    subtitle="Datos generales del evento" bgColor="bg-blue-50" iconColor="text-blue-600" />
+
+                @if (hasFormLevelErrors()) {
+                <div class="mb-6">
+                    @for (error of getFormLevelErrors()(); track error) {
+                    <p-message severity="error" [text]="error" class="w-full mb-2"></p-message>
+                    }
+                </div>
+                }
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Nombre del Evento</label>
+                        <input pInputText id="name" formControlName="name" class="w-full"
+                            [class.ng-invalid]="isFieldInvalid()('name')" [class.ng-dirty]="isFieldInvalid()('name')"
+                            placeholder="Ej: Conferencia Tech 2025" />
+                        @if (isFieldInvalid()('name')) {
+                        <small class="text-red-500 text-xs">{{ getFieldErrorMessage()('name') }}</small>
+                        }
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Tipo de Evento</label>
+                        <p-select inputId="eventTypeId" [options]="eventTypes()" optionLabel="name" optionValue="id"
+                            formControlName="eventTypeId" class="w-full"
+                            [class.ng-invalid]="isFieldInvalid()('eventTypeId')"
+                            [class.ng-dirty]="isFieldInvalid()('eventTypeId')" placeholder="Selecciona el tipo" />
+                        @if (isFieldInvalid()('eventTypeId')) {
+                        <small class="text-red-500 text-xs">{{ getFieldErrorMessage()('eventTypeId') }}</small>
+                        }
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <label class="text-sm font-medium text-gray-700">Descripción</label>
+                        <textarea pInputTextarea id="description" formControlName="description" class="w-full" rows="4"
+                            placeholder="Describe tu evento..."></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Capacidad Máxima</label>
+                        <input type="number" pInputText id="maxParticipants" formControlName="maxParticipants"
+                            class="w-full" placeholder="100" min="1" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Imagen Principal</label>
+                        <p-fileupload name="mainImage" (onSelect)="onFileSelect.emit($event)"
+                            (onRemove)="onFileRemove.emit($event)" [multiple]="false" accept="image/*"
+                            maxFileSize="5000000" mode="basic" [auto]="false" chooseLabel="Seleccionar"
+                            chooseIcon="pi pi-image" class="w-full">
+                        </p-fileupload>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fechas del Evento -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
+                <app-section-header icon="pi-calendar" title="Fechas del Evento"
+                    [subtitle]="getEventDates().length + ' fecha(s) agregada(s)'" bgColor="bg-indigo-50"
+                    iconColor="text-indigo-600" buttonLabel="Agregar Fecha" (onButtonClick)="openEventDateDialog()" />
+
+                @if (getEventDates().length > 0) {
+                <div class="space-y-4">
+                    @for (eventDate of getEventDates(); track $index; let i = $index) {
+                    <div class="border border-gray-200 rounded-xl overflow-hidden">
+                        <!-- Header de la Fecha con Botones -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <app-icon-badge icon="pi-calendar" bgColor="bg-indigo-50" iconColor="text-indigo-600" />
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">
+                                        {{ eventDate.get('title')?.value || 'Sin título' }}
+                                    </h3>
+                                    <p class="text-sm text-gray-500">
+                                        <i class="pi pi-calendar text-xs mr-1"></i>
+                                        {{ eventDate.get('date')?.value | date: 'dd MMMM yyyy' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="secondary"
+                                    size="small" (onClick)="editEventDate(i)" label="Editar" />
+                                @if (getEventDates().length > 1) {
+                                <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger"
+                                    size="small" (onClick)="confirmDeleteEventDate(i)" label="Eliminar" />
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Contenido con Tabs -->
+
+                        <p-tabs value="0">
+                            <p-tablist>
+                                <p-tab value="0">
+                                    <i class="pi pi-info-circle mr-2"></i>
+                                    Detalles
+                                </p-tab>
+                                <p-tab value="1">
+                                    <i class="pi pi-map-marker mr-2"></i>
+                                    Ubicaciones
+                                </p-tab>
+                                <p-tab value="2">
+                                    <i class="pi pi-users mr-2"></i>
+                                    Speakers
+                                </p-tab>
+                                <p-tab value="3">
+                                    <i class="pi pi-microphone mr-2"></i>
+                                    Charlas
+                                </p-tab>
+                            </p-tablist>
+                            <p-tabpanels>
+                                <!-- Panel: Detalles -->
+                                <p-tabpanel value="0">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label
+                                                class="text-sm font-medium text-gray-700 block mb-2">Descripción</label>
+                                            <p class="text-gray-600">
+                                                {{ eventDate.get('description')?.value || 'Sin descripción' }}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="text-sm font-medium text-gray-700 block mb-2">Modalidades</label>
+                                            <div class="flex flex-wrap gap-2">
+                                                @for (modality of modalities(); track modality.id) {
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-sm">
+                                                    {{ modality.name }}
+                                                </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p-tabpanel>
+
+                                <!-- Panel: Ubicación -->
+                                <p-tabpanel value="1">
+                                    @if (getEventDateLocation()(i)?.get('name')?.value &&
+                                    getEventDateLocation()(i)?.get('latitude')?.value) {
+                                    <div class="space-y-3">
+                                        <app-location-card [name]="getEventDateLocation()(i)?.get('name')?.value"
+                                            [address]="getEventDateLocation()(i)?.get('address')?.value"
+                                            [latitude]="getEventDateLocation()(i)?.get('latitude')?.value"
+                                            [longitude]="getEventDateLocation()(i)?.get('longitude')?.value"
+                                            (onDelete)="clearLocation.emit(i)" />
+                                        <div class="mt-4 pt-4 border-t border-gray-100">
+                                            <p-button label="Cambiar Ubicación" icon="pi pi-map-marker"
+                                                (onClick)="editEventDateLocation(i)" [outlined]="true" size="small" />
+                                        </div>
+                                    </div>
+                                    } @else {
+                                    <app-empty-state icon="pi-map-marker" message="No hay ubicación asignada"
+                                        buttonLabel="Agregar Ubicación" (onButtonClick)="editEventDateLocation(i)" />
+                                    }
+                                </p-tabpanel>
+
+                                <!-- Panel: Speakers -->
+                                <p-tabpanel value="2">
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <p class="text-sm text-gray-600">Speakers asignados a esta fecha</p>
+                                            <p-button label="Agregar" icon="pi pi-plus"
+                                                (onClick)="openSpeakerDialogForEventDate(i)" [outlined]="true"
+                                                size="small" />
+                                        </div>
+
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            @for (speaker of getSpeakers()(i); track $index; let s = $index) {
+                                            <app-speaker-card [firstName]="speaker.get('firstName')?.value"
+                                                [lastName]="speaker.get('lastName')?.value"
+                                                [email]="speaker.get('email')?.value"
+                                                [imageUrl]="speaker.get('imageUrl')?.value" (onEdit)="editSpeaker(i, s)"
+                                                (onDelete)="removeSpeaker.emit({ eventDateIndex: i, speakerIndex: s })" />
+                                            } @empty {
+                                            <div class="col-span-2 md:col-span-4">
+                                                <app-empty-state icon="pi-users" message="No hay speakers asignados"
+                                                    buttonLabel="Agregar Speaker"
+                                                    (onButtonClick)="openSpeakerDialogForEventDate(i)" />
+                                            </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </p-tabpanel>
+
+                                <!-- Panel: Charlas -->
+                                <p-tabpanel value="3">
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <p class="text-sm text-gray-600">Charlas programadas para esta fecha</p>
+                                            <p-button label="Agregar" icon="pi pi-plus"
+                                                (onClick)="openTalkDialogForEventDate(i)" [outlined]="true"
+                                                size="small" />
+                                        </div>
+
+                                        <div class="space-y-3">
+                                            @for (talk of getTalks()(i); track $index; let t = $index) {
+                                            <app-talk-card [title]="talk.get('title')?.value"
+                                                [description]="talk.get('description')?.value"
+                                                [duration]="talk.get('duration')?.value"
+                                                [imageUrl]="talk.get('imageUrl')?.value" (onEdit)="editTalk(i, t)"
+                                                (onDelete)="removeTalk.emit({ eventDateIndex: i, talkIndex: t })" />
+                                            } @empty {
+                                            <app-empty-state icon="pi-microphone" message="No hay charlas programadas"
+                                                buttonLabel="Agregar Charla"
+                                                (onButtonClick)="openTalkDialogForEventDate(i)" />
+                                            }
+                                        </div>
+                                    </div>
+                                </p-tabpanel>
+                            </p-tabpanels>
+                        </p-tabs>
+                    </div>
+                    }
+                </div>
+                } @else {
+                <app-empty-state icon="pi-calendar" message="No hay fechas agregadas"
+                    buttonLabel="Agregar Primera Fecha" (onButtonClick)="openEventDateDialog()" />
+                }
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between items-center">
+                <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true"
+                    routerLink="/events" />
+                <p-button label="Crear Evento" icon="pi pi-check" type="submit" size="large" />
+            </div>
+        </form>
+
+        <!-- Dialogs usando componentes organisms -->
+        <app-event-date-dialog [visible]="showEventDateDialog()" [isEditing]="editingEventDateIndex() !== null"
+            [eventDateForm]="getCurrentEventDateForm()" [modalities]="modalities()"
+            [location]="getCurrentEventDateLocation()" (onSave)="saveEventDate()"
+            (onCancel)="showEventDateDialog.set(false)" (onClearLocation)="clearCurrentEventDateLocation()" />
+
+        <app-speaker-dialog [visible]="showSpeakerDialog()" [isEditing]="editingSpeakerIndex() !== null"
+            [speakerForm]="getCurrentSpeakerForm()" [imagePreview]="speakerImagePreview()" (onSave)="saveSpeaker()"
+            (onCancel)="showSpeakerDialog.set(false)" (onImageSelect)="onSpeakerImageSelect($event)" />
+
+        <app-talk-dialog [visible]="showTalkDialog()" [isEditing]="editingTalkIndex() !== null"
+            [talkForm]="getCurrentTalkForm()" [imagePreview]="talkImagePreview()" (onSave)="saveTalk()"
+            (onCancel)="showTalkDialog.set(false)" (onImageSelect)="onTalkImageSelect($event)" />
+
+        <app-location-dialog [visible]="showLocationDialog()" [isEditing]="editingLocationEventDateIndex() !== null"
+            [locationForm]="getCurrentLocationForm()" (onSave)="saveLocation()"
+            (onCancel)="showLocationDialog.set(false)" />
+    </div>
+</div>
