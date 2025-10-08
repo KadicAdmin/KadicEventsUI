@@ -1,28 +1,21 @@
 import { EventService } from '../../services/event.service';
 import { EventRequestDto, EventResp } from '../../models/events.interfaces';
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { StepperModule } from 'primeng/stepper';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
+  FormArray,
   Validators,
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { FloatLabel } from 'primeng/floatlabel';
-import { Select } from 'primeng/select';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
+import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DatePicker } from 'primeng/datepicker';
-import { Message } from 'primeng/message';
+import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 
 interface Modality {
   name: string;
@@ -35,18 +28,9 @@ interface Modality {
   standalone: true,
   imports: [
     CommonModule,
-    StepperModule,
-    ButtonModule,
-    FormsModule,
-    InputTextModule,
-    FloatLabel,
-    Select,
-    FileUpload,
     ToastModule,
     ConfirmDialogModule,
-    ReactiveFormsModule,
-    DatePicker,
-    Message,
+    EventCreateTemplateComponent,
   ],
   templateUrl: './event-create.page.html',
   styleUrl: './event-create.page.css',
@@ -61,7 +45,7 @@ export class EventCreatePage {
   private router = inject(Router);
 
   readonly modalities = signal<Modality[]>([
-    { name: 'Online', code: 'On', id: 2 }, // id: 1 changed to id:2 and id:2 changed to id:5
+    { name: 'Online', code: 'On', id: 2 },
     { name: 'Offline', code: 'Off', id: 5 },
   ]);
 
@@ -73,52 +57,229 @@ export class EventCreatePage {
     { name: 'Meeting', id: 5 },
   ]);
 
+  readonly academicTitles = signal<{ name: string; id: number }[]>([
+    { name: 'Dr.', id: 1 },
+    { name: 'PhD', id: 2 },
+    { name: 'MSc', id: 3 },
+    { name: 'BSc', id: 4 },
+    { name: 'Ing.', id: 5 },
+    { name: 'Lic.', id: 6 },
+  ]);
+
+  readonly academicLevels = signal<{ name: string; id: number }[]>([
+    { name: 'Doctorado', id: 1 },
+    { name: 'Maestría', id: 2 },
+    { name: 'Licenciatura', id: 3 },
+    { name: 'Técnico Superior', id: 4 },
+    { name: 'Técnico', id: 5 },
+  ]);
+
+  readonly studyAreas = signal<{ name: string; id: number }[]>([
+    { name: 'Ingeniería de Software', id: 1 },
+    { name: 'Ciencias de la Computación', id: 2 },
+    { name: 'Sistemas de Información', id: 3 },
+    { name: 'Inteligencia Artificial', id: 4 },
+    { name: 'Ciberseguridad', id: 5 },
+    { name: 'Redes y Telecomunicaciones', id: 6 },
+  ]);
+
+  readonly educationalInstitutions = signal<{ name: string; id: number }[]>([
+    { name: 'Universidad Autónoma de Santo Domingo (UASD)', id: 1 },
+    { name: 'Pontificia Universidad Católica Madre y Maestra (PUCMM)', id: 2 },
+    { name: 'Instituto Tecnológico de Santo Domingo (INTEC)', id: 3 },
+    { name: 'Universidad Iberoamericana (UNIBE)', id: 4 },
+    { name: 'Universidad APEC (UNAPEC)', id: 5 },
+  ]);
+
+  readonly categories = signal<{ name: string; id: number }[]>([
+    { name: 'Tecnología', id: 1 },
+    { name: 'Educación', id: 2 },
+    { name: 'Negocios', id: 3 },
+    { name: 'Salud', id: 4 },
+    { name: 'Arte y Cultura', id: 5 },
+    { name: 'Deportes', id: 6 },
+    { name: 'Ciencia', id: 7 },
+    { name: 'Entretenimiento', id: 8 },
+  ]);
+
+  readonly tags = signal<{ name: string; id: number }[]>([
+    { name: 'Angular', id: 1 },
+    { name: 'React', id: 2 },
+    { name: 'Vue.js', id: 3 },
+    { name: 'Node.js', id: 4 },
+    { name: 'Python', id: 5 },
+    { name: 'JavaScript', id: 6 },
+    { name: 'TypeScript', id: 7 },
+    { name: 'Machine Learning', id: 8 },
+    { name: 'AI', id: 9 },
+    { name: 'Blockchain', id: 10 },
+    { name: 'Cloud Computing', id: 11 },
+    { name: 'DevOps', id: 12 },
+    { name: 'Frontend', id: 13 },
+    { name: 'Backend', id: 14 },
+    { name: 'Mobile', id: 15 },
+  ]);
+
   constructor() {
-    this.myForm = this.fb.group(
-      {
-        eventName: ['', Validators.required],
-        eventTypeId: [null, Validators.required],
-        modality: [null, Validators.required],
-        startDate: [null, Validators.required],
-        endDate: [null, Validators.required],
-        eventLink: [''],
-        addressLine1: ['', Validators.required],
-        addressLine2: [''],
-        postalCode: [''],
-        image: [null],
-        imageCaption: [''],
-        imageIsMain: [true],
-      },
-      { validators: [this.dateRangeValidator] }
-    );
-
-    this.myForm
-      .get('modality')!
-      .valueChanges.subscribe((modalityId: number | null) => {
-        const linkCtrl = this.myForm.get('eventLink')!;
-        const isOnline =
-          modalityId === this.modalities().find((m) => m.code === 'On')?.id;
-        if (isOnline) {
-          linkCtrl.addValidators([Validators.required]);
-        } else {
-          linkCtrl.clearValidators();
-          linkCtrl.setValue('');
-        }
-        linkCtrl.updateValueAndValidity({ emitEvent: false });
-      });
-
+    this.initializeForm();
     this.setupRealtimeValidation();
   }
 
+  private initializeForm(): void {
+    this.myForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      categoryId: [null, Validators.required],
+      tags: [[]],
+      maxParticipants: [null],
+      eventTypeId: [null, Validators.required],
+      mainImage: [null],
+      images: [[]],
+      eventDates: this.fb.array([]),
+    });
+  }
+
+  // FormArray getters
+  get eventDatesArray(): any[] {
+    const dates = (this.myForm.get('eventDates') as FormArray).controls;
+
+    return dates;
+  }
+
+  getSpeakersForEventDate(eventDateIndex: number): any[] {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const speakers = eventDate.get('speakers') as FormArray;
+    return speakers?.controls || [];
+  }
+
+  getTalksForEventDate(eventDateIndex: number): any[] {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const talks = eventDate.get('talks') as FormArray;
+    return talks?.controls || [];
+  }
+
+  // Event Date methods
+  private createEventDateGroup(): FormGroup {
+    return this.fb.group({
+      date: [null, Validators.required],
+      title: ['', Validators.required],
+      description: [''],
+      mainImage: [null],
+      modalities: [[]],
+      location: this.createLocationGroup(),
+      speakers: this.fb.array([]),
+      talks: this.fb.array([]),
+      schedules: this.fb.array([]),
+    });
+  }
+
+  addEventDate(): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const newEventDate = this.createEventDateGroup();
+    console.log('Creating new event date:', newEventDate.value);
+    eventDates.push(newEventDate);
+    console.log('All event dates:', eventDates.value);
+  }
+
+  removeEventDate(index: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    eventDates.removeAt(index);
+  }
+
+  getEventDateLocation(eventDateIndex: number): FormGroup | null {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const location = eventDate.get('location') as FormGroup;
+    console.log(`Getting location for event date ${eventDateIndex}:`, location?.value);
+    return location;
+  }
+
+  // Location methods
+  private createLocationGroup(): FormGroup {
+    return this.fb.group({
+      name: [null],
+      address: [null],
+      latitude: [null],
+      longitude: [null],
+    });
+  }
+
+  editLocation(eventDateIndex: number): void {
+    console.log('Edit location for event date:', eventDateIndex);
+  }
+
+  clearLocation(eventDateIndex: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const location = eventDate.get('location') as FormGroup;
+    location.reset();
+  }
+
+  // Speaker methods
+  private createSpeakerGroup(): FormGroup {
+    return this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [''],
+      bio: [''],
+      profileImageUrl: [''],
+      linkedInUrl: [''],
+      twitterUrl: [''],
+      websiteUrl: [''],
+      academicTitleId: [null],
+      academicLevelId: [null],
+      studyAreaId: [null],
+      educationalInstitutionId: [null],
+    });
+  }
+
+  addSpeakerToEventDate(eventDateIndex: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const speakers = eventDate.get('speakers') as FormArray;
+    speakers.push(this.createSpeakerGroup());
+  }
+
+  removeSpeakerFromEventDate(eventDateIndex: number, speakerIndex: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const speakers = eventDate.get('speakers') as FormArray;
+    speakers.removeAt(speakerIndex);
+  }
+
+  // Talk methods
+  private createTalkGroup(): FormGroup {
+    return this.fb.group({
+      title: ['', Validators.required],
+      description: [''],
+      duration: [null, Validators.required],
+      imageUrl: [''],
+      speakerId: [null],
+    });
+  }
+
+  addTalkToEventDate(eventDateIndex: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const talks = eventDate.get('talks') as FormArray;
+    talks.push(this.createTalkGroup());
+  }
+
+  removeTalkFromEventDate(eventDateIndex: number, talkIndex: number): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const talks = eventDate.get('talks') as FormArray;
+    talks.removeAt(talkIndex);
+  }
+
+  // Validation methods
   private setupRealtimeValidation(): void {
     const fieldsToValidate = [
-      'eventName',
+      'name',
       'eventTypeId',
-      'modality',
-      'startDate',
-      'endDate',
-      'eventLink',
-      'addressLine1',
     ];
 
     fieldsToValidate.forEach((fieldName) => {
@@ -131,48 +292,6 @@ export class EventCreatePage {
         });
       }
     });
-
-    this.myForm.get('startDate')?.valueChanges.subscribe(() => {
-      this.myForm.updateValueAndValidity({ emitEvent: false });
-    });
-
-    this.myForm.get('endDate')?.valueChanges.subscribe(() => {
-      this.myForm.updateValueAndValidity({ emitEvent: false });
-    });
-  }
-
-  private dateRangeValidator(group: AbstractControl): ValidationErrors | null {
-    const start = group.get('startDate')?.value as Date | null;
-    const end = group.get('endDate')?.value as Date | null;
-
-    if (!start || !end) return null;
-
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-
-    if (startDate >= endDate) {
-      return {
-        dateRange: {
-          message: 'La fecha de inicio debe ser anterior a la fecha de fin',
-          startDate: startDate.toLocaleDateString(),
-          endDate: endDate.toLocaleDateString(),
-        },
-      };
-    }
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (startDate < today) {
-      return {
-        dateRange: {
-          message: 'La fecha de inicio no puede ser en el pasado',
-          startDate: startDate.toLocaleDateString(),
-        },
-      };
-    }
-
-    return null;
   }
 
   private getFormErrors(): any {
@@ -226,13 +345,10 @@ export class EventCreatePage {
 
   private getRequiredMessage(fieldName: string): string {
     const messages: { [key: string]: string } = {
-      eventName: 'El nombre del evento es requerido',
+      name: 'El nombre del evento es requerido',
       eventTypeId: 'Selecciona un tipo de evento',
-      modality: 'Selecciona una modalidad',
-      startDate: 'La fecha de inicio es requerida',
-      endDate: 'La fecha de fin es requerida',
-      eventLink: 'El enlace de la plataforma virtual es requerido',
-      // addressLine1: 'La dirección es requerida',
+      date: 'La fecha es requerida',
+      title: 'El título es requerido',
     };
 
     return messages[fieldName] || 'Este campo es requerido';
@@ -240,6 +356,12 @@ export class EventCreatePage {
 
   getFormLevelErrors(): string[] {
     const errors: string[] = [];
+
+    // Validar que haya al menos una fecha de evento
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    if (eventDates.length === 0) {
+      errors.push('Debes agregar al menos una fecha para el evento');
+    }
 
     if (this.myForm.errors?.['dateRange']) {
       const dateRangeError = this.myForm.errors['dateRange'];
@@ -257,70 +379,37 @@ export class EventCreatePage {
     return this.getFormLevelErrors().length > 0;
   }
 
+  // File upload methods
   onUpload(ev: FileUploadEvent) {
     const file = ev.files?.[0];
     if (file) {
-      this.myForm.patchValue({ image: file });
+      this.myForm.patchValue({ mainImage: file });
     }
   }
 
   onFileSelect(event: any) {
     const file = event.files?.[0];
     if (file) {
-      this.myForm.patchValue({ image: file });
-      console.log(
-        'Archivo guardado en el formulario:',
-        this.myForm.get('image')?.value
-      );
+      this.myForm.patchValue({ mainImage: file });
+      console.log('Archivo guardado en el formulario:', this.myForm.get('mainImage')?.value);
     }
   }
 
   onFileRemove(event: any) {
-    this.myForm.patchValue({ image: null });
+    this.myForm.patchValue({ mainImage: null });
   }
 
-  private buildEventRequest(): EventRequestDto {
-    const v = this.myForm.value;
-
-    const eventRequest: EventRequestDto = {
-      Name: String(v.eventName),
-      EventTypeId: Number(v.eventTypeId ?? 0),
-      ModalityId: Number(v.modality ?? 0),
-      VirtualPlatformLink: v.eventLink ?? null,
-      StartDate:
-        v.startDate instanceof Date
-          ? v.startDate.toISOString()
-          : new Date(v.startDate!).toISOString(),
-      EndDate:
-        v.endDate instanceof Date
-          ? v.endDate.toISOString()
-          : new Date(v.endDate!).toISOString(),
-      // AddressesNew: [
-      //   {
-      //     Line1: v.addressLine1 ?? '',
-      //     Line2: v.addressLine2 ?? null,
-      //     CityId: 1,
-      //   },
-      // ],
-      // AddressesToDelete: [],
-      ImagesNew: [],
-      ImagesToDelete: [],
-    };
-
-    if (v.image) {
-      eventRequest.ImagesNew.push({
-        File: v.image as File,
-        Caption: v.imageCaption || 'Event Image',
-        IsMain: !!v.imageIsMain,
-      });
-    } else {
-      console.log('No hay imagen para agregar');
-    }
-
-    console.log('EventRequest final:', eventRequest);
-    return eventRequest;
+  onImagesChange(images: any[]) {
+    console.log('Images changed:', images);
+    this.myForm.patchValue({ images: images });
   }
 
+  onMainImageChange(mainImage: any) {
+    console.log('Main image changed:', mainImage);
+    this.myForm.patchValue({ mainImage: mainImage?.file || null });
+  }
+
+  // Submit
   onSubmit() {
     console.log('onSubmit called');
     console.log('Form valid:', this.myForm.valid);
@@ -351,75 +440,64 @@ export class EventCreatePage {
       return;
     }
 
-    const eventRequest = this.buildEventRequest();
-    console.log('Datos a enviar:', eventRequest);
+    // TODO: Build the new event request with the new structure
+    const formValue = this.myForm.value;
+    console.log('Form data to send:', formValue);
 
     this.messageService.add({
-      severity: 'info',
-      summary: 'Procesando...',
-      detail: 'Creando el evento, por favor espera.',
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Evento creado correctamente (pendiente integración backend)',
       life: 3000,
     });
 
-    this.eventService.create(eventRequest).subscribe({
-      next: (res: EventResp) => {
-        console.log('Respuesta del servidor:', res);
-
-        this.messageService.clear();
-
-        this.myForm.reset({
-          imageIsMain: true,
-        });
-
-        this.confirmationService.confirm({
-          message:
-            '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
-          header: '✅ Evento Creado',
-          icon: 'pi pi-check-circle',
-          acceptIcon: 'pi pi-check',
-          rejectIcon: 'pi pi-times',
-          acceptLabel: 'Ver Eventos',
-          rejectLabel: 'Crear Otro',
-          acceptButtonStyleClass: 'p-button-success',
-          rejectButtonStyleClass: 'p-button-secondary',
-          accept: () => {
-            this.router.navigate(['/events']);
-          },
-          reject: () => {
-            this.messageService.add({
-              severity: 'info',
-              summary: 'Listo para otro evento',
-              detail: 'Puedes crear un nuevo evento.',
-              life: 3000,
-            });
-          },
-        });
-      },
-      error: (err: any) => {
-        console.error('Error creando evento:', err);
-
-        this.messageService.clear();
-
-        let errorMessage = 'No se pudo crear el evento. Intenta nuevamente.';
-
-        if (err?.error?.message) {
-          errorMessage = err.error.message;
-        } else if (err?.message) {
-          errorMessage = err.message;
-        } else if (typeof err === 'string') {
-          errorMessage = err;
-        }
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error al crear evento',
-          detail: errorMessage,
-          life: 7000,
-        });
-      },
-      complete: () => {
-        console.log('Petición completada');
-      },
-    });
+    // Uncomment when backend is ready
+    // this.eventService.create(eventRequest).subscribe({
+    //   next: (res: EventResp) => {
+    //     console.log('Respuesta del servidor:', res);
+    //     this.messageService.clear();
+    //     this.myForm.reset();
+    //     this.confirmationService.confirm({
+    //       message: '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
+    //       header: '✅ Evento Creado',
+    //       icon: 'pi pi-check-circle',
+    //       acceptIcon: 'pi pi-check',
+    //       rejectIcon: 'pi pi-times',
+    //       acceptLabel: 'Ver Eventos',
+    //       rejectLabel: 'Crear Otro',
+    //       acceptButtonStyleClass: 'p-button-success',
+    //       rejectButtonStyleClass: 'p-button-secondary',
+    //       accept: () => {
+    //         this.router.navigate(['/events']);
+    //       },
+    //       reject: () => {
+    //         this.messageService.add({
+    //           severity: 'info',
+    //           summary: 'Listo para otro evento',
+    //           detail: 'Puedes crear un nuevo evento.',
+    //           life: 3000,
+    //         });
+    //       },
+    //     });
+    //   },
+    //   error: (err: any) => {
+    //     console.error('Error creando evento:', err);
+    //     this.messageService.clear();
+    //     let errorMessage = 'No se pudo crear el evento. Intenta nuevamente.';
+    //     if (err?.error?.message) {
+    //       errorMessage = err.error.message;
+    //     } else if (err?.message) {
+    //       errorMessage = err.message;
+    //     } else if (typeof err === 'string') {
+    //       errorMessage = err;
+    //     }
+    //     this.messageService.add({
+    //       severity: 'error',
+    //       summary: 'Error al crear evento',
+    //       detail: errorMessage,
+    //       life: 7000,
+    //     });
+    //   },
+    // });
   }
 }

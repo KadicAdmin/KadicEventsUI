@@ -12,3 +12,9 @@ export interface Tab {
     label: string;
     icon: string;
 }
+
+export interface StatItem {
+    label: string;
+    value: string;
+    icon?: string;
+  }
