@@ -1,16 +1,16 @@
-import { Component, input, output, signal, effect } from '@angular/core';
+import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePicker } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TabsModule } from 'primeng/tabs';
+import { ButtonModule } from 'primeng/button';
 import { LocationCardComponent } from '@shared/components/molecules/location-card';
 import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
 import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
+import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
 
 interface Modality {
   name: string;
@@ -24,34 +24,28 @@ interface Modality {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DialogModule,
-    ButtonModule,
     InputTextModule,
     DatePicker,
     CheckboxModule,
     TabsModule,
+    ButtonModule,
     LocationCardComponent,
     EmptyStateComponent,
     LocationDialogComponent,
     ImageGalleryUploadComponent,
+    ModalComponent,
   ],
   template: `
-    <p-dialog [visible]="visible()" (visibleChange)="onVisibleChange.emit($event)" [modal]="true" [style]="{width: '700px'}" [draggable]="false"
-      [resizable]="false" styleClass="rounded-2xl">
-      <ng-template pTemplate="header">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
-            <i class="pi pi-calendar text-xl text-indigo-600"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-gray-900">
-              {{ isEditing() ? 'Editar' : 'Nueva' }} Fecha del Evento
-            </h3>
-            <p class="text-sm text-gray-500">Completa los detalles de esta fecha</p>
-          </div>
-        </div>
-      </ng-template>
-
+    <app-modal 
+      [visible]="visible()" 
+      [config]="modalConfig()"
+      [showFooter]="true"
+      [cancelLabel]="'Cancelar'"
+      [saveLabel]="'Guardar'"
+      (onVisibleChange)="onVisibleChange.emit($event)"
+      (onCancel)="onCancel.emit()"
+      (onSave)="onSave.emit()">
+      
       @if (eventDateForm()) {
       <form [formGroup]="eventDateForm()!" class="space-y-6 pt-4">
         <!-- Información Básica -->
@@ -72,7 +66,7 @@ interface Modality {
 
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Descripción</label>
-            <textarea pInputTextarea formControlName="description" class="w-full" rows="3" 
+            <textarea pInputTextarea formControlName="description" rows="3" 
               placeholder="Describe las actividades de este día..."></textarea>
           </div>
 
@@ -130,22 +124,15 @@ interface Modality {
       </form>
       }
 
-      <ng-template pTemplate="footer">
-        <div class="flex justify-end gap-2">
-          <p-button label="Cancelar" (onClick)="onCancel.emit()" [outlined]="true" />
-          <p-button label="Guardar" (onClick)="onSave.emit()" />
-        </div>
-      </ng-template>
-    </p-dialog>
-
-    <!-- Location Dialog -->
-    <app-location-dialog
-      [visible]="showLocationDialog()"
-      [isEditing]="false"
-      [locationForm]="getCurrentLocationForm()"
-      (onSave)="saveLocation()"
-      (onCancel)="showLocationDialog.set(false)"
-    />
+      <!-- Location Dialog -->
+      <app-location-dialog
+        [visible]="showLocationDialog()"
+        [isEditing]="false"
+        [locationForm]="getCurrentLocationForm()"
+        (onSave)="saveLocation()"
+        (onCancel)="showLocationDialog.set(false)"
+      />
+    </app-modal>
   `,
 })
 export class EventDateDialogComponent {
@@ -162,6 +149,21 @@ export class EventDateDialogComponent {
 
   showLocationDialog = signal(false);
   previewUrl = signal<string | null>(null);
+
+  // Configuración del modal que se actualiza según el modo de edición
+  modalConfig = computed<ModalConfig>(() => ({
+    title: this.isEditing() ? 'Editar Fecha del Evento' : 'Nueva Fecha del Evento',
+    subtitle: 'Completa los detalles de esta fecha',
+    icon: 'pi pi-calendar',
+    iconBgColor: 'bg-indigo-50',
+    iconColor: 'text-indigo-600',
+    width: '700px',
+    draggable: false,
+    resizable: false,
+    closable: true,
+    modal: true,
+    styleClass: 'rounded-2xl'
+  }));
 
   openLocationDialog() {
     this.showLocationDialog.set(true);
@@ -185,4 +187,3 @@ export class EventDateDialogComponent {
     }
   }
 }
-

@@ -6,9 +6,9 @@ import { Event } from '../../../../core/models';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { EventListTemplate } from "../../components/templates/event-list-template/event-list-template";
-import { MOCK_EVENTS } from "../../mock-data/events-mock-data";
-import { MOCK_SLIDESHOW_IMAGES } from "../../mock-data/events-mock-data";
-import { MOCK_TABS } from "../../mock-data/events-mock-data";
+import { MOCK_EVENTS } from "../../../../core/mocks/mock-event/events-mock-data";
+import { MOCK_SLIDESHOW_IMAGES } from "../../../../core/mocks/mock-event/events-mock-data";
+import { MOCK_TABS } from "../../../../core/mocks/mock-event/events-mock-data";
 import { ImgProps, Tab } from "../../../../core/models/core.models";
 
 

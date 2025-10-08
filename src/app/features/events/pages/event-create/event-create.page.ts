@@ -15,7 +15,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { EventCreateTemplateComponent } from '../../components/templates/event-create-template';
+import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 
 interface Modality {
   name: string;
@@ -91,6 +91,35 @@ export class EventCreatePage {
     { name: 'Universidad APEC (UNAPEC)', id: 5 },
   ]);
 
+  readonly categories = signal<{ name: string; id: number }[]>([
+    { name: 'Tecnología', id: 1 },
+    { name: 'Educación', id: 2 },
+    { name: 'Negocios', id: 3 },
+    { name: 'Salud', id: 4 },
+    { name: 'Arte y Cultura', id: 5 },
+    { name: 'Deportes', id: 6 },
+    { name: 'Ciencia', id: 7 },
+    { name: 'Entretenimiento', id: 8 },
+  ]);
+
+  readonly tags = signal<{ name: string; id: number }[]>([
+    { name: 'Angular', id: 1 },
+    { name: 'React', id: 2 },
+    { name: 'Vue.js', id: 3 },
+    { name: 'Node.js', id: 4 },
+    { name: 'Python', id: 5 },
+    { name: 'JavaScript', id: 6 },
+    { name: 'TypeScript', id: 7 },
+    { name: 'Machine Learning', id: 8 },
+    { name: 'AI', id: 9 },
+    { name: 'Blockchain', id: 10 },
+    { name: 'Cloud Computing', id: 11 },
+    { name: 'DevOps', id: 12 },
+    { name: 'Frontend', id: 13 },
+    { name: 'Backend', id: 14 },
+    { name: 'Mobile', id: 15 },
+  ]);
+
   constructor() {
     this.initializeForm();
     this.setupRealtimeValidation();
@@ -100,18 +129,20 @@ export class EventCreatePage {
     this.myForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
+      categoryId: [null, Validators.required],
+      tags: [[]],
       maxParticipants: [null],
       eventTypeId: [null, Validators.required],
       mainImage: [null],
       images: [[]],
-      eventDates: this.fb.array([this.createEventDateGroup()]),
+      eventDates: this.fb.array([]),
     });
   }
 
   // FormArray getters
   get eventDatesArray(): any[] {
     const dates = (this.myForm.get('eventDates') as FormArray).controls;
-    console.log('Total event dates:', dates.length);
+
     return dates;
   }
 
@@ -154,9 +185,7 @@ export class EventCreatePage {
 
   removeEventDate(index: number): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
-    if (eventDates.length > 1) {
-      eventDates.removeAt(index);
-    }
+    eventDates.removeAt(index);
   }
 
   getEventDateLocation(eventDateIndex: number): FormGroup | null {
@@ -327,6 +356,12 @@ export class EventCreatePage {
 
   getFormLevelErrors(): string[] {
     const errors: string[] = [];
+
+    // Validar que haya al menos una fecha de evento
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    if (eventDates.length === 0) {
+      errors.push('Debes agregar al menos una fecha para el evento');
+    }
 
     if (this.myForm.errors?.['dateRange']) {
       const dateRangeError = this.myForm.errors['dateRange'];

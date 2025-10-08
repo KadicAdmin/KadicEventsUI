@@ -4,6 +4,7 @@ import { FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -39,6 +40,7 @@ interface Modality {
     ButtonModule,
     InputTextModule,
     Select,
+    MultiSelectModule,
     ToastModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
@@ -66,6 +68,8 @@ export class EventCreateTemplateComponent {
   readonly form = input.required<FormGroup>();
   readonly modalities = input.required<Modality[]>();
   readonly eventTypes = input.required<{ name: string; id: number }[]>();
+  readonly categories = input.required<{ name: string; id: number }[]>();
+  readonly tags = input.required<{ name: string; id: number }[]>();
   readonly academicTitles = input<any[]>([]);
   readonly academicLevels = input<any[]>([]);
   readonly studyAreas = input<any[]>([]);
@@ -111,6 +115,7 @@ export class EventCreateTemplateComponent {
 
   openEventDateDialog() {
     this.editingEventDateIndex.set(null);
+    this.addEventDate.emit();
     this.showEventDateDialog.set(true);
   }
 
@@ -177,8 +182,16 @@ export class EventCreateTemplateComponent {
   }
 
   saveEventDate() {
+    this.showEventDateDialog.set(false);
+  }
+
+  cancelEventDate() {
+    // Si estamos creando una nueva fecha (no editando), eliminar la fecha vacía
     if (this.editingEventDateIndex() === null) {
-      this.addEventDate.emit();
+      const eventDates = this.getEventDates();
+      if (eventDates.length > 0) {
+        this.removeEventDate.emit(eventDates.length - 1);
+      }
     }
     this.showEventDateDialog.set(false);
   }
@@ -207,6 +220,12 @@ export class EventCreateTemplateComponent {
     this.editingSpeakerIndex.set(null);
   }
 
+  onSpeakerDialogVisibleChange(visible: boolean) {
+    if (!visible) {
+      this.cancelSpeaker();
+    }
+  }
+
   saveTalk() {
     this.showTalkDialog.set(false);
     this.currentEventDateIndexForTalk.set(null);
@@ -229,6 +248,12 @@ export class EventCreateTemplateComponent {
     this.showTalkDialog.set(false);
     this.currentEventDateIndexForTalk.set(null);
     this.editingTalkIndex.set(null);
+  }
+
+  onTalkDialogVisibleChange(visible: boolean) {
+    if (!visible) {
+      this.cancelTalk();
+    }
   }
 
   editEventDateLocation(eventDateIndex: number) {
@@ -254,7 +279,12 @@ export class EventCreateTemplateComponent {
     if (index !== null && this.getEventDates()[index]) {
       return this.getEventDates()[index] as FormGroup;
     }
-    return this.getEventDates()[this.getEventDates().length - 1] as FormGroup;
+    // Si estamos creando una nueva fecha, devolver el último elemento del array
+    const eventDates = this.getEventDates();
+    if (eventDates.length > 0) {
+      return eventDates[eventDates.length - 1] as FormGroup;
+    }
+    return undefined;
   }
 
   getCurrentEventDateLocation(): FormGroup | undefined {

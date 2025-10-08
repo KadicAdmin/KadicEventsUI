@@ -1,7 +1,6 @@
 import { Component, input, output, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Event } from '../../../../core/models';
-
+import { Event, EventDetailData } from '@core/models';
 // Import organisms
 import { EventHeroComponent } from '../../organisms/event-hero/event-hero.component';
 import { EventDatetimeComponent } from '../../organisms/event-datetime/event-datetime.component';
@@ -15,25 +14,10 @@ import { ImgProps } from '@core/models/core.models';
 import { UiSkeletonComponent } from '../../atoms/ui-skeleton/ui-skeleton.component';
 import { CarouselModule } from 'primeng/carousel';
 import { EventCarouselComponent } from '../../organisms/event-carousel/event-carousel.component';
-
-// Import molecules
-import { StatListComponent, StatItem } from '../../molecules/stat-list/stat-list.component';
+import { } from '../../molecules/stat-list/stat-list.component';
 import { PolicyItemComponent } from '../../molecules/policy-item/policy-item.component';
+import { MOCK_EVENT_DETAIL_DATA } from '@core/mocks/mock-event/events-mock-data';
 
-// Import existing components
-import { FooterComponent } from '../../organisms/footer/footer.component';
-
-export interface EventDetailData {
-    event: Event;
-    relatedEvents: Event[];
-    organizerStats: StatItem[];
-    policies: Array<{
-        title: string;
-        description: string;
-        chipText?: string;
-    }>;
-    eventStats: StatItem[];
-}
 
 @Component({
     selector: 'event-detail-template',
@@ -161,8 +145,6 @@ export class EventDetailTemplateComponent {
 
     transformRelatedEvents(): any[] {
         const events = this.eventData()?.relatedEvents || [];
-        console.log('Related events in template:', events);
-        console.log('Event data:', this.eventData());
         return events.map(event => ({
             id: event.id,
             title: event.name,
@@ -288,16 +270,12 @@ export class EventDetailTemplateComponent {
         return 'Sin biografía disponible';
     }
 
-    // getOrganizerFollowers(): number { return this.organizerFollowersSig(); }
-
-    // getEventPrice(): number { return this.eventPriceSig(); }
 
     getPriceBadge(): string {
         return '';
     }
 
     isFollowingOrganizer(): boolean {
-        // Placeholder
         return false;
     }
 
@@ -481,7 +459,6 @@ export class EventDetailTemplateComponent {
     }
 
     getOrganizerSocialLinks() {
-        // Placeholder - you might want to add social links to organizer data
         return [];
     }
 
@@ -494,213 +471,9 @@ export class EventDetailTemplateComponent {
         return hasVirtualLink ? 'Evento Virtual' : 'Sin ubicación';
     }
 
-    // getSlideshowImages is no longer needed because we use a cached signal
-
     getRelatedEventsAsEvents(): Event[] {
-        // Static mock data for carousel display
-        return [
-            {
-                id: 2,
-                name: 'Conferencia de Desarrollo Web',
-                description: 'Aprende las últimas tecnologías web',
-                address: {
-                    id: 1,
-                    street: 'Virtual',
-                    city: 'Online',
-                    state: 'Online',
-                    country: 'Online'
-                },
-                eventDates: [
-                    {
-                        id: 1,
-                        date: '2024-04-15',
-                        talks: [],
-                        speakers: [],
-                        schedules: [],
-                        modalities: [],
-                        locations: []
-                    }
-                ],
-                maxParticipants: 100,
-                currentParticipants: 45,
-                isActive: true,
-                images: [
-                    {
-                        id: 11,
-                        url: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop',
-                        description: 'Conferencia de desarrollo web',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 1,
-                eventType: 'Conference',
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 3,
-                name: 'Workshop de React Avanzado',
-                description: 'Domina React con hooks y context',
-                address: {
-                    id: 2,
-                    street: 'Virtual',
-                    city: 'Online',
-                    state: 'Online',
-                    country: 'Online'
-                },
-                eventDates: [
-                    {
-                        id: 2,
-                        date: '2024-04-20',
-                        talks: [],
-                        speakers: [],
-                        schedules: [],
-                        modalities: [],
-                        locations: []
-                    }
-                ],
-                maxParticipants: 50,
-                currentParticipants: 23,
-                isActive: true,
-                images: [
-                    {
-                        id: 12,
-                        url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
-                        description: 'Workshop de React',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 2,
-                eventType: 'Workshop',
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 4,
-                name: 'Seminario de Angular 20',
-                description: 'Descubre las nuevas características de Angular 20',
-                address: {
-                    id: 3,
-                    street: 'Calle Principal 789',
-                    city: 'Santiago',
-                    state: 'Santiago',
-                    country: 'República Dominicana',
-                    zipCode: '51000',
-                    latitude: 19.4517,
-                    longitude: -70.6970
-                },
-                eventDates: [
-                    {
-                        id: 3,
-                        date: '2024-05-10',
-                        talks: [],
-                        speakers: [],
-                        schedules: [],
-                        modalities: [],
-                        locations: []
-                    }
-                ],
-                maxParticipants: 80,
-                currentParticipants: 67,
-                isActive: true,
-                images: [
-                    {
-                        id: 13,
-                        url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop',
-                        description: 'Seminario de Angular',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 1,
-                eventType: 'Seminar',
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 5,
-                name: 'Hackathon de Innovación',
-                description: 'Competencia de programación para crear soluciones innovadoras',
-                address: {
-                    id: 4,
-                    street: 'Av. Innovación 321',
-                    city: 'Santo Domingo',
-                    state: 'Distrito Nacional',
-                    country: 'República Dominicana',
-                    zipCode: '10103',
-                    latitude: 18.4861,
-                    longitude: -69.9312
-                },
-                eventDates: [
-                    {
-                        id: 4,
-                        date: '2024-05-25',
-                        talks: [],
-                        speakers: [],
-                        schedules: [],
-                        modalities: [],
-                        locations: []
-                    }
-                ],
-                maxParticipants: 200,
-                currentParticipants: 156,
-                isActive: true,
-                images: [
-                    {
-                        id: 14,
-                        url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop',
-                        description: 'Hackathon de innovación',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 3,
-                eventType: 'Hackathon',
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            {
-                id: 6,
-                name: 'Meetup de JavaScript',
-                description: 'Encuentro mensual de desarrolladores JavaScript',
-                address: {
-                    id: 5,
-                    street: 'Virtual',
-                    city: 'Online',
-                    state: 'Online',
-                    country: 'Online'
-                },
-                eventDates: [
-                    {
-                        id: 5,
-                        date: '2024-06-05',
-                        talks: [],
-                        speakers: [],
-                        schedules: [],
-                        modalities: [],
-                        locations: []
-                    }
-                ],
-                maxParticipants: 60,
-                currentParticipants: 42,
-                isActive: true,
-                images: [
-                    {
-                        id: 15,
-                        url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
-                        description: 'Meetup de JavaScript',
-                        isPrimary: true
-                    }
-                ],
-                eventTypeId: 4,
-                eventType: 'Meetup',
-                participants: [],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            }
-        ];
+        const relatedEvents = MOCK_EVENT_DETAIL_DATA;
+        return relatedEvents;
     }
 
 }

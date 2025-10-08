@@ -1,10 +1,9 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
+import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
 
 @Component({
   selector: 'app-talk-dialog',
@@ -12,28 +11,21 @@ import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DialogModule,
-    ButtonModule,
     InputTextModule,
     ImageGalleryUploadComponent,
+    ModalComponent,
   ],
   template: `
-    <p-dialog [visible]="visible()" (visibleChange)="onVisibleChange.emit($event)" [modal]="true" [style]="{width: '500px'}" [draggable]="false"
-      [resizable]="false" styleClass="rounded-2xl">
-      <ng-template pTemplate="header">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center">
-            <i class="pi pi-microphone text-xl text-pink-600"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-gray-900">
-              {{ isEditing() ? 'Editar' : 'Nueva' }} Charla
-            </h3>
-            <p class="text-sm text-gray-500">Detalles de la presentación</p>
-          </div>
-        </div>
-      </ng-template>
-
+    <app-modal 
+      [visible]="visible()" 
+      [config]="modalConfig()"
+      [showFooter]="true"
+      [cancelLabel]="'Cancelar'"
+      [saveLabel]="'Guardar'"
+      (onVisibleChange)="onVisibleChange.emit($event)"
+      (onCancel)="onCancel.emit()"
+      (onSave)="onSave.emit()">
+      
       @if (talkForm()) {
       <form [formGroup]="talkForm()!" class="space-y-6 pt-4">
         <!-- Imagen -->
@@ -55,7 +47,7 @@ import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-
         <!-- Descripción -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">Descripción</label>
-          <textarea pInputTextarea formControlName="description" class="w-full" rows="3" 
+          <textarea pInputTextarea formControlName="description" rows="3" 
             placeholder="Describe el contenido de la charla..."></textarea>
         </div>
 
@@ -67,14 +59,7 @@ import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-
         </div>
       </form>
       }
-
-      <ng-template pTemplate="footer">
-        <div class="flex justify-end gap-2">
-          <p-button label="Cancelar" (onClick)="onCancel.emit()" [outlined]="true" />
-          <p-button label="Guardar" (onClick)="onSave.emit()" />
-        </div>
-      </ng-template>
-    </p-dialog>
+    </app-modal>
   `,
 })
 export class TalkDialogComponent {
@@ -90,6 +75,21 @@ export class TalkDialogComponent {
 
   previewUrl = signal<string | null>(null);
 
+  // Configuración del modal que se actualiza según el modo de edición
+  modalConfig = computed<ModalConfig>(() => ({
+    title: this.isEditing() ? 'Editar Charla' : 'Nueva Charla',
+    subtitle: 'Detalles de la presentación',
+    icon: 'pi pi-microphone',
+    iconBgColor: 'bg-pink-50',
+    iconColor: 'text-pink-600',
+    width: '500px',
+    draggable: false,
+    resizable: false,
+    closable: true,
+    modal: true,
+    styleClass: 'rounded-2xl'
+  }));
+
   handleImageChange(image: any) {
     if (image) {
       this.previewUrl.set(image.url);
@@ -99,4 +99,3 @@ export class TalkDialogComponent {
     }
   }
 }
-

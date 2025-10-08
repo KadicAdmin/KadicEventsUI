@@ -1,25 +1,25 @@
-import { Component, input, output, signal, computed } from '@angular/core';
+import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabsModule } from 'primeng/tabs';
 import { Select } from 'primeng/select';
 import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
-import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
+import { ModalComponent, ModalConfig } from './modal.component';
 
 @Component({
-  selector: 'app-speaker-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    TabsModule,
-    Select,
-    ImageGalleryUploadComponent,
-    ModalComponent,
-  ],
-  template: `
+    selector: 'app-refactored-speaker-dialog',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        InputTextModule,
+        TabsModule,
+        Select,
+        ImageGalleryUploadComponent,
+        ModalComponent,
+    ],
+    template: `
     <app-modal 
       [visible]="visible()" 
       [config]="modalConfig()"
@@ -115,7 +115,7 @@ import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/moda
                 <!-- Biografía -->
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700">Biografía</label>
-                  <textarea pInputTextarea formControlName="bio" rows="4" 
+                  <textarea pInputTextarea formControlName="bio" class="w-full" rows="4" 
                     placeholder="Breve descripción profesional del speaker..."></textarea>
                 </div>
               </div>
@@ -199,46 +199,45 @@ import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/moda
     </app-modal>
   `,
 })
-export class SpeakerDialogComponent {
-  readonly visible = input.required<boolean>();
-  readonly isEditing = input<boolean>(false);
-  readonly speakerForm = input<FormGroup>();
-  readonly imagePreview = input<string>();
+export class RefactoredSpeakerDialogComponent {
+    readonly visible = input.required<boolean>();
+    readonly isEditing = input<boolean>(false);
+    readonly speakerForm = input<FormGroup>();
+    readonly imagePreview = input<string>();
 
-  readonly academicTitles = input<any[]>([]);
-  readonly academicLevels = input<any[]>([]);
-  readonly studyAreas = input<any[]>([]);
-  readonly educationalInstitutions = input<any[]>([]);
+    readonly academicTitles = input<any[]>([]);
+    readonly academicLevels = input<any[]>([]);
+    readonly studyAreas = input<any[]>([]);
+    readonly educationalInstitutions = input<any[]>([]);
 
-  readonly onSave = output<void>();
-  readonly onCancel = output<void>();
-  readonly onImageSelect = output<any>();
-  readonly onVisibleChange = output<boolean>();
+    readonly onSave = output<void>();
+    readonly onCancel = output<void>();
+    readonly onImageSelect = output<any>();
+    readonly onVisibleChange = output<boolean>();
 
-  previewUrl = signal<string | null>(null);
+    previewUrl = signal<string | null>(null);
 
-  // Configuración del modal que se actualiza según el modo de edición
-  modalConfig = computed<ModalConfig>(() => ({
-    title: this.isEditing() ? 'Editar Speaker' : 'Nuevo Speaker',
-    subtitle: 'Información completa del ponente',
-    icon: 'pi pi-user',
-    iconBgColor: 'bg-purple-50',
-    iconColor: 'text-purple-600',
-    width: '700px',
-    maxHeight: '90vh',
-    draggable: false,
-    resizable: false,
-    closable: true,
-    modal: true,
-    styleClass: 'rounded-2xl'
-  }));
+    modalConfig = signal<ModalConfig>({
+        title: 'Nuevo Speaker',
+        subtitle: 'Información completa del ponente',
+        icon: 'pi pi-user',
+        iconBgColor: 'bg-purple-50',
+        iconColor: 'text-purple-600',
+        width: '700px',
+        maxHeight: '90vh',
+        draggable: false,
+        resizable: false,
+        closable: true,
+        modal: true,
+        styleClass: 'rounded-2xl'
+    });
 
-  handleImageChange(image: any) {
-    if (image) {
-      this.previewUrl.set(image.url);
-      this.onImageSelect.emit({ files: [image.file] });
-    } else {
-      this.previewUrl.set(null);
+    handleImageChange(image: any) {
+        if (image) {
+            this.previewUrl.set(image.url);
+            this.onImageSelect.emit({ files: [image.file] });
+        } else {
+            this.previewUrl.set(null);
+        }
     }
-  }
 }

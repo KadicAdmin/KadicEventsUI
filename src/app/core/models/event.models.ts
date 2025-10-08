@@ -1,12 +1,15 @@
 import { BaseEntity } from './common.models';
 import { Speaker } from './speaker.models';
 import { Participant } from './participant.models';
+import { StatItem } from './core.models';
 
 export interface Event extends BaseEntity {
   name: string;
   description?: string;
   maxParticipants?: number;
   currentParticipants?: number;
+  category?: string;
+  tags?: string[];
   isActive?: boolean;
   images?: EventImage[];
   eventTypeId: number;
@@ -152,3 +155,14 @@ export interface Modality extends BaseEntity {
   isActive: boolean;
 }
 
+export interface EventDetailData {
+  event: Event;
+  relatedEvents: Event[];
+  organizerStats: StatItem[];
+  policies: Array<{
+    title: string;
+    description: string;
+    chipText?: string;
+  }>;
+  eventStats: StatItem[];
+}

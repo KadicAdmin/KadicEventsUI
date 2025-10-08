@@ -55,7 +55,7 @@ declare const google: any;
                   field="description"
                   placeholder="Buscar lugar, dirección o punto de interés..."
                   inputStyleClass="w-full"
-                  styleClass="w-full"
+                  class="w-full"
                   [dropdown]="false"
                   [showEmptyMessage]="true"
                   emptyMessage="No se encontraron lugares"
@@ -96,7 +96,7 @@ declare const google: any;
         </div>
 
         <!-- Coordenadas (Solo Lectura) -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Latitud</label>
             <input pInputText formControlName="latitude" class="w-full bg-gray-50" readonly />
@@ -105,7 +105,7 @@ declare const google: any;
             <label class="text-sm font-medium text-gray-700">Longitud</label>
             <input pInputText formControlName="longitude" class="w-full bg-gray-50" readonly />
           </div>
-        </div>
+        </div> -->
       </form>
       }
 

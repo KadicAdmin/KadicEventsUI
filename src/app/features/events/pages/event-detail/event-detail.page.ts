@@ -5,9 +5,9 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 import { EventService } from '../../services/event.service';
-import { Event } from '../../../../core/models';
-import { EventDetailTemplateComponent, EventDetailData } from '../../../../shared/components/template/event-detail-template/event-detail-template.component';
-import { MOCK_EVENTS } from '../../mock-data/events-mock-data';
+import { Event, EventDetailData } from '../../../../core/models';
+import { EventDetailTemplateComponent } from '../../../../shared/components/template/event-detail-template/event-detail-template.component';
+import { MOCK_EVENTS } from '../../../../core/mocks/mock-event/events-mock-data';
 
 @Component({
     selector: 'app-event-detail',
@@ -40,8 +40,6 @@ export class EventDetailPage implements OnInit {
     readonly loading = signal<boolean>(false);
     readonly eventData = signal<EventDetailData | null>(null);
     readonly error = signal<string | null>(null);
-
-    // State
     private isFollowingOrganizer = false;
     private savedEvents = new Set<number>();
 
@@ -91,13 +89,7 @@ export class EventDetailPage implements OnInit {
             policies: this.getEventPolicies(event),
             eventStats: this.getEventStats(event)
         };
-
-        console.log('Event detail data prepared:', eventDetailData);
-        console.log('Related events in eventDetailData:', eventDetailData.relatedEvents);
-        console.log('Event in eventDetailData:', eventDetailData.event);
-
         this.eventData.set(eventDetailData);
-        console.log('eventData signal set to:', this.eventData());
     }
 
     private getEventStartDate(event: Event): Date {
