@@ -24,13 +24,7 @@ import { EventDateDialogComponent } from '@shared/components/organisms/event-dat
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
-
-
-interface Modality {
-  name: string;
-  code: 'On' | 'Off';
-  id: number;
-}
+import { Modality } from '@core/models';
 
 @Component({
   selector: 'app-event-create-template',

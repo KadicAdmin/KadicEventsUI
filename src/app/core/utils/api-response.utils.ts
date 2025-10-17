@@ -12,11 +12,7 @@ import { ApiResponse, PaginatedResponse } from '../models/common.models';
  */
 export function extractData<T>() {
     return pipe(
-        map((response: ApiResponse<T>) => {
-            console.log('🔍 extractData - Respuesta completa:', response);
-            console.log('📦 extractData - Data extraída:', response?.data);
-            return response?.data;
-        })
+        map((response: ApiResponse<T>) => response?.data)
     );
 }
 
@@ -104,16 +100,12 @@ export function handleApiResponse<T>(onError?: (errors: string[]) => void) {
 export function extractDataSafe<T>() {
     return pipe(
         map((response: any) => {
-            console.log('🔍 extractDataSafe - Respuesta:', response);
-
             // Si es un ApiResponse con data, extraer data
             if (response && typeof response === 'object' && 'data' in response) {
-                console.log('📦 extractDataSafe - Extrayendo .data:', response.data);
                 return response.data as T;
             }
 
             // Si no, asumir que ya es el dato directo
-            console.log('📦 extractDataSafe - Retornando response directa:', response);
             return response as T;
         })
     );

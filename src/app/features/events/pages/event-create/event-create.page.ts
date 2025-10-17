@@ -126,10 +126,7 @@ export class EventCreatePage {
     this.loadModalities();
   }
   loadModalities() {
-    console.log('🎯 Modalities Signal Value:', this.modalities());
-    console.log('🎯 Tipo:', typeof this.modalities());
-    console.log('🎯 Es array?', Array.isArray(this.modalities()));
-    console.log('🎯 Length:', this.modalities()?.length);
+    console.log('Loading modalities...', this.modalities());
   }
 
   private initializeForm(): void {
