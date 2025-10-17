@@ -18,8 +18,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Modality, EventModality } from '@core/models';
+import { Modality, EventModality, EventType } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
+import { EventTypeService } from '../../services/event.type.service';
 
 @Component({
   selector: 'app-event-create',
@@ -46,16 +47,12 @@ export class EventCreatePage {
     this.$modalities.pipe(extractData()),
     { initialValue: [] as EventModality[] }
   );
+  readonly $eventTypes = inject(EventTypeService).getAll();
+  readonly eventTypes = toSignal(
+    this.$eventTypes.pipe(extractData()),
+    { initialValue: [] as EventType[] }
+  );
 
-
-
-  readonly eventTypes = signal<{ name: string; id: number }[]>([
-    { name: 'Conference', id: 1 },
-    { name: 'Workshop', id: 2 },
-    { name: 'Seminar', id: 3 },
-    { name: 'Webinar', id: 4 },
-    { name: 'Meeting', id: 5 },
-  ]);
 
   readonly academicTitles = signal<{ name: string; id: number }[]>([
     { name: 'Dr.', id: 1 },

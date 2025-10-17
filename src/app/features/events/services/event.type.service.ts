@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '@core/config/api.config';
-import { EventType } from '@core/models';
+import { ApiResponse, EventType } from '@core/models';
 
 type EventTypeCreateDto = Pick<EventType, 'name' | 'description' | 'isActive'>;
 type EventTypeUpdateDto = Partial<EventTypeCreateDto>;
@@ -16,33 +16,12 @@ export class EventTypeService {
   }
 
   private get basePath(): string {
-    return `${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.base}`; // /EventTypes
+    return `${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.base}`;
   }
 
-  private get listPath(): string {
-    return `${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.getAll}`; // /EventTypes
-  }
 
-  /** GET /EventTypes  -> arreglo simple */
-  listAll(params?: {
-    search?: string;
-    page?: number;
-    pageSize?: number;
-    sortField?: string;
-    sortOrder?: 'asc' | 'desc';
-  }): Observable<EventType[]> {
-    let httpParams = new HttpParams();
-    if (params?.search) httpParams = httpParams.set('search', params.search);
-    if (params?.page != null)
-      httpParams = httpParams.set('page', String(params.page));
-    if (params?.pageSize != null)
-      httpParams = httpParams.set('pageSize', String(params.pageSize));
-    if (params?.sortField)
-      httpParams = httpParams.set('sortField', params.sortField);
-    if (params?.sortOrder)
-      httpParams = httpParams.set('sortOrder', params.sortOrder);
-
-    return this.http.get<EventType[]>(this.listPath, { params: httpParams });
+  getAll(): Observable<ApiResponse<EventType[]>> {
+    return this.http.get<ApiResponse<EventType[]>>(`${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.getAll}`);
   }
 
   getById(id: number | string): Observable<EventType> {

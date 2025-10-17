@@ -95,12 +95,12 @@ export const API_CONFIG = {
 
 
       eventTypes: {
-        base: '/EventTypes',
-        getAll: '/EventTypes',
-        getById: (id: number) => `/EventTypes/${id}`,
-        create: '/EventTypes',
-        update: (id: number) => `/EventTypes/${id}`,
-        delete: (id: number) => `/EventTypes/${id}`,
+        base: '/EventType',
+        getAll: '/EventType',
+        getById: (id: number) => `/EventType/${id}`,
+        create: '/EventType',
+        update: (id: number) => `/EventType/${id}`,
+        delete: (id: number) => `/EventType/${id}`,
       },
       // Modalities
       modalities: {
