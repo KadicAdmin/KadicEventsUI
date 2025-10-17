@@ -106,9 +106,9 @@ export const API_CONFIG = {
 
       eventTypes: {
         base: '/EventType',
-        getAll: '/EventType',
+        getAll: '/EventType/GetAll',
         getById: (id: number) => `/EventType/${id}`,
-        create: '/EventType',
+        create: '/EventType/Create',
         update: (id: number) => `/EventType/${id}`,
         delete: (id: number) => `/EventType/${id}`,
       },
