@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { API_CONFIG } from '@core/config/api.config';
 import { Modality, ApiResponse } from '@core/models';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Servicio para gestionar las modalidades de eventos
@@ -32,7 +33,14 @@ export class EventModalityService {
    */
   getAll(): Observable<ApiResponse<Modality[]>> {
     const url = `${this.baseUrl}${API_CONFIG.endpoints.events.modality.getAll}`;
-    console.log('Get All Modalities Service:', url);
-    return this.http.get<ApiResponse<Modality[]>>(url);
+    console.log('🌐 API URL:', url);
+    return this.http.get<ApiResponse<Modality[]>>(url).pipe(
+      map(response => {
+        console.log('✅ Respuesta RAW de la API:', response);
+        console.log('📊 Tipo de respuesta:', typeof response);
+        console.log('🔑 Keys de la respuesta:', Object.keys(response || {}));
+        return response;
+      })
+    );
   }
 }
