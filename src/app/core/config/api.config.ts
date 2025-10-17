@@ -82,6 +82,17 @@ export const API_CONFIG = {
         update: (id: number) => `/EducationalInstitutions/${id}`,
         delete: (id: number) => `/EducationalInstitutions/${id}`,
       },
+
+      // Event Categories
+      eventCategories: {
+        base: '/EventCategories',
+        getAll: '/EventCategories',
+        getById: (id: number) => `/EventCategories/${id}`,
+        create: '/EventCategories',
+        update: (id: number) => `/EventCategories/${id}`,
+        delete: (id: number) => `/EventCategories/${id}`,
+      },
+
       // Event Types
       eventTypes: {
         base: '/EventTypes',

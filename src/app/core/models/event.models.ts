@@ -166,3 +166,9 @@ export interface EventDetailData {
   }>;
   eventStats: StatItem[];
 }
+
+export interface EventCategory{
+  id: number;
+  name: string; 
+  isActive: true;
+} 
