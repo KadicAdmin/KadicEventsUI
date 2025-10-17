@@ -18,12 +18,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-
-interface Modality {
-  name: string;
-  code: 'On' | 'Off';
-  id: number;
-}
+import { extractData } from '@core/utils/api-response.utils';
+import { Modality } from '@core/models';
 
 @Component({
   selector: 'app-event-create',
@@ -45,19 +41,12 @@ export class EventCreatePage {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private router = inject(Router);
-  // private modalitiesSignal = toSignal(
-  //   inject(EventModalityService).getAll() || []
-  // );
-
-  private readonly modalitiesSignal = toSignal(
-    inject(EventModalityService).getAll(),
-    { initialValue: [] }
+  readonly modalities = toSignal(
+    inject(EventModalityService).getAll().pipe(
+      extractData() 
+    ),
+    { initialValue: [] as Modality[] }
   );
-
-  readonly modalities = signal<Modality[]>([
-    { name: 'Online', code: 'On', id: 2 },
-    { name: 'Offline', code: 'Off', id: 5 },
-  ]);
 
   readonly eventTypes = signal<{ name: string; id: number }[]>([
     { name: 'Conference', id: 1 },
@@ -136,7 +125,7 @@ export class EventCreatePage {
     this.loadModalities();
   }
   loadModalities() {
-    console.log('Loading modalities...', this.modalitiesSignal());
+    console.log('Loading modalities...', this.modalities());
   }
 
   private initializeForm(): void {
