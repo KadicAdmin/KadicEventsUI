@@ -18,8 +18,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Modality, EventModality } from '@core/models';
-import { extractData } from '@core/utils/api-response.utils';
+import { extractData, extractDataSafe } from '@core/utils/api-response.utils';
+import { EventModality, Modality } from '@core/models';
 
 @Component({
   selector: 'app-event-create',
@@ -91,16 +91,16 @@ export class EventCreatePage {
     { name: 'Universidad APEC (UNAPEC)', id: 5 },
   ]);
 
-  readonly categories = signal<{ name: string; id: number }[]>([
-    { name: 'Tecnología', id: 1 },
-    { name: 'Educación', id: 2 },
-    { name: 'Negocios', id: 3 },
-    { name: 'Salud', id: 4 },
-    { name: 'Arte y Cultura', id: 5 },
-    { name: 'Deportes', id: 6 },
-    { name: 'Ciencia', id: 7 },
-    { name: 'Entretenimiento', id: 8 },
-  ]);
+  // readonly categories = signal<{ name: string; id: number }[]>([
+  //   { name: 'Tecnología', id: 1 },
+  //   { name: 'Educación', id: 2 },
+  //   { name: 'Negocios', id: 3 },
+  //   { name: 'Salud', id: 4 },
+  //   { name: 'Arte y Cultura', id: 5 },
+  //   { name: 'Deportes', id: 6 },
+  //   { name: 'Ciencia', id: 7 },
+  //   { name: 'Entretenimiento', id: 8 },
+  // ]);
 
   readonly tags = signal<{ name: string; id: number }[]>([
     { name: 'Angular', id: 1 },

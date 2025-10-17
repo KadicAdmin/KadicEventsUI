@@ -8,7 +8,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class EventCategoryService {
-  private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient)
+
+  constructor() {
+    console.log('Get All Event Categories:', this.getAll());
+  }
 
   private get baseUrl(): string {
     return `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.eventCategories.base}/Categories`;
