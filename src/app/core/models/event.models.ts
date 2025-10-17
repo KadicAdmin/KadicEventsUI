@@ -9,7 +9,7 @@ export interface Event extends BaseEntity {
   maxParticipants?: number;
   currentParticipants?: number;
   category?: string;
-  tags?: string[];
+  tags?: EventTags[];
   isActive?: boolean;
   images?: EventImage[];
   eventTypeId: number;
@@ -17,6 +17,12 @@ export interface Event extends BaseEntity {
   eventDates: EventDate[];
   participants?: Participant[];
   address: Address;
+}
+
+export interface EventTags {
+  id: number;
+  name: string;
+  isActive: boolean;
 }
 
 export interface EventDate {

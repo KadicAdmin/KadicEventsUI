@@ -26,6 +26,16 @@ export const API_CONFIG = {
         base: '/Modality',
         getAll: '/Modality/GetAll',
       },
+
+      eventTags: {
+        base: '/Tags',
+        getAll: '/Tags',
+        getById: (id: number) => `/EventTags/${id}`,
+        create: '/Tags',
+        update: (id: number) => `/EventTags/${id}`,
+        delete: (id: number) => `/EventTags/${id}`,
+      },
+
       // Speakers
       speakers: {
         base: '/Speakers',
