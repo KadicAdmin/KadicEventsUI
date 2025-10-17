@@ -16,6 +16,8 @@ import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
+import { EventModalityService } from '../../services/event.modality.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface Modality {
   name: string;
@@ -43,6 +45,14 @@ export class EventCreatePage {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private router = inject(Router);
+  // private modalitiesSignal = toSignal(
+  //   inject(EventModalityService).getAll() || []
+  // );
+
+  private readonly modalitiesSignal = toSignal(
+    inject(EventModalityService).getAll(),
+    { initialValue: [] }
+  );
 
   readonly modalities = signal<Modality[]>([
     { name: 'Online', code: 'On', id: 2 },
@@ -123,6 +133,10 @@ export class EventCreatePage {
   constructor() {
     this.initializeForm();
     this.setupRealtimeValidation();
+    this.loadModalities();
+  }
+  loadModalities() {
+    console.log('Loading modalities...', this.modalitiesSignal());
   }
 
   private initializeForm(): void {
@@ -192,7 +206,10 @@ export class EventCreatePage {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const location = eventDate.get('location') as FormGroup;
-    console.log(`Getting location for event date ${eventDateIndex}:`, location?.value);
+    console.log(
+      `Getting location for event date ${eventDateIndex}:`,
+      location?.value
+    );
     return location;
   }
 
@@ -243,7 +260,10 @@ export class EventCreatePage {
     speakers.push(this.createSpeakerGroup());
   }
 
-  removeSpeakerFromEventDate(eventDateIndex: number, speakerIndex: number): void {
+  removeSpeakerFromEventDate(
+    eventDateIndex: number,
+    speakerIndex: number
+  ): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const speakers = eventDate.get('speakers') as FormArray;
@@ -277,10 +297,7 @@ export class EventCreatePage {
 
   // Validation methods
   private setupRealtimeValidation(): void {
-    const fieldsToValidate = [
-      'name',
-      'eventTypeId',
-    ];
+    const fieldsToValidate = ['name', 'eventTypeId'];
 
     fieldsToValidate.forEach((fieldName) => {
       const control = this.myForm.get(fieldName);
@@ -391,7 +408,10 @@ export class EventCreatePage {
     const file = event.files?.[0];
     if (file) {
       this.myForm.patchValue({ mainImage: file });
-      console.log('Archivo guardado en el formulario:', this.myForm.get('mainImage')?.value);
+      console.log(
+        'Archivo guardado en el formulario:',
+        this.myForm.get('mainImage')?.value
+      );
     }
   }
 
