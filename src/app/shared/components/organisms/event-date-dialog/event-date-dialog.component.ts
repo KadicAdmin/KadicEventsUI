@@ -11,12 +11,7 @@ import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
 import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
-
-interface Modality {
-  name: string;
-  code: 'On' | 'Off';
-  id: number;
-}
+import { Modality } from '@core/models';
 
 @Component({
   selector: 'app-event-date-dialog',

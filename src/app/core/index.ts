@@ -16,3 +16,6 @@ export * from './guards/guest.guard';
 // Interceptors
 export * from './interceptors/auth.interceptor';
 export * from './interceptors/error.interceptor';
+
+// Utils
+export * from './utils/api-response.utils';

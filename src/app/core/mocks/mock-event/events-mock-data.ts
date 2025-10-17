@@ -107,8 +107,7 @@ export const MOCK_EVENTS: Event[] = [
                 modalities: [
                     {
                         id: 1,
-                        modalityId: 1,
-                        modality: "Híbrido",
+                        name: "Híbrido",
                         isOnline: true,
                         isInPerson: true,
                         virtualPlatformLink: "https://zoom.us/j/123456789"
@@ -175,8 +174,7 @@ export const MOCK_EVENTS: Event[] = [
                 modalities: [
                     {
                         id: 2,
-                        modalityId: 2,
-                        modality: "Presencial",
+                        name: "Presencial",
                         isOnline: false,
                         isInPerson: true
                     }
@@ -271,10 +269,9 @@ export const MOCK_EVENTS: Event[] = [
                 modalities: [
                     {
                         id: 3,
-                        modalityId: 3,
-                        modality: "Online",
-                        isOnline: false,
-                        isInPerson: true,
+                        name: "Virtual",
+                        isOnline: true,
+                        isInPerson: false,
                         virtualPlatformLink: "https://meet.google.com/abc-defg-hij"
                     }
                 ],
@@ -362,8 +359,7 @@ export const MOCK_EVENTS: Event[] = [
                 modalities: [
                     {
                         id: 4,
-                        modalityId: 2,
-                        modality: "Presencial",
+                        name: "Presencial",
                         isOnline: false,
                         isInPerson: true
                     }
