@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_CONFIG } from '@core/config/api.config';
-import { Modality, ApiResponse } from '@core/models';
-import { Observable } from 'rxjs';
+import { Modality, ApiResponse, EventModality } from '@core/models';
+import { Observable, of } from 'rxjs';
 
 /**
  * Servicio para gestionar las modalidades de eventos
@@ -26,12 +26,9 @@ export class EventModalityService {
     return `${API_CONFIG.baseUrl}`;
   }
 
-  /**
-   * Obtiene todas las modalidades disponibles
-   * @returns Observable con la lista de modalidades envuelta en ApiResponse
-   */
-  getAll(): Observable<ApiResponse<Modality[]>> {
+  getAll(): Observable<ApiResponse<EventModality[]>> {
     const url = `${this.baseUrl}${API_CONFIG.endpoints.events.modality.getAll}`;
-    return this.http.get<ApiResponse<Modality[]>>(url);
+    console.log(url);
+    return this.http.get<ApiResponse<EventModality[]>>(url);
   }
 }

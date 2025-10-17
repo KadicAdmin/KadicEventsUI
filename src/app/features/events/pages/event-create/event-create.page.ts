@@ -19,7 +19,7 @@ import { EventCreateTemplateComponent } from '../../components/templates/event-c
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { extractData, extractDataSafe } from '@core/utils/api-response.utils';
-import { Modality } from '@core/models';
+import { Modality, EventModality } from '@core/models';
 
 @Component({
   selector: 'app-event-create',
@@ -44,7 +44,7 @@ export class EventCreatePage {
   readonly $modalities = inject(EventModalityService).getAll();
   readonly modalities = toSignal(
     this.$modalities.pipe(extractData()),
-    { initialValue: [] as Modality[] }
+    { initialValue: [] as EventModality[] }
   );
 
 

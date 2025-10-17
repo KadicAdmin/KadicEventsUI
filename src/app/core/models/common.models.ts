@@ -8,10 +8,11 @@ export interface BaseEntity {
 
 export interface ApiResponse<T = unknown> {
   data: T;
-  success: boolean;
-  message: string;
+  success?: boolean;
+  message?: string;
   errors?: string[];
   metadata?: Record<string, unknown>;
+  totalRecords?: number;
 }
 
 /**

@@ -52,8 +52,7 @@ export interface Schedule {
 
 export interface EventModality {
   id?: number;
-  modalityId: number;
-  modality?: string;
+  name: string;
   isOnline: boolean;
   isInPerson: boolean;
   virtualPlatformLink?: string;
@@ -150,6 +149,7 @@ export interface EventType extends BaseEntity {
 }
 
 export interface Modality extends BaseEntity {
+  id: number;
   name: string;
   description?: string;
   isActive: boolean;
@@ -167,8 +167,8 @@ export interface EventDetailData {
   eventStats: StatItem[];
 }
 
-export interface EventCategory{
+export interface EventCategory {
   id: number;
-  name: string; 
+  name: string;
   isActive: true;
 } 
