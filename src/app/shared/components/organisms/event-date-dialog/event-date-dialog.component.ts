@@ -11,7 +11,7 @@ import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
 import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
-import { Modality } from '@core/models';
+import { EventModality } from '@core/models';
 
 @Component({
   selector: 'app-event-date-dialog',
@@ -134,7 +134,7 @@ export class EventDateDialogComponent {
   readonly visible = input.required<boolean>();
   readonly isEditing = input<boolean>(false);
   readonly eventDateForm = input<FormGroup>();
-  readonly modalities = input.required<Modality[]>();
+  readonly modalities = input.required<EventModality[]>();
   readonly location = input<FormGroup>();
 
   readonly onSave = output<void>();

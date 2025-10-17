@@ -24,7 +24,7 @@ import { EventDateDialogComponent } from '@shared/components/organisms/event-dat
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
-import { Modality } from '@core/models';
+import { EventModality, Modality } from '@core/models';
 
 @Component({
   selector: 'app-event-create-template',
@@ -60,7 +60,7 @@ export class EventCreateTemplateComponent {
   private confirmationService = inject(ConfirmationService);
 
   readonly form = input.required<FormGroup>();
-  readonly modalities = input.required<Modality[]>();
+  readonly modalities = input.required<EventModality[]>();
   readonly eventTypes = input.required<{ name: string; id: number }[]>();
   readonly categories = input.required<{ name: string; id: number }[]>();
   readonly tags = input.required<{ name: string; id: number }[]>();

@@ -18,8 +18,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { extractData, extractDataSafe } from '@core/utils/api-response.utils';
 import { Modality, EventModality } from '@core/models';
+import { extractData } from '@core/utils/api-response.utils';
 
 @Component({
   selector: 'app-event-create',
