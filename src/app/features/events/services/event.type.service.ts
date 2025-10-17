@@ -16,11 +16,11 @@ export class EventTypeService {
   }
 
   private get basePath(): string {
-    return `${this.baseUrl}${API_CONFIG.endpoints.eventTypes.base}`; // /EventTypes
+    return `${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.base}`; // /EventTypes
   }
 
   private get listPath(): string {
-    return `${this.baseUrl}${API_CONFIG.endpoints.eventTypes.getAll}`; // /EventTypes
+    return `${this.baseUrl}${API_CONFIG.endpoints.events.eventTypes.getAll}`; // /EventTypes
   }
 
   /** GET /EventTypes  -> arreglo simple */
@@ -45,22 +45,18 @@ export class EventTypeService {
     return this.http.get<EventType[]>(this.listPath, { params: httpParams });
   }
 
-  /** GET /EventTypes/{id} */
   getById(id: number | string): Observable<EventType> {
     return this.http.get<EventType>(`${this.basePath}/${id}`);
   }
 
-  /** POST /EventTypes */
   create(dto: EventTypeCreateDto): Observable<void> {
     return this.http.post<void>(this.basePath, dto);
   }
 
-  /** PUT /EventTypes/{id} */
   update(id: number | string, dto: EventTypeUpdateDto): Observable<void> {
     return this.http.put<void>(`${this.basePath}/${id}`, dto);
   }
 
-  /** DELETE /EventTypes/{id} */
   delete(id: number | string): Observable<void> {
     return this.http.delete<void>(`${this.basePath}/${id}`);
   }

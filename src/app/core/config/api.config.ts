@@ -93,7 +93,7 @@ export const API_CONFIG = {
         delete: (id: number) => `/EventCategories/${id}`,
       },
 
-      // Event Types
+
       eventTypes: {
         base: '/EventTypes',
         getAll: '/EventTypes',
