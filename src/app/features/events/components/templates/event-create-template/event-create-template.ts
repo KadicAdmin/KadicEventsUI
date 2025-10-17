@@ -24,7 +24,7 @@ import { EventDateDialogComponent } from '@shared/components/organisms/event-dat
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
-import { EventModality, Modality, EventType } from '@core/models';
+import { EventModality, Modality, EventType, EventTags } from '@core/models';
 
 @Component({
   selector: 'app-event-create-template',
@@ -63,7 +63,7 @@ export class EventCreateTemplateComponent {
   readonly modalities = input.required<EventModality[]>();
   readonly eventTypes = input<EventType[]>();
   readonly categories = input.required<{ name: string; id: number }[]>();
-  readonly tags = input.required<{ name: string; id: number }[]>();
+  readonly tags = input.required<EventTags[]>();
   readonly academicTitles = input<any[]>([]);
   readonly academicLevels = input<any[]>([]);
   readonly studyAreas = input<any[]>([]);

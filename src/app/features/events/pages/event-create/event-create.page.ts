@@ -17,9 +17,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Modality, EventModality, EventType } from '@core/models';
+import { Modality, EventModality, EventType, EventTags } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
 import { EventTypeService } from '../../services/event.type.service';
+import { EventTagsService } from '../../services/event-tags.service';
 
 @Component({
   selector: 'app-event-create',
@@ -50,6 +51,11 @@ export class EventCreatePage {
   readonly eventTypes = toSignal(
     this.$eventTypes.pipe(extractData()),
     { initialValue: [] as EventType[] }
+  );
+  readonly $tags = inject(EventTagsService).getAll();
+  readonly tags = toSignal(
+    this.$tags.pipe(extractData()),
+    { initialValue: [] as EventTags[] }
   );
 
 
@@ -98,23 +104,23 @@ export class EventCreatePage {
     { name: 'Entretenimiento', id: 8 },
   ]);
 
-  readonly tags = signal<{ name: string; id: number }[]>([
-    { name: 'Angular', id: 1 },
-    { name: 'React', id: 2 },
-    { name: 'Vue.js', id: 3 },
-    { name: 'Node.js', id: 4 },
-    { name: 'Python', id: 5 },
-    { name: 'JavaScript', id: 6 },
-    { name: 'TypeScript', id: 7 },
-    { name: 'Machine Learning', id: 8 },
-    { name: 'AI', id: 9 },
-    { name: 'Blockchain', id: 10 },
-    { name: 'Cloud Computing', id: 11 },
-    { name: 'DevOps', id: 12 },
-    { name: 'Frontend', id: 13 },
-    { name: 'Backend', id: 14 },
-    { name: 'Mobile', id: 15 },
-  ]);
+  // readonly tags = signal<{ name: string; id: number }[]>([
+  //   { name: 'Angular', id: 1 },
+  //   { name: 'React', id: 2 },
+  //   { name: 'Vue.js', id: 3 },
+  //   { name: 'Node.js', id: 4 },
+  //   { name: 'Python', id: 5 },
+  //   { name: 'JavaScript', id: 6 },
+  //   { name: 'TypeScript', id: 7 },
+  //   { name: 'Machine Learning', id: 8 },
+  //   { name: 'AI', id: 9 },
+  //   { name: 'Blockchain', id: 10 },
+  //   { name: 'Cloud Computing', id: 11 },
+  //   { name: 'DevOps', id: 12 },
+  //   { name: 'Frontend', id: 13 },
+  //   { name: 'Backend', id: 14 },
+  //   { name: 'Mobile', id: 15 },
+  // ]);
 
   constructor() {
     this.initializeForm();
