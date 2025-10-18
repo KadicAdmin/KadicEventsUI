@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  baseUrl: 'http://kadictechnology-001-site2.ltempurl.com/api',
+  baseUrl: 'https://eventApi.kadictechnology.com/api',
   endpoints: {
     // Authentication
     auth: {
@@ -38,12 +38,12 @@ export const API_CONFIG = {
 
       // Speakers
       speakers: {
-        base: '/Speakers',
-        getAll: '/Speakers',
-        getById: (id: number) => `/Speakers/${id}`,
-        create: '/Speakers',
-        update: (id: number) => `/Speakers/${id}`,
-        delete: (id: number) => `/Speakers/${id}`,
+        base: '/Speaker',
+        getAll: '/Speaker/GetAll',
+        getById: (id: number) => `/Speaker/${id}`,
+        create: '/Speaker',
+        update: (id: number) => `/Speaker/${id}`,
+        delete: (id: number) => `/Speaker/${id}`,
         search: '/Speakers/search',
       },
       // Participants
@@ -94,15 +94,14 @@ export const API_CONFIG = {
       },
 
       // Event Categories
-      eventCategories: {
-        base: '/EventCategories',
-        getAll: '/EventCategories',
-        getById: (id: number) => `/EventCategories/${id}`,
-        create: '/EventCategories',
-        update: (id: number) => `/EventCategories/${id}`,
-        delete: (id: number) => `/EventCategories/${id}`,
+      categories: {
+        base: '/EventCategory',
+        getAll: '/EventCategory',
+        getById: (id: number) => `/EventCategory/${id}`,
+        create: '/EventCategory',
+        update: (id: number) => `/EventCategory/${id}`,
+        delete: (id: number) => `/EventCategory/${id}`,
       },
-
 
       eventTypes: {
         base: '/EventType',

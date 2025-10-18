@@ -4,7 +4,7 @@ import { API_CONFIG, ApiResponse, EventTags } from '@core/index';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EventTagsService {
   private readonly http = inject(HttpClient);
@@ -13,11 +13,9 @@ export class EventTagsService {
     return `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.events.eventTags.base}`;
   }
 
-
   getAll(): Observable<ApiResponse<EventTags[]>> {
-    return this.http.get<ApiResponse<EventTags[]>>(`${this.baseUrl}${API_CONFIG.endpoints.events.eventTags.getAll}`);
+    return this.http.get<ApiResponse<EventTags[]>>(`${this.baseUrl}`);
   }
 
-  constructor() { }
-
+  constructor() {}
 }
