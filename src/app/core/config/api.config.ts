@@ -26,6 +26,16 @@ export const API_CONFIG = {
         base: '/Modality',
         getAll: '/Modality/GetAll',
       },
+
+      eventTags: {
+        base: '/Tags',
+        getAll: '/Tags',
+        getById: (id: number) => `/EventTags/${id}`,
+        create: '/Tags',
+        update: (id: number) => `/EventTags/${id}`,
+        delete: (id: number) => `/EventTags/${id}`,
+      },
+
       // Speakers
       speakers: {
         base: '/Speakers',
@@ -95,12 +105,12 @@ export const API_CONFIG = {
 
 
       eventTypes: {
-        base: '/EventTypes',
-        getAll: '/EventTypes',
-        getById: (id: number) => `/EventTypes/${id}`,
-        create: '/EventTypes',
-        update: (id: number) => `/EventTypes/${id}`,
-        delete: (id: number) => `/EventTypes/${id}`,
+        base: '/EventType',
+        getAll: '/EventType/GetAll',
+        getById: (id: number) => `/EventType/${id}`,
+        create: '/EventType/Create',
+        update: (id: number) => `/EventType/${id}`,
+        delete: (id: number) => `/EventType/${id}`,
       },
       // Modalities
       modalities: {

@@ -1,5 +1,4 @@
 import { EventService } from '../../services/event.service';
-import { EventRequestDto, EventResp } from '../../models/events.interfaces';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -18,8 +17,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Modality, EventModality } from '@core/models';
+import { Modality, EventModality, EventType, EventTags } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
+import { EventTypeService } from '../../services/event.type.service';
+import { EventTagsService } from '../../services/event-tags.service';
 
 @Component({
   selector: 'app-event-create',
@@ -46,16 +47,17 @@ export class EventCreatePage {
     this.$modalities.pipe(extractData()),
     { initialValue: [] as EventModality[] }
   );
+  readonly $eventTypes = inject(EventTypeService).getAll();
+  readonly eventTypes = toSignal(
+    this.$eventTypes.pipe(extractData()),
+    { initialValue: [] as EventType[] }
+  );
+  readonly $tags = inject(EventTagsService).getAll();
+  readonly tags = toSignal(
+    this.$tags.pipe(extractData()),
+    { initialValue: [] as EventTags[] }
+  );
 
-
-
-  readonly eventTypes = signal<{ name: string; id: number }[]>([
-    { name: 'Conference', id: 1 },
-    { name: 'Workshop', id: 2 },
-    { name: 'Seminar', id: 3 },
-    { name: 'Webinar', id: 4 },
-    { name: 'Meeting', id: 5 },
-  ]);
 
   readonly academicTitles = signal<{ name: string; id: number }[]>([
     { name: 'Dr.', id: 1 },
@@ -102,23 +104,23 @@ export class EventCreatePage {
     { name: 'Entretenimiento', id: 8 },
   ]);
 
-  readonly tags = signal<{ name: string; id: number }[]>([
-    { name: 'Angular', id: 1 },
-    { name: 'React', id: 2 },
-    { name: 'Vue.js', id: 3 },
-    { name: 'Node.js', id: 4 },
-    { name: 'Python', id: 5 },
-    { name: 'JavaScript', id: 6 },
-    { name: 'TypeScript', id: 7 },
-    { name: 'Machine Learning', id: 8 },
-    { name: 'AI', id: 9 },
-    { name: 'Blockchain', id: 10 },
-    { name: 'Cloud Computing', id: 11 },
-    { name: 'DevOps', id: 12 },
-    { name: 'Frontend', id: 13 },
-    { name: 'Backend', id: 14 },
-    { name: 'Mobile', id: 15 },
-  ]);
+  // readonly tags = signal<{ name: string; id: number }[]>([
+  //   { name: 'Angular', id: 1 },
+  //   { name: 'React', id: 2 },
+  //   { name: 'Vue.js', id: 3 },
+  //   { name: 'Node.js', id: 4 },
+  //   { name: 'Python', id: 5 },
+  //   { name: 'JavaScript', id: 6 },
+  //   { name: 'TypeScript', id: 7 },
+  //   { name: 'Machine Learning', id: 8 },
+  //   { name: 'AI', id: 9 },
+  //   { name: 'Blockchain', id: 10 },
+  //   { name: 'Cloud Computing', id: 11 },
+  //   { name: 'DevOps', id: 12 },
+  //   { name: 'Frontend', id: 13 },
+  //   { name: 'Backend', id: 14 },
+  //   { name: 'Mobile', id: 15 },
+  // ]);
 
   constructor() {
     this.initializeForm();
