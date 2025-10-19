@@ -30,6 +30,7 @@ import { EventTypeService } from '../../services/event.type.service';
 import { EventTagsService } from '../../services/event-tags.service';
 import { EventCategoryService } from '../../services/event.category.service';
 import { SpeakerService } from '../../services/speaker.service';
+import { EventResp } from '../../models/events.interfaces';
 
 @Component({
   selector: 'app-event-create',
@@ -110,7 +111,7 @@ export class EventCreatePage {
 
   constructor() {
     effect(() => {
-      console.log('Speakers loaded:', this.speakers());
+    
     });
     this.initializeForm();
     this.setupRealtimeValidation();
@@ -169,9 +170,9 @@ export class EventCreatePage {
   addEventDate(): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const newEventDate = this.createEventDateGroup();
-    console.log('Creating new event date:', newEventDate.value);
+   
     eventDates.push(newEventDate);
-    console.log('All event dates:', eventDates.value);
+  
   }
 
   removeEventDate(index: number): void {
@@ -183,10 +184,7 @@ export class EventCreatePage {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const location = eventDate.get('location') as FormGroup;
-    console.log(
-      `Getting location for event date ${eventDateIndex}:`,
-      location?.value
-    );
+    
     return location;
   }
 
@@ -201,7 +199,7 @@ export class EventCreatePage {
   }
 
   editLocation(eventDateIndex: number): void {
-    console.log('Edit location for event date:', eventDateIndex);
+    
   }
 
   clearLocation(eventDateIndex: number): void {
@@ -408,11 +406,7 @@ export class EventCreatePage {
 
   // Submit
   onSubmit() {
-    console.log('onSubmit called');
-    console.log('Form valid:', this.myForm.valid);
-    console.log('Form value:', this.myForm.value);
-    console.log('Form errors:', this.getFormErrors());
-
+    
     if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
 
@@ -440,61 +434,63 @@ export class EventCreatePage {
     // TODO: Build the new event request with the new structure
     const formValue = this.myForm.value;
     console.log('Form data to send:', formValue);
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Éxito',
-      detail: 'Evento creado correctamente (pendiente integración backend)',
-      life: 3000,
+    this.eventService.create(formValue).subscribe({
+      next: (res: EventResp) => {
+        console.log('Respuesta del servidor:', res);
+        this.messageService.clear();
+        this.myForm.reset();
+        this.confirmationService.confirm({
+          message:
+            '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
+          header: '✅ Evento Creado',
+          icon: 'pi pi-check-circle',
+          acceptIcon: 'pi pi-check',
+          rejectIcon: 'pi pi-times',
+          acceptLabel: 'Ver Eventos',
+          rejectLabel: 'Crear Otro',
+          acceptButtonStyleClass: 'p-button-success',
+          rejectButtonStyleClass: 'p-button-secondary',
+          accept: () => {
+            this.router.navigate(['/events']);
+          },
+          reject: () => {
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Listo para otro evento',
+              detail: 'Puedes crear un nuevo evento.',
+              life: 3000,
+            });
+          },
+        });
+      },
+      error: (err: any) => {
+        console.error('Error creando evento:', err);
+        this.messageService.clear();
+        let errorMessage = 'No se pudo crear el evento. Intenta nuevamente.';
+        if (err?.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err?.message) {
+          errorMessage = err.message;
+        } else if (typeof err === 'string') {
+          errorMessage = err;
+        }
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al crear evento',
+          detail: errorMessage,
+          life: 7000,
+        });
+      },
     });
+    // this.messageService.add({
+    //   severity: 'success',
+    //   summary: 'Éxito',
+    //   detail: 'Evento creado correctamente (pendiente integración backend)',
+
+    //   life: 3000,
+    // });
 
     // Uncomment when backend is ready
-    // this.eventService.create(eventRequest).subscribe({
-    //   next: (res: EventResp) => {
-    //     console.log('Respuesta del servidor:', res);
-    //     this.messageService.clear();
-    //     this.myForm.reset();
-    //     this.confirmationService.confirm({
-    //       message: '¡El evento se ha creado exitosamente! ¿Deseas ir a la lista de eventos?',
-    //       header: '✅ Evento Creado',
-    //       icon: 'pi pi-check-circle',
-    //       acceptIcon: 'pi pi-check',
-    //       rejectIcon: 'pi pi-times',
-    //       acceptLabel: 'Ver Eventos',
-    //       rejectLabel: 'Crear Otro',
-    //       acceptButtonStyleClass: 'p-button-success',
-    //       rejectButtonStyleClass: 'p-button-secondary',
-    //       accept: () => {
-    //         this.router.navigate(['/events']);
-    //       },
-    //       reject: () => {
-    //         this.messageService.add({
-    //           severity: 'info',
-    //           summary: 'Listo para otro evento',
-    //           detail: 'Puedes crear un nuevo evento.',
-    //           life: 3000,
-    //         });
-    //       },
-    //     });
-    //   },
-    //   error: (err: any) => {
-    //     console.error('Error creando evento:', err);
-    //     this.messageService.clear();
-    //     let errorMessage = 'No se pudo crear el evento. Intenta nuevamente.';
-    //     if (err?.error?.message) {
-    //       errorMessage = err.error.message;
-    //     } else if (err?.message) {
-    //       errorMessage = err.message;
-    //     } else if (typeof err === 'string') {
-    //       errorMessage = err;
-    //     }
-    //     this.messageService.add({
-    //       severity: 'error',
-    //       summary: 'Error al crear evento',
-    //       detail: errorMessage,
-    //       life: 7000,
-    //     });
-    //   },
-    // });
+    //
   }
 }
