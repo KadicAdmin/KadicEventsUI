@@ -34,9 +34,12 @@ export class EventService {
    * Crear un evento enviando FormData (datos + imagen)
    */
   create(event: EventRequestDto): Observable<EventResp> {
+    console.log('eventService');
+    console.log(event);
     const formData = this.convertToFormData(event);
-    const url = `${API_CONFIG.baseUrl
-      }${API_CONFIG.endpoints.events.createOrUpdate()}`;
+    const url = `${
+      API_CONFIG.baseUrl
+    }${API_CONFIG.endpoints.events.createOrUpdate()}`;
     return this.http.post<EventResp>(url, formData);
   }
 
@@ -58,10 +61,12 @@ export class EventService {
    * Convierte EventRequestDto a FormData para envío de archivos
    */
   private convertToFormData(event: EventRequestDto): FormData {
+    console.log('event:');
+    console.log(event);
     const formData = new FormData();
     formData.append('Name', event.Name);
-    formData.append('EventTypeId', event.EventTypeId.toString());
-    formData.append('ModalityId', event.ModalityId.toString());
+    // formData.append('eventTypeId', event.EventTypeId.toString());
+    // formData.append('ModalityId', event.ModalityId.toString());
 
     if (event.VirtualPlatformLink) {
       formData.append('VirtualPlatformLink', event.VirtualPlatformLink);
