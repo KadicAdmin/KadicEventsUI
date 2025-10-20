@@ -26,10 +26,11 @@ import {
   Speaker,
 } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
+import { ImageUtil } from '@core/utils';
 import { EventTypeService } from '../../services/event.type.service';
 import { EventTagsService } from '../../services/event-tags.service';
 import { EventCategoryService } from '../../services/event.category.service';
-import { SpeakerService } from '../../services/speaker.service';
+import { SpeakerService } from '../../../speakers/services/speaker.service';
 import { EventResp } from '../../models/events.interfaces';
 
 @Component({
@@ -111,7 +112,7 @@ export class EventCreatePage {
 
   constructor() {
     effect(() => {
-    
+
     });
     this.initializeForm();
     this.setupRealtimeValidation();
@@ -134,7 +135,6 @@ export class EventCreatePage {
   // FormArray getters
   get eventDatesArray(): any[] {
     const dates = (this.myForm.get('eventDates') as FormArray).controls;
-
     return dates;
   }
 
@@ -170,9 +170,9 @@ export class EventCreatePage {
   addEventDate(): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const newEventDate = this.createEventDateGroup();
-   
+
     eventDates.push(newEventDate);
-  
+
   }
 
   removeEventDate(index: number): void {
@@ -184,7 +184,7 @@ export class EventCreatePage {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const location = eventDate.get('location') as FormGroup;
-    
+
     return location;
   }
 
@@ -199,7 +199,7 @@ export class EventCreatePage {
   }
 
   editLocation(eventDateIndex: number): void {
-    
+
   }
 
   clearLocation(eventDateIndex: number): void {
@@ -209,22 +209,12 @@ export class EventCreatePage {
     location.reset();
   }
 
-  // Speaker methods
   private createSpeakerGroup(): FormGroup {
     return this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [''],
-      bio: [''],
-      profileImageUrl: [''],
-      linkedInUrl: [''],
-      twitterUrl: [''],
-      websiteUrl: [''],
-      academicTitleId: [null],
-      academicLevelId: [null],
-      studyAreaId: [null],
-      educationalInstitutionId: [null],
+      speakerId: [null, Validators.required],
+      name: [''],
+      lastName: [''],
+      email: [''],
     });
   }
 
@@ -245,14 +235,12 @@ export class EventCreatePage {
     speakers.removeAt(speakerIndex);
   }
 
-  // Talk methods
   private createTalkGroup(): FormGroup {
     return this.fb.group({
-      title: ['', Validators.required],
+      talkId: [null, Validators.required],
+      title: [''],
       description: [''],
-      duration: [null, Validators.required],
-      imageUrl: [''],
-      speakerId: [null],
+      duration: [null],
     });
   }
 
@@ -299,6 +287,15 @@ export class EventCreatePage {
     return formErrors;
   }
 
+  logAllFormErrors(): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const formLevelErrors = this.getFormLevelErrors();
+    const fieldErrors = this.getFormErrors();
+    const totalFieldErrors = Object.keys(fieldErrors).length;
+    const totalFormErrors = formLevelErrors.length;
+    const totalErrors = totalFieldErrors + totalFormErrors;
+  }
+
   isFieldInvalid(fieldName: string): boolean {
     const field = this.myForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
@@ -339,8 +336,11 @@ export class EventCreatePage {
     const messages: { [key: string]: string } = {
       name: 'El nombre del evento es requerido',
       eventTypeId: 'Selecciona un tipo de evento',
+      categoryId: 'Selecciona una categoría',
       date: 'La fecha es requerida',
-      title: 'El título es requerido',
+      title: 'El título de la fecha es requerido',
+      speakerId: 'El ID del speaker es requerido',
+      talkId: 'El ID del talk es requerido',
     };
 
     return messages[fieldName] || 'Este campo es requerido';
@@ -352,7 +352,7 @@ export class EventCreatePage {
     // Validar que haya al menos una fecha de evento
     const eventDates = this.myForm.get('eventDates') as FormArray;
     if (eventDates.length === 0) {
-      errors.push('Debes agregar al menos una fecha para el evento');
+      // errors.push('Debes agregar al menos una fecha para el evento');
     }
 
     if (this.myForm.errors?.['dateRange']) {
@@ -383,10 +383,6 @@ export class EventCreatePage {
     const file = event.files?.[0];
     if (file) {
       this.myForm.patchValue({ mainImage: file });
-      console.log(
-        'Archivo guardado en el formulario:',
-        this.myForm.get('mainImage')?.value
-      );
     }
   }
 
@@ -395,20 +391,19 @@ export class EventCreatePage {
   }
 
   onImagesChange(images: any[]) {
-    console.log('Images changed:', images);
     this.myForm.patchValue({ images: images });
   }
 
   onMainImageChange(mainImage: any) {
-    console.log('Main image changed:', mainImage);
     this.myForm.patchValue({ mainImage: mainImage?.file || null });
   }
 
   // Submit
   onSubmit() {
-    
+
     if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
+      this.logAllFormErrors();
 
       const errors = this.getFormErrors();
       const errorCount = Object.keys(errors).length;
@@ -431,12 +426,27 @@ export class EventCreatePage {
       return;
     }
 
-    // TODO: Build the new event request with the new structure
-    const formValue = this.myForm.value;
-    console.log('Form data to send:', formValue);
-    this.eventService.create(formValue).subscribe({
+    let processedImages: any[] = [];
+
+    if (this.myForm.value.images && Array.isArray(this.myForm.value.images)) {
+      const imagesArray = Array.isArray(this.myForm.value.images[0])
+        ? this.myForm.value.images[0]
+        : this.myForm.value.images;
+
+      processedImages = ImageUtil.processImagesArray(imagesArray);
+    }
+
+    const eventRequest: any = {
+      name: this.myForm.value.name || '',
+      description: this.myForm.value.description || '',
+      eventCategoryID: this.myForm.value.categoryId || 0,
+      eventTypeId: this.myForm.value.eventTypeId || 0,
+      maxParticipants: this.myForm.value.maxParticipants || 0,
+      images: processedImages
+    };
+
+    this.eventService.create(eventRequest).subscribe({
       next: (res: EventResp) => {
-        console.log('Respuesta del servidor:', res);
         this.messageService.clear();
         this.myForm.reset();
         this.confirmationService.confirm({
@@ -464,7 +474,6 @@ export class EventCreatePage {
         });
       },
       error: (err: any) => {
-        console.error('Error creando evento:', err);
         this.messageService.clear();
         let errorMessage = 'No se pudo crear el evento. Intenta nuevamente.';
         if (err?.error?.message) {
@@ -482,15 +491,5 @@ export class EventCreatePage {
         });
       },
     });
-    // this.messageService.add({
-    //   severity: 'success',
-    //   summary: 'Éxito',
-    //   detail: 'Evento creado correctamente (pendiente integración backend)',
-
-    //   life: 3000,
-    // });
-
-    // Uncomment when backend is ready
-    //
   }
 }

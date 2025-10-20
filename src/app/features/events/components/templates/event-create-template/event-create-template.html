@@ -277,9 +277,12 @@
 
         <app-speaker-dialog [visible]="showSpeakerDialog()" [isEditing]="editingSpeakerIndex() !== null"
             [speakerForm]="getCurrentSpeakerForm()" [imagePreview]="speakerImagePreview()"
-            [academicTitles]="academicTitles()" [academicLevels]="academicLevels()" [studyAreas]="studyAreas()"
-            [educationalInstitutions]="educationalInstitutions()" (onSave)="saveSpeaker()" (onCancel)="cancelSpeaker()"
-            (onVisibleChange)="onSpeakerDialogVisibleChange($event)" (onImageSelect)="onSpeakerImageSelect($event)" />
+            [availableSpeakers]="availableSpeakers()" [assignedSpeakers]="getAssignedSpeakers()"
+            [speakerToEdit]="speakerToEdit()" [academicTitles]="academicTitles()" [academicLevels]="academicLevels()"
+            [studyAreas]="studyAreas()" [educationalInstitutions]="educationalInstitutions()" (onSave)="saveSpeaker()"
+            (onCancel)="cancelSpeaker()" (onSelectExistingSpeaker)="selectExistingSpeaker($event)"
+            (onUpdateSpeaker)="updateSpeakerToEdit($event)" (onVisibleChange)="onSpeakerDialogVisibleChange($event)"
+            (onImageSelect)="onSpeakerImageSelect($event)" />
 
         <app-talk-dialog [visible]="showTalkDialog()" [isEditing]="editingTalkIndex() !== null"
             [talkForm]="getCurrentTalkForm()" [imagePreview]="talkImagePreview()" (onSave)="saveTalk()"
