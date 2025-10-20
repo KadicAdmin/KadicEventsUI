@@ -1,40 +1,33 @@
 import { BaseEntity } from './common.models';
 
 export interface Speaker extends BaseEntity {
-  firstName: string;
+  id: number;
+  name: string;
   lastName: string;
+  birthDay: string;
+  gendersId: number;
+  countriesId: number;
   email: string;
-  phoneNumber?: string;
-  bio?: string;
+  phoneNumber: string;
+  commentary?: string;
+  academicDegreesId: number;
+  academicLevelsId: number;
+  areaOfStudyId: number;
   profileImageUrl?: string;
-  linkedInUrl?: string;
-  twitterUrl?: string;
-  websiteUrl?: string;
-  isActive: boolean;
-  academicTitleId?: number;
-  academicLevelId?: number;
-  studyAreaId?: number;
-  educationalInstitutionId?: number;
-  academicTitle?: AcademicTitle;
-  academicLevel?: AcademicLevel;
-  studyArea?: StudyArea;
-  educationalInstitution?: EducationalInstitution;
 }
 
 export interface CreateSpeakerRequest {
-  firstName: string;
+  name: string;
   lastName: string;
+  birthDay: string;
+  gendersId: number;
+  countriesId: number;
   email: string;
-  phoneNumber?: string;
-  bio?: string;
-  profileImageUrl?: string;
-  linkedInUrl?: string;
-  twitterUrl?: string;
-  websiteUrl?: string;
-  academicTitleId?: number;
-  academicLevelId?: number;
-  studyAreaId?: number;
-  educationalInstitutionId?: number;
+  phoneNumber: string;
+  commentary?: string;
+  academicDegreesId: number;
+  academicLevelsId: number;
+  areaOfStudyId: number;
 }
 
 export interface UpdateSpeakerRequest extends Partial<CreateSpeakerRequest> {

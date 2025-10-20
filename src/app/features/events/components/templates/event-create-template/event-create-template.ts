@@ -1,6 +1,6 @@
 import { Component, input, output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormArray, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
@@ -13,6 +13,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { TabsModule } from 'primeng/tabs';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService } from 'primeng/api';
+import { SpeakerService } from '@features/speakers/services/speaker.service';
 import { SectionHeaderComponent } from '@shared/components/atoms/section-header';
 import { IconBadgeComponent } from '@shared/components/atoms/icon-badge';
 import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
@@ -24,7 +25,7 @@ import { EventDateDialogComponent } from '@shared/components/organisms/event-dat
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
-import { EventModality, Modality, EventType, EventTags } from '@core/models';
+import { EventModality, Modality, EventType, EventTags, Speaker } from '@core/models';
 
 @Component({
   selector: 'app-event-create-template',
@@ -55,9 +56,50 @@ import { EventModality, Modality, EventType, EventTags } from '@core/models';
     LocationDialogComponent,
   ],
   templateUrl: './event-create-template.html',
+  styles: [`
+    /* Estilos para campos con errores */
+    :host ::ng-deep {
+      /* Input text con error */
+      input.ng-invalid.ng-dirty,
+      input.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 1px #ef4444 !important;
+      }
+
+      /* Textarea con error */
+      textarea.ng-invalid.ng-dirty,
+      textarea.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 1px #ef4444 !important;
+      }
+
+      /* PrimeNG Select con error */
+      .p-select.ng-invalid.ng-dirty .p-select-label,
+      .p-select.ng-invalid.ng-touched .p-select-label {
+        border-color: #ef4444 !important;
+      }
+
+      /* PrimeNG MultiSelect con error */
+      .p-multiselect.ng-invalid.ng-dirty,
+      .p-multiselect.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+      }
+
+      /* Focus en campos con error */
+      input.ng-invalid.ng-dirty:focus,
+      input.ng-invalid.ng-touched:focus,
+      textarea.ng-invalid.ng-dirty:focus,
+      textarea.ng-invalid.ng-touched:focus {
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+      }
+    }
+  `],
 })
 export class EventCreateTemplateComponent {
   private confirmationService = inject(ConfirmationService);
+  private fb = inject(FormBuilder);
+  private speakerService = inject(SpeakerService);
 
   readonly form = input.required<FormGroup>();
   readonly modalities = input.required<EventModality[]>();
@@ -68,6 +110,7 @@ export class EventCreateTemplateComponent {
   readonly academicLevels = input<any[]>([]);
   readonly studyAreas = input<any[]>([]);
   readonly educationalInstitutions = input<any[]>([]);
+  readonly availableSpeakers = input<Speaker[]>([]);
   readonly isFieldInvalid = input.required<(fieldName: string) => boolean>();
   readonly getFieldErrorMessage = input.required<(fieldName: string) => string>();
   readonly hasFormLevelErrors = input.required<() => boolean>();
@@ -106,6 +149,8 @@ export class EventCreateTemplateComponent {
   currentEventDateIndexForTalk = signal<number | null>(null);
   speakerImagePreview = signal<string>('');
   talkImagePreview = signal<string>('');
+  speakerToEdit = signal<Speaker | undefined>(undefined);
+  newSpeakerForm = signal<FormGroup | undefined>(undefined);
 
   openEventDateDialog() {
     this.editingEventDateIndex.set(null);
@@ -118,6 +163,10 @@ export class EventCreateTemplateComponent {
     this.editingSpeakerIndex.set(null);
     this.speakerImagePreview.set('');
     this.addSpeaker.emit(eventDateIndex);
+
+    // Crear formulario para nuevo speaker
+    const newForm = this.createNewSpeakerForm();
+    this.newSpeakerForm.set(newForm);
 
     const speakers = this.getSpeakers()(eventDateIndex);
     this.editingSpeakerIndex.set(speakers.length - 1);
@@ -162,8 +211,30 @@ export class EventCreateTemplateComponent {
   editSpeaker(eventDateIndex: number, speakerIndex: number) {
     this.currentEventDateIndexForSpeaker.set(eventDateIndex);
     this.editingSpeakerIndex.set(speakerIndex);
-    const speaker = this.getSpeakers()(eventDateIndex)[speakerIndex];
-    this.speakerImagePreview.set(speaker.get('imageUrl')?.value || '');
+
+    // Obtener el speaker a editar
+    const speakers = this.getSpeakers()(eventDateIndex);
+    const speakerForm = speakers[speakerIndex] as FormGroup;
+    const speakerData = speakerForm.value;
+
+    // Crear objeto Speaker para editar
+    const speakerToEdit: Speaker = {
+      id: speakerData.speakerId,
+      name: speakerData.name || '',
+      lastName: speakerData.lastName || '',
+      birthDay: '2000-01-01', // Valor por defecto
+      gendersId: 1, // Valor por defecto
+      countriesId: 1, // Valor por defecto
+      email: speakerData.email || '',
+      phoneNumber: '', // Valor por defecto
+      commentary: '', // Valor por defecto
+      academicDegreesId: 1, // Valor por defecto
+      academicLevelsId: 1, // Valor por defecto
+      areaOfStudyId: 1 // Valor por defecto
+    };
+
+    this.speakerToEdit.set(speakerToEdit);
+    this.speakerImagePreview.set(speakerData.profileImageUrl || '');
     this.showSpeakerDialog.set(true);
   }
 
@@ -191,6 +262,83 @@ export class EventCreateTemplateComponent {
   }
 
   saveSpeaker() {
+    const eventDateIndex = this.currentEventDateIndexForSpeaker();
+    const speakerIndex = this.editingSpeakerIndex();
+
+    // Si estamos creando un nuevo speaker
+    if (this.newSpeakerForm()) {
+      const speakerData = this.newSpeakerForm()!.value;
+      this.createSpeaker(speakerData);
+      return;
+    }
+
+    if (eventDateIndex !== null && speakerIndex !== null) {
+      const speakers = this.getSpeakers()(eventDateIndex);
+      const speakerForm = speakers[speakerIndex] as FormGroup;
+      const speakerToEdit = this.speakerToEdit();
+
+      if (speakerToEdit) {
+        speakerForm.patchValue({
+          speakerId: speakerToEdit.id,
+          name: speakerToEdit.name,
+          lastName: speakerToEdit.lastName,
+          email: speakerToEdit.email
+        });
+      }
+    }
+
+    this.showSpeakerDialog.set(false);
+    this.currentEventDateIndexForSpeaker.set(null);
+    this.editingSpeakerIndex.set(null);
+    this.speakerToEdit.set(undefined);
+    this.newSpeakerForm.set(undefined);
+  }
+
+  updateSpeakerToEdit(updatedSpeaker: Speaker) {
+    this.speakerToEdit.set(updatedSpeaker);
+  }
+
+  createSpeaker(speakerData: any): void {
+    const createRequest = {
+      name: speakerData.name || '',
+      lastName: speakerData.lastName || '',
+      birthDay: speakerData.birthDay || '2000-01-01',
+      gendersId: speakerData.gendersId || 1,
+      countriesId: speakerData.countriesId || 1,
+      email: speakerData.email || '',
+      phoneNumber: speakerData.phoneNumber || '',
+      commentary: speakerData.commentary || '',
+      academicDegreesId: speakerData.academicDegreesId || 1,
+      academicLevelsId: speakerData.academicLevelsId || 1,
+      areaOfStudyId: speakerData.areaOfStudyId || 1
+    };
+
+    this.speakerService.create(createRequest).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.addSpeakerToEvent(response.data);
+        }
+      },
+      error: (error) => {
+      }
+    });
+  }
+
+  addSpeakerToEvent(speaker: Speaker): void {
+    const eventDateIndex = this.currentEventDateIndexForSpeaker();
+
+    if (eventDateIndex !== null) {
+      const speakerForm = this.fb.group({
+        speakerId: [speaker.id],
+        name: [speaker.name],
+        lastName: [speaker.lastName],
+        email: [speaker.email]
+      });
+
+      const speakers = this.getSpeakers()(eventDateIndex);
+      speakers.push(speakerForm);
+    }
+
     this.showSpeakerDialog.set(false);
     this.currentEventDateIndexForSpeaker.set(null);
     this.editingSpeakerIndex.set(null);
@@ -214,9 +362,36 @@ export class EventCreateTemplateComponent {
     this.editingSpeakerIndex.set(null);
   }
 
+  selectExistingSpeaker(speaker: Speaker) {
+    const eventDateIndex = this.currentEventDateIndexForSpeaker();
+
+    if (eventDateIndex !== null) {
+      console.log('Speaker seleccionado:', speaker); // Debug
+
+      // Crear un nuevo speaker form para cada speaker seleccionado
+      const speakerForm = this.fb.group({
+        speakerId: [speaker.id], // Solo el ID del speaker
+        // Campos adicionales para mostrar en la UI (opcional)
+        name: [speaker.name || ''],
+        lastName: [speaker.lastName || ''],
+        email: [speaker.email || '']
+      });
+
+      // Agregar el nuevo speaker al array de speakers
+      const speakers = this.getSpeakers()(eventDateIndex);
+      speakers.push(speakerForm);
+
+      console.log('Speaker agregado al formulario:', speakerForm.value); // Debug
+      console.log('Total speakers en el array:', speakers.length); // Debug
+    }
+  }
+
   onSpeakerDialogVisibleChange(visible: boolean) {
     if (!visible) {
-      this.cancelSpeaker();
+      // Solo cerrar el diálogo, no cancelar
+      this.showSpeakerDialog.set(false);
+      this.currentEventDateIndexForSpeaker.set(null);
+      this.editingSpeakerIndex.set(null);
     }
   }
 
@@ -303,6 +478,10 @@ export class EventCreateTemplateComponent {
     const eventDateIndex = this.currentEventDateIndexForSpeaker();
     const speakerIndex = this.editingSpeakerIndex();
 
+    if (this.newSpeakerForm()) {
+      return this.newSpeakerForm()!;
+    }
+
     if (eventDateIndex !== null) {
       const speakers = this.getSpeakers()(eventDateIndex);
       if (speakerIndex !== null && speakers[speakerIndex]) {
@@ -311,6 +490,23 @@ export class EventCreateTemplateComponent {
       return speakers[speakers.length - 1] as FormGroup;
     }
     return undefined;
+  }
+
+  createNewSpeakerForm(): FormGroup {
+    // Crear formulario para crear un nuevo speaker con la estructura de la API
+    return this.fb.group({
+      name: ['', Validators.required],
+      lastName: ['', Validators.required],
+      birthDay: ['2000-01-01', Validators.required],
+      gendersId: [1, Validators.required],
+      countriesId: [1, Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [''],
+      commentary: [''],
+      academicDegreesId: [1, Validators.required],
+      academicLevelsId: [1, Validators.required],
+      areaOfStudyId: [1, Validators.required]
+    });
   }
 
   getCurrentTalkForm(): FormGroup | undefined {
@@ -325,6 +521,31 @@ export class EventCreateTemplateComponent {
       return talks[talks.length - 1] as FormGroup;
     }
     return undefined;
+  }
+
+  getAssignedSpeakers(): Speaker[] {
+    const eventDateIndex = this.currentEventDateIndexForSpeaker();
+    if (eventDateIndex !== null) {
+      const speakers = this.getSpeakers()(eventDateIndex);
+      return speakers.map(speakerForm => {
+        const formValue = speakerForm.value;
+        return {
+          id: formValue.speakerId,
+          name: formValue.name || '',
+          lastName: formValue.lastName || '',
+          birthDay: '2000-01-01',
+          gendersId: 1,
+          countriesId: 1,
+          email: formValue.email || '',
+          phoneNumber: '',
+          commentary: '',
+          academicDegreesId: 1,
+          academicLevelsId: 1,
+          areaOfStudyId: 1
+        } as Speaker;
+      });
+    }
+    return [];
   }
 
 

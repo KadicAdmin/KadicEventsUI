@@ -14,7 +14,7 @@ export const API_CONFIG = {
       base: '/Event',
       getAll: '/Event/GetAll',
       getById: (id: number) => `/Event/${id}`,
-      create: '/Event/create',
+      create: '/Event/SaveEvent',
       createOrUpdate: (id?: number) =>
         id
           ? `/Event/create-update-event/${id}`
@@ -41,8 +41,8 @@ export const API_CONFIG = {
         base: '/Speaker',
         getAll: '/Speaker/GetAll',
         getById: (id: number) => `/Speaker/${id}`,
-        create: '/Speaker',
-        update: (id: number) => `/Speaker/${id}`,
+        create: '/Speaker/Save',
+        update: (id: number) => `/Speaker/`,
         delete: (id: number) => `/Speaker/${id}`,
         search: '/Speakers/search',
       },

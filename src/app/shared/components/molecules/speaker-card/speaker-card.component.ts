@@ -4,10 +4,10 @@ import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 
 @Component({
-    selector: 'app-speaker-card',
-    standalone: true,
-    imports: [CommonModule, ButtonModule, AvatarModule],
-    template: `
+  selector: 'app-speaker-card',
+  standalone: true,
+  imports: [CommonModule, ButtonModule, AvatarModule],
+  template: `
     <div class="group text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all">
       <div class="relative inline-block mb-3">
         @if (imageUrl()) {
@@ -35,15 +35,18 @@ import { AvatarModule } from 'primeng/avatar';
   `,
 })
 export class SpeakerCardComponent {
-    readonly firstName = input<string>('');
-    readonly lastName = input<string>('');
-    readonly email = input<string>('');
-    readonly imageUrl = input<string>();
-    readonly onEdit = output<void>();
-    readonly onDelete = output<void>();
+  readonly firstName = input<string>('');
+  readonly lastName = input<string>('');
+  readonly email = input<string>('');
+  readonly imageUrl = input<string>();
+  readonly onEdit = output<void>();
+  readonly onDelete = output<void>();
 
-    fullName() {
-        return `${this.firstName()} ${this.lastName()}`.trim() || 'Sin nombre';
-    }
+  fullName() {
+    const firstName = this.firstName() || '';
+    const lastName = this.lastName() || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName || 'Sin nombre';
+  }
 }
 

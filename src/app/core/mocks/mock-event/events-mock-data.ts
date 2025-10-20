@@ -59,19 +59,33 @@ export const MOCK_EVENTS: Event[] = [
                 speakers: [
                     {
                         id: 1,
-                        firstName: "Juan",
+                        name: "Juan",
                         lastName: "Pérez",
+                        birthDay: "1985-05-15T00:00:00",
+                        gendersId: 1,
+                        countriesId: 1,
                         email: "juan@example.com",
-                        bio: "Experto en Angular",
-                        isActive: true
+                        phoneNumber: "1234567890",
+                        commentary: "Experto en Angular",
+                        academicDegreesId: 1,
+                        academicLevelsId: 1,
+                        areaOfStudyId: 1,
+                        profileImageUrl: "https://example.com/juan.jpg"
                     },
                     {
                         id: 2,
-                        firstName: "María",
+                        name: "María",
                         lastName: "García",
+                        birthDay: "1990-08-22T00:00:00",
+                        gendersId: 2,
+                        countriesId: 1,
                         email: "maria@example.com",
-                        bio: "Especialista en Node.js",
-                        isActive: true
+                        phoneNumber: "0987654321",
+                        commentary: "Especialista en Node.js",
+                        academicDegreesId: 2,
+                        academicLevelsId: 2,
+                        areaOfStudyId: 2,
+                        profileImageUrl: "https://example.com/maria.jpg"
                     }
                 ],
                 schedules: [
@@ -148,11 +162,18 @@ export const MOCK_EVENTS: Event[] = [
                 speakers: [
                     {
                         id: 3,
-                        firstName: "Carlos",
+                        name: "Carlos",
                         lastName: "López",
+                        birthDay: "1988-12-10T00:00:00",
+                        gendersId: 1,
+                        countriesId: 1,
                         email: "carlos@example.com",
-                        bio: "Especialista en Machine Learning",
-                        isActive: true
+                        phoneNumber: "5555555555",
+                        commentary: "Especialista en Machine Learning",
+                        academicDegreesId: 3,
+                        academicLevelsId: 3,
+                        areaOfStudyId: 3,
+                        profileImageUrl: "https://example.com/carlos.jpg"
                     }
                 ],
                 schedules: [
@@ -243,11 +264,18 @@ export const MOCK_EVENTS: Event[] = [
                 speakers: [
                     {
                         id: 4,
-                        firstName: "Ana",
+                        name: "Ana",
                         lastName: "Rodríguez",
+                        birthDay: "1992-03-25T00:00:00",
+                        gendersId: 2,
+                        countriesId: 1,
                         email: "ana@example.com",
-                        bio: "React Expert y Tech Lead",
-                        isActive: true
+                        phoneNumber: "4444444444",
+                        commentary: "React Expert y Tech Lead",
+                        academicDegreesId: 4,
+                        academicLevelsId: 4,
+                        areaOfStudyId: 4,
+                        profileImageUrl: "https://example.com/ana.jpg"
                     }
                 ],
                 schedules: [
@@ -340,11 +368,18 @@ export const MOCK_EVENTS: Event[] = [
                 speakers: [
                     {
                         id: 5,
-                        firstName: "Lucía",
+                        name: "Lucía",
                         lastName: "Martínez",
+                        birthDay: "1987-07-18T00:00:00",
+                        gendersId: 2,
+                        countriesId: 1,
                         email: "lucia@example.com",
-                        bio: "Investigadora en IA",
-                        isActive: true
+                        phoneNumber: "3333333333",
+                        commentary: "Investigadora en IA",
+                        academicDegreesId: 5,
+                        academicLevelsId: 5,
+                        areaOfStudyId: 5,
+                        profileImageUrl: "https://example.com/lucia.jpg"
                     }
                 ],
                 schedules: [
