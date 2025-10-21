@@ -6,9 +6,11 @@
   [getEventDates]="eventDatesArray" [getEventDateLocation]="getEventDateLocation.bind(this)"
   [getSpeakers]="getSpeakersForEventDate.bind(this)" [getTalks]="getTalksForEventDate.bind(this)"
   (addEventDate)="addEventDate()" (removeEventDate)="removeEventDate($event)" (editLocation)="editLocation($event)"
-  (clearLocation)="clearLocation($event)" (addSpeaker)="addSpeakerToEventDate($event)"
+  (clearLocation)="clearLocation($event)" (addSpeaker)="addEmptySpeakerToEventDate($event)"
   (removeSpeaker)="removeSpeakerFromEventDate($event.eventDateIndex, $event.speakerIndex)"
   (addTalk)="addTalkToEventDate($event)" (removeTalk)="removeTalkFromEventDate($event.eventDateIndex, $event.talkIndex)"
   (onUpload)="onUpload($event)" (onFileSelect)="onFileSelect($event)" (onFileRemove)="onFileRemove($event)"
-  (onImagesChange)="onImagesChange($event)" (onMainImageChange)="onMainImageChange($event)" (onSubmit)="onSubmit()">
+  (onImagesChange)="onImagesChange($event)" (onMainImageChange)="onMainImageChange($event)" (onSubmit)="onSubmit()"
+  (onCreateSpeaker)="onCreateSpeaker($event)" (onUpdateSpeaker)="onUpdateSpeaker($event)"
+  (onSelectExistingSpeaker)="onSelectExistingSpeaker($event)">
 </app-event-create-template>

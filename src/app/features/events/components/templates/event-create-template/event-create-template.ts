@@ -13,7 +13,6 @@ import { AccordionModule } from 'primeng/accordion';
 import { TabsModule } from 'primeng/tabs';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService } from 'primeng/api';
-import { SpeakerService } from '@features/speakers/services/speaker.service';
 import { SectionHeaderComponent } from '@shared/components/atoms/section-header';
 import { IconBadgeComponent } from '@shared/components/atoms/icon-badge';
 import { EmptyStateComponent } from '@shared/components/atoms/empty-state';
@@ -99,7 +98,6 @@ import { EventModality, Modality, EventType, EventTags, Speaker } from '@core/mo
 export class EventCreateTemplateComponent {
   private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
-  private speakerService = inject(SpeakerService);
 
   readonly form = input.required<FormGroup>();
   readonly modalities = input.required<EventModality[]>();
@@ -136,6 +134,9 @@ export class EventCreateTemplateComponent {
   readonly onImagesChange = output<any[]>();
   readonly onMainImageChange = output<any>();
   readonly onSubmit = output<void>();
+  readonly onCreateSpeaker = output<any>();
+  readonly onUpdateSpeaker = output<{ speaker: Speaker; eventDateIndex: number; speakerIndex: number }>();
+  readonly onSelectExistingSpeaker = output<{ speaker: Speaker; eventDateIndex: number }>();
 
   showEventDateDialog = signal(false);
   showSpeakerDialog = signal(false);
@@ -251,7 +252,6 @@ export class EventCreateTemplateComponent {
   }
 
   cancelEventDate() {
-    // Si estamos creando una nueva fecha (no editando), eliminar la fecha vacía
     if (this.editingEventDateIndex() === null) {
       const eventDates = this.getEventDates();
       if (eventDates.length > 0) {
@@ -268,21 +268,17 @@ export class EventCreateTemplateComponent {
     // Si estamos creando un nuevo speaker
     if (this.newSpeakerForm()) {
       const speakerData = this.newSpeakerForm()!.value;
-      this.createSpeaker(speakerData);
+      this.onCreateSpeaker.emit({ speakerData, eventDateIndex });
       return;
     }
 
     if (eventDateIndex !== null && speakerIndex !== null) {
-      const speakers = this.getSpeakers()(eventDateIndex);
-      const speakerForm = speakers[speakerIndex] as FormGroup;
       const speakerToEdit = this.speakerToEdit();
-
       if (speakerToEdit) {
-        speakerForm.patchValue({
-          speakerId: speakerToEdit.id,
-          name: speakerToEdit.name,
-          lastName: speakerToEdit.lastName,
-          email: speakerToEdit.email
+        this.onUpdateSpeaker.emit({
+          speaker: speakerToEdit,
+          eventDateIndex,
+          speakerIndex
         });
       }
     }
@@ -298,51 +294,6 @@ export class EventCreateTemplateComponent {
     this.speakerToEdit.set(updatedSpeaker);
   }
 
-  createSpeaker(speakerData: any): void {
-    const createRequest = {
-      name: speakerData.name || '',
-      lastName: speakerData.lastName || '',
-      birthDay: speakerData.birthDay || '2000-01-01',
-      gendersId: speakerData.gendersId || 1,
-      countriesId: speakerData.countriesId || 1,
-      email: speakerData.email || '',
-      phoneNumber: speakerData.phoneNumber || '',
-      commentary: speakerData.commentary || '',
-      academicDegreesId: speakerData.academicDegreesId || 1,
-      academicLevelsId: speakerData.academicLevelsId || 1,
-      areaOfStudyId: speakerData.areaOfStudyId || 1
-    };
-
-    this.speakerService.create(createRequest).subscribe({
-      next: (response) => {
-        if (response.data) {
-          this.addSpeakerToEvent(response.data);
-        }
-      },
-      error: (error) => {
-      }
-    });
-  }
-
-  addSpeakerToEvent(speaker: Speaker): void {
-    const eventDateIndex = this.currentEventDateIndexForSpeaker();
-
-    if (eventDateIndex !== null) {
-      const speakerForm = this.fb.group({
-        speakerId: [speaker.id],
-        name: [speaker.name],
-        lastName: [speaker.lastName],
-        email: [speaker.email]
-      });
-
-      const speakers = this.getSpeakers()(eventDateIndex);
-      speakers.push(speakerForm);
-    }
-
-    this.showSpeakerDialog.set(false);
-    this.currentEventDateIndexForSpeaker.set(null);
-    this.editingSpeakerIndex.set(null);
-  }
 
   cancelSpeaker() {
     const eventDateIndex = this.currentEventDateIndexForSpeaker();
@@ -364,25 +315,8 @@ export class EventCreateTemplateComponent {
 
   selectExistingSpeaker(speaker: Speaker) {
     const eventDateIndex = this.currentEventDateIndexForSpeaker();
-
     if (eventDateIndex !== null) {
-      console.log('Speaker seleccionado:', speaker); // Debug
-
-      // Crear un nuevo speaker form para cada speaker seleccionado
-      const speakerForm = this.fb.group({
-        speakerId: [speaker.id], // Solo el ID del speaker
-        // Campos adicionales para mostrar en la UI (opcional)
-        name: [speaker.name || ''],
-        lastName: [speaker.lastName || ''],
-        email: [speaker.email || '']
-      });
-
-      // Agregar el nuevo speaker al array de speakers
-      const speakers = this.getSpeakers()(eventDateIndex);
-      speakers.push(speakerForm);
-
-      console.log('Speaker agregado al formulario:', speakerForm.value); // Debug
-      console.log('Total speakers en el array:', speakers.length); // Debug
+      this.onSelectExistingSpeaker.emit({ speaker, eventDateIndex });
     }
   }
 
@@ -448,7 +382,7 @@ export class EventCreateTemplateComponent {
     if (index !== null && this.getEventDates()[index]) {
       return this.getEventDates()[index] as FormGroup;
     }
-    // Si estamos creando una nueva fecha, devolver el último elemento del array
+
     const eventDates = this.getEventDates();
     if (eventDates.length > 0) {
       return eventDates[eventDates.length - 1] as FormGroup;
@@ -505,7 +439,11 @@ export class EventCreateTemplateComponent {
       commentary: [''],
       academicDegreesId: [1, Validators.required],
       academicLevelsId: [1, Validators.required],
-      areaOfStudyId: [1, Validators.required]
+      areaOfStudyId: [1, Validators.required],
+      educationalInstitutionId: [null],
+      linkedInUrl: [''],
+      twitterUrl: [''],
+      websiteUrl: ['']
     });
   }
 

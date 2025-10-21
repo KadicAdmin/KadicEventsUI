@@ -24,6 +24,7 @@ import {
   EventTags,
   EventCategory,
   Speaker,
+  ApiResponse,
 } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
 import { ImageUtil } from '@core/utils';
@@ -32,6 +33,7 @@ import { EventTagsService } from '../../services/event-tags.service';
 import { EventCategoryService } from '../../services/event.category.service';
 import { SpeakerService } from '../../../speakers/services/speaker.service';
 import { EventResp } from '../../models/events.interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-event-create',
@@ -75,6 +77,8 @@ export class EventCreatePage {
     inject(SpeakerService).getAll().pipe(extractData()),
     { initialValue: [] as Speaker[] }
   );
+
+  readonly speakerService = inject(SpeakerService);
 
   readonly academicTitles = signal<{ name: string; id: number }[]>([
     { name: 'Dr.', id: 1 },
@@ -152,7 +156,6 @@ export class EventCreatePage {
     return talks?.controls || [];
   }
 
-  // Event Date methods
   private createEventDateGroup(): FormGroup {
     return this.fb.group({
       date: [null, Validators.required],
@@ -218,7 +221,7 @@ export class EventCreatePage {
     });
   }
 
-  addSpeakerToEventDate(eventDateIndex: number): void {
+  addEmptySpeakerToEventDate(eventDateIndex: number): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const speakers = eventDate.get('speakers') as FormArray;
@@ -256,6 +259,153 @@ export class EventCreatePage {
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const talks = eventDate.get('talks') as FormArray;
     talks.removeAt(talkIndex);
+  }
+
+  // Speaker management methods
+  onCreateSpeaker(data: { speakerData: any; eventDateIndex: number }): void {
+    const { speakerData, eventDateIndex } = data;
+
+    const createRequest = {
+      name: speakerData.name || '',
+      lastName: speakerData.lastName || '',
+      birthDay: speakerData.birthDay || '2000-01-01',
+      gendersId: speakerData.gendersId || 1,
+      countriesId: speakerData.countriesId || 1,
+      email: speakerData.email || '',
+      phoneNumber: speakerData.phoneNumber || '',
+      commentary: speakerData.commentary || '',
+      academicDegreesId: speakerData.academicDegreesId || 1,
+      academicLevelsId: speakerData.academicLevelsId || 1,
+      areaOfStudyId: speakerData.areaOfStudyId || 1,
+      educationalInstitutionId: speakerData.educationalInstitutionId || null,
+      linkedInUrl: speakerData.linkedInUrl || '',
+      twitterUrl: speakerData.twitterUrl || '',
+      websiteUrl: speakerData.websiteUrl || ''
+    };
+
+    this.speakerService.create(createRequest).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.addSpeakerToEventDate(eventDateIndex, response.data);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Speaker Creado',
+            detail: `${response.data.name} ${response.data.lastName} ha sido creado exitosamente.`,
+            life: 3000,
+          });
+        }
+      },
+      error: (error) => {
+        let errorMessage = 'No se pudo crear el speaker. Intenta nuevamente.';
+        let errorSummary = 'Error al crear speaker';
+
+        if (error?.status === 409) {
+          errorSummary = 'Speaker Ya Existe';
+          errorMessage = 'Ya existe un speaker registrado con este email. Por favor, usa la opción "Seleccionar Existente" para agregarlo al evento.';
+        } else if (error?.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+
+        this.messageService.add({
+          severity: 'warn',
+          summary: errorSummary,
+          detail: errorMessage,
+          life: 7000,
+        });
+      }
+    });
+  }
+
+  onUpdateSpeaker(data: { speaker: Speaker; eventDateIndex: number; speakerIndex: number }): void {
+    const { speaker, eventDateIndex, speakerIndex } = data;
+
+    const updateRequest = {
+      id: speaker.id,
+      name: speaker.name,
+      lastName: speaker.lastName,
+      birthDay: speaker.birthDay,
+      gendersId: speaker.gendersId,
+      countriesId: speaker.countriesId,
+      email: speaker.email,
+      phoneNumber: speaker.phoneNumber,
+      commentary: speaker.commentary,
+      academicDegreesId: speaker.academicDegreesId,
+      academicLevelsId: speaker.academicLevelsId,
+      areaOfStudyId: speaker.areaOfStudyId,
+      educationalInstitutionId: (speaker as any).educationalInstitutionId || null,
+      linkedInUrl: (speaker as any).linkedInUrl || '',
+      twitterUrl: (speaker as any).twitterUrl || '',
+      websiteUrl: (speaker as any).websiteUrl || ''
+    };
+
+    this.speakerService.update(updateRequest).subscribe({
+      next: (response) => {
+        if (response.data) {
+          // Actualizar el formulario con los datos actualizados
+          const eventDates = this.myForm.get('eventDates') as FormArray;
+          const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+          const speakers = eventDate.get('speakers') as FormArray;
+          const speakerForm = speakers.at(speakerIndex) as FormGroup;
+
+          speakerForm.patchValue({
+            speakerId: response.data.id,
+            name: response.data.name,
+            lastName: response.data.lastName,
+            email: response.data.email
+          });
+
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Speaker Actualizado',
+            detail: `${response.data.name} ${response.data.lastName} ha sido actualizado exitosamente.`,
+            life: 3000,
+          });
+        }
+      },
+      error: (error) => {
+        let errorMessage = 'No se pudo actualizar el speaker. Intenta nuevamente.';
+        let errorSummary = 'Error al actualizar speaker';
+
+        // Manejar error 409 - Conflict
+        if (error?.status === 409) {
+          errorSummary = 'Conflicto al Actualizar';
+          errorMessage = 'El email ingresado ya está registrado con otro speaker.';
+        } else if (error?.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error?.message) {
+          errorMessage = error.message;
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: errorSummary,
+          detail: errorMessage,
+          life: 5000,
+        });
+      }
+    });
+  }
+
+  onSelectExistingSpeaker(data: { speaker: Speaker; eventDateIndex: number }): void {
+    const { speaker, eventDateIndex } = data;
+    this.addSpeakerToEventDate(eventDateIndex, speaker);
+  }
+
+  private addSpeakerToEventDate(eventDateIndex: number, speaker: Speaker): void {
+    const eventDates = this.myForm.get('eventDates') as FormArray;
+    const eventDate = eventDates.at(eventDateIndex) as FormGroup;
+    const speakers = eventDate.get('speakers') as FormArray;
+
+    const speakerForm = this.fb.group({
+      speakerId: [speaker.id],
+      name: [speaker.name],
+      lastName: [speaker.lastName],
+      email: [speaker.email]
+    });
+
+    speakers.push(speakerForm);
   }
 
   // Validation methods
