@@ -42,14 +42,14 @@ export const API_CONFIG = {
         getAll: '/Speaker/GetAll',
         getById: (id: number) => `/Speaker/${id}`,
         create: '/Speaker/Save',
-        update: (id: number) => `/Speaker/`,
+        update: `/Speaker/`,
         delete: (id: number) => `/Speaker/${id}`,
         search: '/Speakers/search',
       },
       // Participants
       participants: {
         base: '/Participants',
-        getAll: '/Participants',
+        getAll: '/Participants',  
         getById: (id: number) => `/Participants/${id}`,
         create: '/Participants',
         update: (id: number) => `/Participants/${id}`,
