@@ -100,6 +100,11 @@ export interface CreateEventRequest {
   eventTypeId: number;
   address: Address;
   eventDates: CreateEventDateRequest[];
+  tags: CreateEventTag[];
+}
+
+export interface CreateEventTag {
+  TagId: number;
 }
 
 export interface CreateEventDateRequest {
@@ -177,4 +182,4 @@ export interface EventCategory {
   id: number;
   name: string;
   isActive: true;
-} 
+}
