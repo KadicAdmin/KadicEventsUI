@@ -584,7 +584,8 @@ export class EventCreatePage {
       processedImages = ImageUtil.processImagesArray(imagesArray);
     }
 
-    
+    const tagIds: number[] = this.myForm.value.tags ?? [];
+    const tagsPayload = tagIds.map((id) => ({ TagId: id }));
     const eventRequest: any = {
       name: this.myForm.value.name || '',
       description: this.myForm.value.description || '',
@@ -592,8 +593,9 @@ export class EventCreatePage {
       eventTypeId: this.myForm.value.eventTypeId || 0,
       maxParticipants: this.myForm.value.maxParticipants || 0,
       images: processedImages,
+      tags: tagsPayload,
+      eventDates: this.myForm.value.eventDates || [],
     };
-    console.log(`Tags: ${this.tags()}`);
 
     this.eventService.create(eventRequest).subscribe({
       next: (res: EventResp) => {

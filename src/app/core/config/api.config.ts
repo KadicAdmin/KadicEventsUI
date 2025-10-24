@@ -14,7 +14,7 @@ export const API_CONFIG = {
       base: '/Event',
       getAll: '/Event/GetAll',
       getById: (id: number) => `/Event/${id}`,
-      create: '/Event/SaveEvent',
+      create: '/Event/CreateEvent',
       createOrUpdate: (id?: number) =>
         id
           ? `/Event/create-update-event/${id}`

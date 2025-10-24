@@ -100,7 +100,11 @@ export interface CreateEventRequest {
   eventTypeId: number;
   address: Address;
   eventDates: CreateEventDateRequest[];
-  tags: EventTags[]; // <-- lo que viaja al back
+  tags: CreateEventTag[];
+}
+
+export interface CreateEventTag {
+  TagId: number;
 }
 
 export interface CreateEventDateRequest {
