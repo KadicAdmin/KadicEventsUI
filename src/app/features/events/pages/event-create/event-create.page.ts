@@ -109,7 +109,6 @@ export class EventCreatePage {
     this.initializeForm();
     this.setupRealtimeValidation();
   }
-
   private initializeForm(): void {
     this.myForm = this.fb.group({
       name: ['', Validators.required],
@@ -121,6 +120,7 @@ export class EventCreatePage {
       mainImage: [null],
       images: [[]],
       eventDates: this.fb.array([]),
+      speakers: this.fb.array([]),
     });
   }
 
@@ -574,7 +574,9 @@ export class EventCreatePage {
       return;
     }
 
+    // Process event images
     let processedImages: any[] = [];
+    console.log('Processing event images:', this.myForm.value.images);
 
     if (this.myForm.value.images && Array.isArray(this.myForm.value.images)) {
       const imagesArray = Array.isArray(this.myForm.value.images[0])
@@ -583,6 +585,32 @@ export class EventCreatePage {
 
       processedImages = ImageUtil.processImagesArray(imagesArray);
     }
+
+    //
+    let processedMainImages: any[] = [];
+
+    // if (this.myForm.value.images && Array.isArray(this.myForm.value.images)) {
+    //   const imagesArray = Array.isArray(this.myForm.value.images[0])
+    //     ? this.myForm.value.images[0]
+    //     : this.myForm.value.images;
+
+    //   processedMainImages = ImageUtil.processImagesArray(imagesArray);
+    // }
+
+    this.myForm.value.eventDates.forEach((eventDate: any) => {
+      if (eventDate.mainImage) {
+        console.log(
+          'Processing main image for event date:',
+          eventDate.mainImage
+        );
+        const imagesArray = Array.isArray(eventDate.mainImage)
+          ? eventDate.mainImage[0]
+          : eventDate.mainImage;
+
+        processedMainImages = ImageUtil.processImagesArray(imagesArray);
+        eventDate.mainImage = processedMainImages;
+      }
+    });
 
     const tagIds: number[] = this.myForm.value.tags ?? [];
     const tagsPayload = tagIds.map((id) => ({ TagId: id }));

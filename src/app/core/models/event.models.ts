@@ -27,12 +27,16 @@ export interface EventTags {
 
 export interface EventDate {
   id?: number;
+  eventId?: number;
   date: Date | string;
+  title?: string;
+  description?: string;
+  mainImage?: EventImage;
   talks: Talk[];
   speakers: Speaker[];
   schedules: Schedule[];
-  modalities: EventModality[];
-  locations: EventLocation[];
+  eventDatesModalities: EventModality[];
+  eventAddress: EventLocation[];
 }
 
 export interface Talk {
@@ -87,7 +91,10 @@ export interface Address {
 
 export interface EventImage {
   id?: number;
+  eventId?: number;
   url: string;
+  caption?: string;
+  isMain?: boolean;
   description?: string;
   isPrimary?: boolean;
 }
@@ -97,6 +104,7 @@ export interface CreateEventRequest {
   description?: string;
   maxParticipants?: number;
   images?: EventImage[];
+  mainImage?: EventImage | null;
   eventTypeId: number;
   address: Address;
   eventDates: CreateEventDateRequest[];

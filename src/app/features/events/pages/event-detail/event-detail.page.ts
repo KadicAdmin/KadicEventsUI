@@ -110,7 +110,7 @@ export class EventDetailPage implements OnInit {
 
     private getEventModality(event: Event): string {
         if (event.eventDates && event.eventDates.length > 0) {
-            const modalities = event.eventDates.flatMap(eventDate => eventDate.modalities);
+            const modalities = event.eventDates.flatMap(eventDate => eventDate.eventDatesModalities);
             const hasOnline = modalities.some(mod => mod.isOnline);
             const hasInPerson = modalities.some(mod => mod.isInPerson);
 
@@ -169,8 +169,8 @@ export class EventDetailPage implements OnInit {
                         talks: [],
                         speakers: [],
                         schedules: [],
-                        modalities: [],
-                        locations: []
+                        eventDatesModalities: [],
+                        eventAddress: []
                     }
                 ],
                 participants: []
@@ -206,8 +206,8 @@ export class EventDetailPage implements OnInit {
                         talks: [],
                         speakers: [],
                         schedules: [],
-                        modalities: [],
-                        locations: []
+                        eventDatesModalities: [],
+                        eventAddress: []
                     }
                 ],
                 participants: []

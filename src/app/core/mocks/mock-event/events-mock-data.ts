@@ -118,7 +118,7 @@ export const MOCK_EVENTS: Event[] = [
                         isBreak: false
                     }
                 ],
-                modalities: [
+                eventDatesModalities: [
                     {
                         id: 1,
                         name: "Híbrido",
@@ -127,7 +127,7 @@ export const MOCK_EVENTS: Event[] = [
                         virtualPlatformLink: "https://zoom.us/j/123456789"
                     }
                 ],
-                locations: [
+                eventAddress: [
                     {
                         id: 1,
                         address: {
@@ -192,7 +192,7 @@ export const MOCK_EVENTS: Event[] = [
                         isBreak: false
                     }
                 ],
-                modalities: [
+                eventDatesModalities: [
                     {
                         id: 2,
                         name: "Presencial",
@@ -200,7 +200,7 @@ export const MOCK_EVENTS: Event[] = [
                         isInPerson: true
                     }
                 ],
-                locations: [
+                eventAddress: [
                     {
                         id: 2,
                         address: {
@@ -294,7 +294,7 @@ export const MOCK_EVENTS: Event[] = [
                         isBreak: false
                     }
                 ],
-                modalities: [
+                eventDatesModalities: [
                     {
                         id: 3,
                         name: "Virtual",
@@ -303,7 +303,7 @@ export const MOCK_EVENTS: Event[] = [
                         virtualPlatformLink: "https://meet.google.com/abc-defg-hij"
                     }
                 ],
-                locations: [
+                eventAddress: [
                     {
                         id: 3,
                         address: {
@@ -391,7 +391,7 @@ export const MOCK_EVENTS: Event[] = [
                         breakDescription: "Registro"
                     }
                 ],
-                modalities: [
+                eventDatesModalities: [
                     {
                         id: 4,
                         name: "Presencial",
@@ -399,7 +399,7 @@ export const MOCK_EVENTS: Event[] = [
                         isInPerson: true
                     }
                 ],
-                locations: [
+                eventAddress: [
                     {
                         id: 4,
                         address: {
@@ -472,8 +472,8 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
                     talks: [],
                     speakers: [],
                     schedules: [],
-                    modalities: [],
-                    locations: []
+                    eventDatesModalities: [],
+            eventAddress: [],
                 }
             ],
             maxParticipants: 100,
@@ -511,8 +511,8 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
                     talks: [],
                     speakers: [],
                     schedules: [],
-                    modalities: [],
-                    locations: []
+                    eventDatesModalities: [],
+            eventAddress: [],
                 }
             ],
             maxParticipants: 50,
@@ -553,8 +553,8 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
                     talks: [],
                     speakers: [],
                     schedules: [],
-                    modalities: [],
-                    locations: []
+                    eventDatesModalities: [],
+                    eventAddress: []
                 }
             ],
             maxParticipants: 80,
@@ -595,8 +595,8 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
                     talks: [],
                     speakers: [],
                     schedules: [],
-                    modalities: [],
-                    locations: []
+                   eventDatesModalities: [],
+                   eventAddress: [],
                 }
             ],
             maxParticipants: 200,
@@ -634,8 +634,8 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
                     talks: [],
                     speakers: [],
                     schedules: [],
-                    modalities: [],
-                    locations: []
+                   eventDatesModalities: [],
+                   eventAddress: [],
                 }
             ],
             maxParticipants: 60,

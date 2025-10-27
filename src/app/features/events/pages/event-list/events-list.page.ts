@@ -140,7 +140,7 @@ export class EventsListPage {
 
   private getEventModality(event: Event): string {
     if (event.eventDates && event.eventDates.length > 0) {
-      const modalities = event.eventDates.flatMap(eventDate => eventDate.modalities);
+      const modalities = event.eventDates.flatMap(eventDate => eventDate.eventDatesModalities);
       const hasOnline = modalities.some(mod => mod.isOnline);
       const hasInPerson = modalities.some(mod => mod.isInPerson);
 
