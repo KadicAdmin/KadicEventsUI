@@ -7,6 +7,7 @@ import { Event, CreateEventRequest, UpdateEventRequest, ApiResponse } from '../m
   providedIn: 'root'
 })
 export class EventService extends BaseHttpService<Event, CreateEventRequest, UpdateEventRequest> {
+  [x: string]: any;
   protected get baseEndpoint(): string {
     return API_CONFIG.endpoints.events.base;
   }

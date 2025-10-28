@@ -165,7 +165,8 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         label: 'Actualización de Evento',
         icon: 'pi pi-refresh',
-        routerLink: '/events',
+        // routerLink: '/events',
+        routerLink: 'event-view-update',
       },
       {
         label: 'Configuración',
