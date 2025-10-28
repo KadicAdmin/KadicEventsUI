@@ -111,16 +111,16 @@ export class EventCreatePage {
   }
   private initializeForm(): void {
     this.myForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      categoryId: [null, Validators.required],
-      tags: [[]],
-      maxParticipants: [null],
-      eventTypeId: [null, Validators.required],
-      mainImage: [null],
-      images: [[]],
+      // name: ['', Validators.required],
+      // description: [''],
+      // categoryId: [null, Validators.required],
+      // tags: [[]],
+      // maxParticipants: [null],
+      // eventTypeId: [null, Validators.required],
+      // mainImage: [null],
+      // images: [[]],
       eventDates: this.fb.array([]),
-      speakers: this.fb.array([]),
+      // speakers: this.fb.array([]),
     });
   }
 
@@ -549,6 +549,8 @@ export class EventCreatePage {
 
   // Submit
   onSubmit() {
+    const eventDates = this.myForm.get('eventDates')?.value;
+    console.log('[DEBUG] eventDates =>', eventDates); //debug para eventDate
     if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
       this.logAllFormErrors();
@@ -615,13 +617,13 @@ export class EventCreatePage {
     const tagIds: number[] = this.myForm.value.tags ?? [];
     const tagsPayload = tagIds.map((id) => ({ TagId: id }));
     const eventRequest: any = {
-      name: this.myForm.value.name || '',
-      description: this.myForm.value.description || '',
-      eventCategoryID: this.myForm.value.categoryId || 0,
-      eventTypeId: this.myForm.value.eventTypeId || 0,
-      maxParticipants: this.myForm.value.maxParticipants || 0,
-      images: processedImages,
-      tags: tagsPayload,
+      // name: this.myForm.value.name || '',
+      // description: this.myForm.value.description || '',
+      // eventCategoryID: this.myForm.value.categoryId || 0,
+      // eventTypeId: this.myForm.value.eventTypeId || 0,
+      // maxParticipants: this.myForm.value.maxParticipants || 0,
+      // images: processedImages,
+      // tags: tagsPayload,
       eventDates: this.myForm.value.eventDates || [],
     };
 

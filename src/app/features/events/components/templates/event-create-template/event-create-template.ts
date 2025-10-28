@@ -1,19 +1,6 @@
-import {
-  Component,
-  input,
-  output,
-  signal,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, input, output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormGroup,
-  FormArray,
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormGroup, FormArray, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
@@ -37,7 +24,7 @@ import { EventDateDialogComponent } from '@shared/components/organisms/event-dat
 import { SpeakerDialogComponent } from '@shared/components/organisms/speaker-dialog';
 import { TalkDialogComponent } from '@shared/components/organisms/talk-dialog';
 import { LocationDialogComponent } from '@shared/components/organisms/location-dialog';
-import { EventModality, EventType, EventTags, Speaker } from '@core/models';
+import { EventModality, Modality, EventType, EventTags, Speaker } from '@core/models';
 
 @Component({
   selector: 'app-event-create-template',
@@ -68,47 +55,45 @@ import { EventModality, EventType, EventTags, Speaker } from '@core/models';
     LocationDialogComponent,
   ],
   templateUrl: './event-create-template.html',
-  styles: [
-    `
-      /* Estilos para campos con errores */
-      :host ::ng-deep {
-        /* Input text con error */
-        input.ng-invalid.ng-dirty,
-        input.ng-invalid.ng-touched {
-          border-color: #ef4444 !important;
-          box-shadow: 0 0 0 1px #ef4444 !important;
-        }
-
-        /* Textarea con error */
-        textarea.ng-invalid.ng-dirty,
-        textarea.ng-invalid.ng-touched {
-          border-color: #ef4444 !important;
-          box-shadow: 0 0 0 1px #ef4444 !important;
-        }
-
-        /* PrimeNG Select con error */
-        .p-select.ng-invalid.ng-dirty .p-select-label,
-        .p-select.ng-invalid.ng-touched .p-select-label {
-          border-color: #ef4444 !important;
-        }
-
-        /* PrimeNG MultiSelect con error */
-        .p-multiselect.ng-invalid.ng-dirty,
-        .p-multiselect.ng-invalid.ng-touched {
-          border-color: #ef4444 !important;
-        }
-
-        /* Focus en campos con error */
-        input.ng-invalid.ng-dirty:focus,
-        input.ng-invalid.ng-touched:focus,
-        textarea.ng-invalid.ng-dirty:focus,
-        textarea.ng-invalid.ng-touched:focus {
-          border-color: #dc2626 !important;
-          box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
-        }
+  styles: [`
+    /* Estilos para campos con errores */
+    :host ::ng-deep {
+      /* Input text con error */
+      input.ng-invalid.ng-dirty,
+      input.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 1px #ef4444 !important;
       }
-    `,
-  ],
+
+      /* Textarea con error */
+      textarea.ng-invalid.ng-dirty,
+      textarea.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 1px #ef4444 !important;
+      }
+
+      /* PrimeNG Select con error */
+      .p-select.ng-invalid.ng-dirty .p-select-label,
+      .p-select.ng-invalid.ng-touched .p-select-label {
+        border-color: #ef4444 !important;
+      }
+
+      /* PrimeNG MultiSelect con error */
+      .p-multiselect.ng-invalid.ng-dirty,
+      .p-multiselect.ng-invalid.ng-touched {
+        border-color: #ef4444 !important;
+      }
+
+      /* Focus en campos con error */
+      input.ng-invalid.ng-dirty:focus,
+      input.ng-invalid.ng-touched:focus,
+      textarea.ng-invalid.ng-dirty:focus,
+      textarea.ng-invalid.ng-touched:focus {
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+      }
+    }
+  `],
 })
 export class EventCreateTemplateComponent {
   private confirmationService = inject(ConfirmationService);
@@ -125,8 +110,7 @@ export class EventCreateTemplateComponent {
   readonly educationalInstitutions = input<any[]>([]);
   readonly availableSpeakers = input<Speaker[]>([]);
   readonly isFieldInvalid = input.required<(fieldName: string) => boolean>();
-  readonly getFieldErrorMessage =
-    input.required<(fieldName: string) => string>();
+  readonly getFieldErrorMessage = input.required<(fieldName: string) => string>();
   readonly hasFormLevelErrors = input.required<() => boolean>();
   readonly getFormLevelErrors = input.required<() => string[]>();
 
@@ -140,10 +124,7 @@ export class EventCreateTemplateComponent {
   readonly editLocation = output<number>();
   readonly clearLocation = output<number>();
   readonly addSpeaker = output<number>();
-  readonly removeSpeaker = output<{
-    eventDateIndex: number;
-    speakerIndex: number;
-  }>();
+  readonly removeSpeaker = output<{ eventDateIndex: number; speakerIndex: number }>();
   readonly addTalk = output<number>();
   readonly removeTalk = output<{ eventDateIndex: number; talkIndex: number }>();
 
@@ -154,15 +135,8 @@ export class EventCreateTemplateComponent {
   readonly onMainImageChange = output<any>();
   readonly onSubmit = output<void>();
   readonly onCreateSpeaker = output<any>();
-  readonly onUpdateSpeaker = output<{
-    speaker: Speaker;
-    eventDateIndex: number;
-    speakerIndex: number;
-  }>();
-  readonly onSelectExistingSpeaker = output<{
-    speaker: Speaker;
-    eventDateIndex: number;
-  }>();
+  readonly onUpdateSpeaker = output<{ speaker: Speaker; eventDateIndex: number; speakerIndex: number }>();
+  readonly onSelectExistingSpeaker = output<{ speaker: Speaker; eventDateIndex: number }>();
 
   showEventDateDialog = signal(false);
   showSpeakerDialog = signal(false);
@@ -231,7 +205,7 @@ export class EventCreateTemplateComponent {
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.removeEventDate.emit(index);
-      },
+      }
     });
   }
 
@@ -257,7 +231,7 @@ export class EventCreateTemplateComponent {
       commentary: '', // Valor por defecto
       academicDegreesId: 1, // Valor por defecto
       academicLevelsId: 1, // Valor por defecto
-      areaOfStudyId: 1, // Valor por defecto
+      areaOfStudyId: 1 // Valor por defecto
     };
 
     this.speakerToEdit.set(speakerToEdit);
@@ -304,7 +278,7 @@ export class EventCreateTemplateComponent {
         this.onUpdateSpeaker.emit({
           speaker: speakerToEdit,
           eventDateIndex,
-          speakerIndex,
+          speakerIndex
         });
       }
     }
@@ -319,6 +293,7 @@ export class EventCreateTemplateComponent {
   updateSpeakerToEdit(updatedSpeaker: Speaker) {
     this.speakerToEdit.set(updatedSpeaker);
   }
+
 
   cancelSpeaker() {
     const eventDateIndex = this.currentEventDateIndexForSpeaker();
@@ -421,9 +396,7 @@ export class EventCreateTemplateComponent {
       const eventDate = this.getEventDates()[index] as FormGroup;
       return eventDate?.get('location') as FormGroup;
     }
-    const lastEventDate = this.getEventDates()[
-      this.getEventDates().length - 1
-    ] as FormGroup;
+    const lastEventDate = this.getEventDates()[this.getEventDates().length - 1] as FormGroup;
     return lastEventDate?.get('location') as FormGroup;
   }
 
@@ -470,7 +443,7 @@ export class EventCreateTemplateComponent {
       educationalInstitutionId: [null],
       linkedInUrl: [''],
       twitterUrl: [''],
-      websiteUrl: [''],
+      websiteUrl: ['']
     });
   }
 
@@ -492,7 +465,7 @@ export class EventCreateTemplateComponent {
     const eventDateIndex = this.currentEventDateIndexForSpeaker();
     if (eventDateIndex !== null) {
       const speakers = this.getSpeakers()(eventDateIndex);
-      return speakers.map((speakerForm) => {
+      return speakers.map(speakerForm => {
         const formValue = speakerForm.value;
         return {
           id: formValue.speakerId,
@@ -506,12 +479,13 @@ export class EventCreateTemplateComponent {
           commentary: '',
           academicDegreesId: 1,
           academicLevelsId: 1,
-          areaOfStudyId: 1,
+          areaOfStudyId: 1
         } as Speaker;
       });
     }
     return [];
   }
+
 
   onSpeakerImageSelect(event: any) {
     const file = event.files?.[0];
