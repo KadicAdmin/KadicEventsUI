@@ -56,28 +56,37 @@ export const routes: Routes = [
       import('./features/admin/admin.routes').then((m) => m.adminRoutes),
   },
 
+  // {
+  //   path: 'admin-update-event',
+  //      // canActivate: [authGuard, adminGuard], // Temporalmente desactivado
+  //   loadChildren: () =>
+  //     import('./features/admin-update-event/admin-update-event.routes').then(
+  //       (m) => m.adminUpdateEventRoutes
+  //     ),
+  // },
+
   {
     path: 'productcard',
     loadComponent: () =>
-      import('@shared/components/molecules/card/product-card-component/product.card.component').then(
-        (m) => m.ProductCardComponent
-      ),
+      import(
+        '@shared/components/molecules/card/product-card-component/product.card.component'
+      ).then((m) => m.ProductCardComponent),
   },
 
   {
     path: 'event cards',
     loadComponent: () =>
-      import('@shared/components/organisms/event-card.component/event.card.component.component').then(
-        (m) => m.CardsListComponent
-      ),
+      import(
+        '@shared/components/organisms/event-card.component/event.card.component.component'
+      ).then((m) => m.CardsListComponent),
   },
 
   {
     path: 'category-event',
     loadComponent: () =>
-      import('@shared/components/organisms/category-card/category-card.component').then(
-        (m) => m.CategoryCardComponent
-      ),
+      import(
+        '@shared/components/organisms/category-card/category-card.component'
+      ).then((m) => m.CategoryCardComponent),
   },
 
   {
