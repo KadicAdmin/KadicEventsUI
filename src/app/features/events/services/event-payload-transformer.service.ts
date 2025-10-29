@@ -1,4 +1,13 @@
 import { Injectable } from '@angular/core';
+import {
+    CreateEventRequest,
+    CreateEventDateRequest,
+    CreateEventDateTalkRequest,
+    CreateEventAddressRequest,
+    CreateEventModalityRequest,
+    CreateEventTag,
+    EventImage
+} from '@core/models';
 import { ImageUtil } from '@core/utils';
 
 /**
@@ -9,13 +18,13 @@ export class EventPayloadTransformerService {
     /**
      * Procesa las imágenes principales del evento
      */
-    async processMainImages(images: any[]): Promise<any[]> {
+    async processMainImages(images: any[]): Promise<EventImage[]> {
         if (!images || !Array.isArray(images)) {
             return [];
         }
 
         const imagesArray = Array.isArray(images[0]) ? images[0] : images;
-        const processedImages: any[] = [];
+        const processedImages: EventImage[] = [];
 
         for (const img of imagesArray) {
             let base64Image = '';
@@ -28,10 +37,11 @@ export class EventPayloadTransformerService {
 
             if (base64Image) {
                 processedImages.push({
+                    eventId: img.eventId || 0,
                     imageUrl: base64Image,
                     caption: img.caption || 'Imagen del evento',
                     isMain: img.isMain || false,
-                    createdAt: new Date().toISOString(),
+                    createAt: new Date().toISOString(),
                 });
             }
         }
@@ -40,18 +50,34 @@ export class EventPayloadTransformerService {
     }
 
     /**
-     * Procesa una imagen individual
+     * Procesa una imagen individual y retorna el base64
      */
     async processImage(image: any): Promise<string> {
         if (!image) {
             return '';
         }
 
+        // Si es un archivo File directamente
+        if (image instanceof File) {
+            return await ImageUtil.fileToBase64(image);
+        }
+
+        // Si tiene propiedad file
         if (image.file) {
             return await ImageUtil.fileToBase64(image.file);
-        } else if (image.imageUrl) {
+        }
+
+        // Si tiene url o imageUrl (ya es base64 o URL)
+        if (image.url) {
+            return ImageUtil.extractBase64(image.url);
+        }
+
+        if (image.imageUrl) {
             return ImageUtil.extractBase64(image.imageUrl);
-        } else if (typeof image === 'string') {
+        }
+
+        // Si es string directamente
+        if (typeof image === 'string') {
             return ImageUtil.extractBase64(image);
         }
 
@@ -61,21 +87,21 @@ export class EventPayloadTransformerService {
     /**
      * Procesa los tags del evento
      */
-    processTags(tagIds: number[]): any[] {
+    processTags(tagIds: number[]): CreateEventTag[] {
         return (tagIds || []).map((id) => ({ tagId: id }));
     }
 
     /**
      * Procesa las modalidades de una fecha de evento
      */
-    processModalities(modalityIds: number[]): any[] {
+    processModalities(modalityIds: number[]): CreateEventModalityRequest[] {
         return (modalityIds || []).map((modalityId) => ({ modalityId }));
     }
 
     /**
      * Procesa la dirección/ubicación de un evento
      */
-    processEventAddress(location: any): any | null {
+    processEventAddress(location: any): CreateEventAddressRequest | null {
         if (!location || (!location.name && !location.address)) {
             return null;
         }
@@ -106,23 +132,16 @@ export class EventPayloadTransformerService {
     /**
      * Procesa las charlas de una fecha de evento
      */
-    async processEventDateTalks(talks: any[]): Promise<any[]> {
+    async processEventDateTalks(talks: any[]): Promise<CreateEventDateTalkRequest[]> {
         if (!talks || !Array.isArray(talks)) {
             return [];
         }
 
-        const processedTalks: any[] = [];
+        const processedTalks: CreateEventDateTalkRequest[] = [];
 
         for (const talk of talks) {
             // Procesar imagen de la charla
-            let talkImageBase64 = '';
-            if (talk.imageUrl) {
-                if (typeof talk.imageUrl === 'object' && talk.imageUrl.file) {
-                    talkImageBase64 = await ImageUtil.fileToBase64(talk.imageUrl.file);
-                } else if (typeof talk.imageUrl === 'string') {
-                    talkImageBase64 = ImageUtil.extractBase64(talk.imageUrl);
-                }
-            }
+            const talkImageBase64 = await this.processImage(talk.imageUrl);
 
             // Procesar speakers de la charla
             const speakerTalkPayload = (talk.speakers || []).map(
@@ -150,21 +169,19 @@ export class EventPayloadTransformerService {
     /**
      * Procesa las fechas de evento completas
      */
-    async processEventDates(eventDates: any[]): Promise<any[]> {
+    async processEventDates(eventDates: any[]): Promise<CreateEventDateRequest[]> {
         if (!eventDates || !Array.isArray(eventDates)) {
             return [];
         }
 
-        const processedEventDates: any[] = [];
+        const processedEventDates: CreateEventDateRequest[] = [];
 
         for (const eventDateForm of eventDates) {
             // Procesar imagen principal del eventDate
             const mainImageBase64 = await this.processImage(eventDateForm.mainImage);
 
             // Procesar modalidades
-            const modalitiesPayload = this.processModalities(
-                eventDateForm.modalities
-            );
+            const modalitiesPayload = this.processModalities(eventDateForm.modalities);
 
             // Procesar ubicación/dirección
             const eventAddress = this.processEventAddress(eventDateForm.location);
@@ -174,8 +191,8 @@ export class EventPayloadTransformerService {
                 eventDateForm.talks
             );
 
-            // Construir el eventDate completo
-            const eventDatePayload: any = {
+            // Construir el eventDate completo con tipo correcto
+            const eventDatePayload: CreateEventDateRequest = {
                 date: eventDateForm.date
                     ? new Date(eventDateForm.date).toISOString()
                     : new Date().toISOString(),
@@ -197,7 +214,7 @@ export class EventPayloadTransformerService {
     /**
      * Construye el payload completo del evento
      */
-    async buildEventPayload(formValue: any): Promise<any> {
+    async buildEventPayload(formValue: any): Promise<CreateEventRequest> {
         // Procesar imágenes del evento principal
         const processedImages = await this.processMainImages(formValue.images);
 
@@ -205,12 +222,10 @@ export class EventPayloadTransformerService {
         const tagsPayload = this.processTags(formValue.tags);
 
         // Procesar eventDates
-        const eventDatesPayload = await this.processEventDates(
-            formValue.eventDates
-        );
+        const eventDatesPayload = await this.processEventDates(formValue.eventDates);
 
-        // Construir el request final
-        return {
+        // Construir el request final con tipo correcto
+        const payload: CreateEventRequest = {
             name: formValue.name || '',
             description: formValue.description || '',
             eventCategoryID: formValue.categoryId || 0,
@@ -220,6 +235,7 @@ export class EventPayloadTransformerService {
             tags: tagsPayload,
             eventDates: eventDatesPayload,
         };
+
+        return payload;
     }
 }
-

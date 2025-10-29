@@ -86,7 +86,7 @@ export interface Address {
 }
 
 export interface EventImage {
-  eventId:number;
+  eventId: number;
   imageUrl: string;
   caption: string;
   isMain: boolean;
@@ -105,24 +105,47 @@ export interface CreateEventRequest {
 }
 
 export interface CreateEventTag {
-  TagId: number;
+  tagId: number;
 }
 
 export interface CreateEventDateRequest {
   date: Date | string;
-  talks: CreateTalkRequest[];
-  speakerIds: number[];
-  schedules: CreateScheduleRequest[];
-  modalities: CreateEventModalityRequest[];
-  locations: CreateEventLocationRequest[];
-  mainImage: EventImage[]
+  title: string;
+  description?: string;
+  mainImage: string;
+  virtualLink?: string | null;
+  eventDatesModalities: CreateEventModalityRequest[];
+  eventAddress: CreateEventAddressRequest | null;
+  eventDateTalk: CreateEventDateTalkRequest[];
+}
+
+export interface CreateEventAddressRequest {
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface CreateEventDateTalkRequest {
+  startHour: string;
+  endHour: string;
+  title: string;
+  description?: string;
+  duration: number;
+  imageUrl: string;
+  speakerTalk: CreateSpeakerTalkRequest[];
+}
+
+export interface CreateSpeakerTalkRequest {
+  speakerId: number;
 }
 
 export interface CreateTalkRequest {
   title: string;
   description?: string;
   duration: number;
-  speakerId: number;
+  imageUrl: string;
+  speakerTalk: Speaker[];
   startTime?: Date | string;
   endTime?: Date | string;
 }
@@ -137,9 +160,6 @@ export interface CreateScheduleRequest {
 
 export interface CreateEventModalityRequest {
   modalityId: number;
-  isOnline: boolean;
-  isInPerson: boolean;
-  virtualPlatformLink?: string;
 }
 
 export interface CreateEventLocationRequest {

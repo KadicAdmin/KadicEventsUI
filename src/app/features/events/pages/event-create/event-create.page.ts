@@ -7,7 +7,7 @@ import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { EventCreateTemplateComponent } from '../../components/templates/event-create-template/event-create-template';
-import { Speaker } from '@core/models';
+import { Speaker, CreateEventRequest } from '@core/models';
 import { EventResp } from '../../models/events.interfaces';
 import { EventService } from '../../services/event.service';
 import { EventStateService } from '../../services/event-state.service';
@@ -242,11 +242,9 @@ export class EventCreatePage {
 
     try {
       // Transformar datos del formulario al formato del API
-      const eventRequest = await this.payloadTransformer.buildEventPayload(
+      const eventRequest: CreateEventRequest = await this.payloadTransformer.buildEventPayload(
         this.myForm.value
       );
-
-      console.log('Event Request Payload:', JSON.stringify(eventRequest, null, 2));
 
       // Enviar al servidor
       this.eventService.create(eventRequest).subscribe({
@@ -258,7 +256,6 @@ export class EventCreatePage {
         },
       });
     } catch (error) {
-      console.error('Error al procesar el formulario:', error);
       this.messageService.add({
         severity: 'error',
         summary: 'Error al procesar',
@@ -314,8 +311,6 @@ export class EventCreatePage {
     } else if (typeof err === 'string') {
       errorMessage = err;
     }
-
-    console.error('Error al crear evento:', err);
 
     this.messageService.add({
       severity: 'error',
