@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  baseUrl: 'https://eventapi.kadictechnology.com/api',
+  baseUrl: 'https://kadictechnology-001-site2.ltempurl.com/api',
   endpoints: {
     // Authentication
     auth: {
@@ -49,7 +49,7 @@ export const API_CONFIG = {
       // Participants
       participants: {
         base: '/Participants',
-        getAll: '/Participants',  
+        getAll: '/Participants',
         getById: (id: number) => `/Participants/${id}`,
         create: '/Participants',
         update: (id: number) => `/Participants/${id}`,
