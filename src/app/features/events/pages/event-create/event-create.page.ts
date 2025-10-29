@@ -2,14 +2,7 @@ import { EventService } from '../../services/event.service';
 import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
@@ -18,13 +11,11 @@ import { EventCreateTemplateComponent } from '../../components/templates/event-c
 import { EventModalityService } from '../../services/event.modality.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  Modality,
   EventModality,
   EventType,
   EventTags,
   EventCategory,
   Speaker,
-  ApiResponse,
 } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
 import { ImageUtil } from '@core/utils';
@@ -33,7 +24,6 @@ import { EventTagsService } from '../../services/event-tags.service';
 import { EventCategoryService } from '../../services/event.category.service';
 import { SpeakerService } from '../../../speakers/services/speaker.service';
 import { EventResp } from '../../models/events.interfaces';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-event-create',
@@ -115,9 +105,7 @@ export class EventCreatePage {
   ]);
 
   constructor() {
-    effect(() => {
-
-    });
+    effect(() => {});
     this.initializeForm();
     this.setupRealtimeValidation();
   }
@@ -175,7 +163,6 @@ export class EventCreatePage {
     const newEventDate = this.createEventDateGroup();
 
     eventDates.push(newEventDate);
-
   }
 
   removeEventDate(index: number): void {
@@ -201,9 +188,7 @@ export class EventCreatePage {
     });
   }
 
-  editLocation(eventDateIndex: number): void {
-
-  }
+  editLocation(eventDateIndex: number): void {}
 
   clearLocation(eventDateIndex: number): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
@@ -280,7 +265,7 @@ export class EventCreatePage {
       educationalInstitutionId: speakerData.educationalInstitutionId || null,
       linkedInUrl: speakerData.linkedInUrl || '',
       twitterUrl: speakerData.twitterUrl || '',
-      websiteUrl: speakerData.websiteUrl || ''
+      websiteUrl: speakerData.websiteUrl || '',
     };
 
     this.speakerService.create(createRequest).subscribe({
@@ -301,7 +286,8 @@ export class EventCreatePage {
 
         if (error?.status === 409) {
           errorSummary = 'Speaker Ya Existe';
-          errorMessage = 'Ya existe un speaker registrado con este email. Por favor, usa la opción "Seleccionar Existente" para agregarlo al evento.';
+          errorMessage =
+            'Ya existe un speaker registrado con este email. Por favor, usa la opción "Seleccionar Existente" para agregarlo al evento.';
         } else if (error?.error?.message) {
           errorMessage = error.error.message;
         } else if (error?.message) {
@@ -314,11 +300,15 @@ export class EventCreatePage {
           detail: errorMessage,
           life: 7000,
         });
-      }
+      },
     });
   }
 
-  onUpdateSpeaker(data: { speaker: Speaker; eventDateIndex: number; speakerIndex: number }): void {
+  onUpdateSpeaker(data: {
+    speaker: Speaker;
+    eventDateIndex: number;
+    speakerIndex: number;
+  }): void {
     const { speaker, eventDateIndex, speakerIndex } = data;
 
     const updateRequest = {
@@ -334,10 +324,11 @@ export class EventCreatePage {
       academicDegreesId: speaker.academicDegreesId,
       academicLevelsId: speaker.academicLevelsId,
       areaOfStudyId: speaker.areaOfStudyId,
-      educationalInstitutionId: (speaker as any).educationalInstitutionId || null,
+      educationalInstitutionId:
+        (speaker as any).educationalInstitutionId || null,
       linkedInUrl: (speaker as any).linkedInUrl || '',
       twitterUrl: (speaker as any).twitterUrl || '',
-      websiteUrl: (speaker as any).websiteUrl || ''
+      websiteUrl: (speaker as any).websiteUrl || '',
     };
 
     this.speakerService.update(updateRequest).subscribe({
@@ -353,7 +344,7 @@ export class EventCreatePage {
             speakerId: response.data.id,
             name: response.data.name,
             lastName: response.data.lastName,
-            email: response.data.email
+            email: response.data.email,
           });
 
           this.messageService.add({
@@ -365,13 +356,15 @@ export class EventCreatePage {
         }
       },
       error: (error) => {
-        let errorMessage = 'No se pudo actualizar el speaker. Intenta nuevamente.';
+        let errorMessage =
+          'No se pudo actualizar el speaker. Intenta nuevamente.';
         let errorSummary = 'Error al actualizar speaker';
 
         // Manejar error 409 - Conflict
         if (error?.status === 409) {
           errorSummary = 'Conflicto al Actualizar';
-          errorMessage = 'El email ingresado ya está registrado con otro speaker.';
+          errorMessage =
+            'El email ingresado ya está registrado con otro speaker.';
         } else if (error?.error?.message) {
           errorMessage = error.error.message;
         } else if (error?.message) {
@@ -384,16 +377,22 @@ export class EventCreatePage {
           detail: errorMessage,
           life: 5000,
         });
-      }
+      },
     });
   }
 
-  onSelectExistingSpeaker(data: { speaker: Speaker; eventDateIndex: number }): void {
+  onSelectExistingSpeaker(data: {
+    speaker: Speaker;
+    eventDateIndex: number;
+  }): void {
     const { speaker, eventDateIndex } = data;
     this.addSpeakerToEventDate(eventDateIndex, speaker);
   }
 
-  private addSpeakerToEventDate(eventDateIndex: number, speaker: Speaker): void {
+  private addSpeakerToEventDate(
+    eventDateIndex: number,
+    speaker: Speaker
+  ): void {
     const eventDates = this.myForm.get('eventDates') as FormArray;
     const eventDate = eventDates.at(eventDateIndex) as FormGroup;
     const speakers = eventDate.get('speakers') as FormArray;
@@ -402,7 +401,7 @@ export class EventCreatePage {
       speakerId: [speaker.id],
       name: [speaker.name],
       lastName: [speaker.lastName],
-      email: [speaker.email]
+      email: [speaker.email],
     });
 
     speakers.push(speakerForm);
@@ -550,7 +549,6 @@ export class EventCreatePage {
 
   // Submit
   onSubmit() {
-
     if (this.myForm.invalid) {
       this.myForm.markAllAsTouched();
       this.logAllFormErrors();
@@ -586,13 +584,17 @@ export class EventCreatePage {
       processedImages = ImageUtil.processImagesArray(imagesArray);
     }
 
+    const tagIds: number[] = this.myForm.value.tags ?? [];
+    const tagsPayload = tagIds.map((id) => ({ TagId: id }));
     const eventRequest: any = {
       name: this.myForm.value.name || '',
       description: this.myForm.value.description || '',
       eventCategoryID: this.myForm.value.categoryId || 0,
       eventTypeId: this.myForm.value.eventTypeId || 0,
       maxParticipants: this.myForm.value.maxParticipants || 0,
-      images: processedImages
+      images: processedImages,
+      tags: tagsPayload,
+      eventDates: this.myForm.value.eventDates || [],
     };
 
     this.eventService.create(eventRequest).subscribe({
