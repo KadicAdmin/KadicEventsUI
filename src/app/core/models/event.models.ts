@@ -86,21 +86,22 @@ export interface Address {
 }
 
 export interface EventImage {
-  id?: number;
-  url: string;
-  description?: string;
-  isPrimary?: boolean;
+  eventId:number;
+  imageUrl: string;
+  caption: string;
+  isMain: boolean;
+  createAt: string
 }
 
 export interface CreateEventRequest {
   name: string;
   description?: string;
+  eventCategoryID: number;
   maxParticipants?: number;
   images?: EventImage[];
   eventTypeId: number;
-  address: Address;
-  eventDates: CreateEventDateRequest[];
   tags: CreateEventTag[];
+  eventDates: CreateEventDateRequest[];
 }
 
 export interface CreateEventTag {
@@ -114,6 +115,7 @@ export interface CreateEventDateRequest {
   schedules: CreateScheduleRequest[];
   modalities: CreateEventModalityRequest[];
   locations: CreateEventLocationRequest[];
+  mainImage: EventImage[]
 }
 
 export interface CreateTalkRequest {

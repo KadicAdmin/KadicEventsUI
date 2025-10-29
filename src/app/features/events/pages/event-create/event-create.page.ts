@@ -16,6 +16,8 @@ import {
   EventTags,
   EventCategory,
   Speaker,
+  CreateEventRequest,
+  CreateEventDateRequest,
 } from '@core/models';
 import { extractData } from '@core/utils/api-response.utils';
 import { ImageUtil } from '@core/utils';
@@ -120,7 +122,7 @@ export class EventCreatePage {
       eventTypeId: [null, Validators.required],
       mainImage: [null],
       images: [[]],
-      eventDates: this.fb.array([]),
+      eventDates: this.fb.array([] as CreateEventDateRequest[] ),
     });
   }
 
@@ -581,17 +583,17 @@ export class EventCreatePage {
         ? this.myForm.value.images[0]
         : this.myForm.value.images;
 
-      processedImages = ImageUtil.processImagesArray(imagesArray);
+      processedImages:string[] = ImageUtil.processImagesArray(imagesArray);
     }
 
     const tagIds: number[] = this.myForm.value.tags ?? [];
     const tagsPayload = tagIds.map((id) => ({ TagId: id }));
-    const eventRequest: any = {
+    const eventRequest: CreateEventRequest = {
       name: this.myForm.value.name || '',
       description: this.myForm.value.description || '',
       eventCategoryID: this.myForm.value.categoryId || 0,
-      eventTypeId: this.myForm.value.eventTypeId || 0,
       maxParticipants: this.myForm.value.maxParticipants || 0,
+      eventTypeId: this.myForm.value.eventTypeId || 0,
       images: processedImages,
       tags: tagsPayload,
       eventDates: this.myForm.value.eventDates || [],
