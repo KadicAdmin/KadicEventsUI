@@ -66,19 +66,20 @@ export class ImageUtil {
    * @param images - Array de objetos con imagen
    * @returns Array procesado con base64 puro
    */
-  static processImagesArray(images: {
-    imageUrl: string;
-    caption: string;
-    eventId: number;
-    isMain: boolean;
-    createdAt: string;
-  ): EventImage[] {
+  static processImagesArray(images: Array<{
+    imageUrl?: string;
+    url?: string;
+    caption?: string;
+    eventId?: number;
+    isMain?: boolean;
+    createdAt?: string;
+  }>): EventImage[] {
     if (!Array.isArray(images)) return [];
 
     return images
       .filter((img) => img && (img.imageUrl || img.url))
       .map((img) => {
-        const imageUrl = img.imageUrl || img.url;
+        const imageUrl = img.imageUrl || img.url || '';
         const base64Data = this.extractBase64(imageUrl);
 
         return {
@@ -86,7 +87,7 @@ export class ImageUtil {
           imageUrl: base64Data,
           caption: img.caption || '',
           isMain: img.isMain || false,
-          createdAt: img.createdAt || new Date().toISOString(),
+          createAt: img.createdAt || new Date().toISOString(),
         };
       });
   }

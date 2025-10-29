@@ -148,7 +148,7 @@ export class EventDetailTemplateComponent {
         return events.map(event => ({
             id: event.id,
             title: event.name,
-            imageUrl: event.images?.[0]?.url,
+            imageUrl: event.images?.[0]?.imageUrl,
             date: this.getEventStartDate(event),
             location: this.getEventLocationFromEvent(event),
             price: Math.floor(Math.random() * 100) + 20,
@@ -218,7 +218,7 @@ export class EventDetailTemplateComponent {
 
     getHeroImage(): string {
         const event = this.eventData()?.event;
-        return event?.images?.[0]?.url || '';
+        return event?.images?.[0]?.imageUrl || '';
     }
 
     getBadgeText(): string {

@@ -26,10 +26,11 @@ export const MOCK_EVENTS: Event[] = [
         },
         images: [
             {
-                id: 1,
-                url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
-                description: "Imagen principal del evento",
-                isPrimary: true
+                eventId: 1,
+                imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
+                caption: "Imagen principal del evento",
+                isMain: true,
+                createAt: new Date().toISOString()
             }
         ],
         eventDates: [
@@ -240,10 +241,11 @@ export const MOCK_EVENTS: Event[] = [
         },
         images: [
             {
-                id: 3,
-                url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
-                description: "Workshop de React",
-                isPrimary: true
+                eventId: 2,
+                imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
+                caption: "Workshop de React",
+                isMain: true,
+                createAt: new Date().toISOString()
             }
         ],
         eventDates: [
@@ -344,10 +346,11 @@ export const MOCK_EVENTS: Event[] = [
         },
         images: [
             {
-                id: 5,
-                url: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=600&fit=crop",
-                description: "Innovación y startups",
-                isPrimary: true
+                eventId: 3,
+                imageUrl: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=600&fit=crop",
+                caption: "Innovación y startups",
+                isMain: true,
+                createAt: new Date().toISOString()
             }
         ],
         eventDates: [
@@ -481,10 +484,11 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
             isActive: true,
             images: [
                 {
-                    id: 11,
-                    url: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop',
-                    description: 'Conferencia de desarrollo web',
-                    isPrimary: true
+                    eventId: 2,
+                    imageUrl: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop',
+                    caption: 'Conferencia de desarrollo web',
+                    isMain: true,
+                    createAt: new Date().toISOString()
                 }
             ],
             eventTypeId: 1,
@@ -520,10 +524,11 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
             isActive: true,
             images: [
                 {
-                    id: 12,
-                    url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
-                    description: 'Workshop de React',
-                    isPrimary: true
+                    eventId: 3,
+                    imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
+                    caption: 'Workshop de React',
+                    isMain: true,
+                    createAt: new Date().toISOString()
                 }
             ],
             eventTypeId: 2,
@@ -562,10 +567,11 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
             isActive: true,
             images: [
                 {
-                    id: 13,
-                    url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop',
-                    description: 'Seminario de Angular',
-                    isPrimary: true
+                    eventId: 4,
+                    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop',
+                    caption: 'Seminario de Angular',
+                    isMain: true,
+                    createAt: new Date().toISOString()
                 }
             ],
             eventTypeId: 1,
@@ -604,10 +610,11 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
             isActive: true,
             images: [
                 {
-                    id: 14,
-                    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop',
-                    description: 'Hackathon de innovación',
-                    isPrimary: true
+                    eventId: 5,
+                    imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop',
+                    caption: 'Hackathon de innovación',
+                    isMain: true,
+                    createAt: new Date().toISOString()
                 }
             ],
             eventTypeId: 3,
@@ -643,10 +650,11 @@ export const MOCK_EVENT_DETAIL_DATA: Event[] =
             isActive: true,
             images: [
                 {
-                    id: 15,
-                    url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
-                    description: 'Meetup de JavaScript',
-                    isPrimary: true
+                    eventId: 6,
+                    imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop',
+                    caption: 'Meetup de JavaScript',
+                    isMain: true,
+                    createAt: new Date().toISOString()
                 }
             ],
             eventTypeId: 4,
