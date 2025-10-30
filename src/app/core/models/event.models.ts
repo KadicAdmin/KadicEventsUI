@@ -86,41 +86,66 @@ export interface Address {
 }
 
 export interface EventImage {
-  id?: number;
-  url: string;
-  description?: string;
-  isPrimary?: boolean;
+  eventId: number;
+  imageUrl: string;
+  caption: string;
+  isMain: boolean;
+  createAt: string
 }
 
 export interface CreateEventRequest {
   name: string;
   description?: string;
+  eventCategoryID: number;
   maxParticipants?: number;
   images?: EventImage[];
   eventTypeId: number;
-  address: Address;
-  eventDates: CreateEventDateRequest[];
   tags: CreateEventTag[];
+  eventDates: CreateEventDateRequest[];
 }
 
 export interface CreateEventTag {
-  TagId: number;
+  tagId: number;
 }
 
 export interface CreateEventDateRequest {
   date: Date | string;
-  talks: CreateTalkRequest[];
-  speakerIds: number[];
-  schedules: CreateScheduleRequest[];
-  modalities: CreateEventModalityRequest[];
-  locations: CreateEventLocationRequest[];
+  title: string;
+  description?: string;
+  mainImage: string;
+  virtualLink?: string | null;
+  eventDatesModalities: CreateEventModalityRequest[];
+  eventAddress: CreateEventAddressRequest | null;
+  eventDateTalk: CreateEventDateTalkRequest[];
+}
+
+export interface CreateEventAddressRequest {
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface CreateEventDateTalkRequest {
+  startHour: string;
+  endHour: string;
+  title: string;
+  description?: string;
+  duration: number;
+  imageUrl: string;
+  speakerTalk: CreateSpeakerTalkRequest[];
+}
+
+export interface CreateSpeakerTalkRequest {
+  speakerId: number;
 }
 
 export interface CreateTalkRequest {
   title: string;
   description?: string;
   duration: number;
-  speakerId: number;
+  imageUrl: string;
+  speakerTalk: Speaker[];
   startTime?: Date | string;
   endTime?: Date | string;
 }
@@ -135,9 +160,6 @@ export interface CreateScheduleRequest {
 
 export interface CreateEventModalityRequest {
   modalityId: number;
-  isOnline: boolean;
-  isInPerson: boolean;
-  virtualPlatformLink?: string;
 }
 
 export interface CreateEventLocationRequest {

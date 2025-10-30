@@ -66,6 +66,13 @@ import { EventModality } from '@core/models';
           </div>
 
           <div class="space-y-2">
+            <label class="text-sm font-medium text-gray-700">Link Virtual (Opcional)</label>
+            <input pInputText formControlName="virtualLink" class="w-full" 
+              placeholder="https://meet.google.com/xxx-xxxx-xxx" />
+            <small class="text-gray-500 text-xs">Link para evento virtual o híbrido</small>
+          </div>
+
+          <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Imagen del Día</label>
             <app-image-gallery-upload
               [allowMultiple]="false"

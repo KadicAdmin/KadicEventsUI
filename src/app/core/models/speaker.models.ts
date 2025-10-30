@@ -16,6 +16,12 @@ export interface Speaker extends BaseEntity {
   profileImageUrl?: string;
 }
 
+export interface SpeakerTalkRequest {
+  id: number;
+  speakerId: number;
+  eventDateTalkId: number;
+}
+
 export interface CreateSpeakerRequest {
   name: string;
   lastName: string;

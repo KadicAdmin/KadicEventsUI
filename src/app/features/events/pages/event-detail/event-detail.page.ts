@@ -156,10 +156,11 @@ export class EventDetailPage implements OnInit {
                 },
                 images: [
                     {
-                        id: 11,
-                        url: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop',
-                        description: 'Conferencia de desarrollo web',
-                        isPrimary: true
+                        eventId: 1,
+                        imageUrl: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop',
+                        caption: 'Conferencia de desarrollo web',
+                        isMain: true,
+                        createAt: new Date().toISOString()
                     }
                 ],
                 eventDates: [
@@ -193,10 +194,11 @@ export class EventDetailPage implements OnInit {
                 },
                 images: [
                     {
-                        id: 12,
-                        url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
-                        description: 'Workshop de React',
-                        isPrimary: true
+                        eventId: 2,
+                        imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop',
+                        caption: 'Workshop de React',
+                        isMain: true,
+                        createAt: new Date().toISOString()
                     }
                 ],
                 eventDates: [
