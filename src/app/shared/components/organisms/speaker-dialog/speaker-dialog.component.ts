@@ -241,10 +241,13 @@ import { ChipModule } from 'primeng/chip';
               <i class="pi pi-id-card mr-2"></i>
               Académica
             </p-tab>
+            <!-- Tab de Redes Sociales deshabilitado temporalmente -->
+            <!--
             <p-tab value="2">
               <i class="pi pi-link mr-2"></i>
               Redes
             </p-tab>
+            -->
           </p-tablist>
           
           <p-tabpanels>
@@ -359,20 +362,22 @@ import { ChipModule } from 'primeng/chip';
                     class="w-full" styleClass="w-full" />
                 </div>
 
-                <!-- Institución Educativa -->
+                <!-- Institución Educativa (Deshabilitado temporalmente - no está en el modelo API) -->
+                <!--
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700">Institución Educativa</label>
                   <p-select formControlName="educationalInstitutionId" 
                     [options]="educationalInstitutions()" optionLabel="name" optionValue="id" 
                     placeholder="Selecciona una institución" class="w-full" styleClass="w-full" />
                 </div>
+                -->
               </div>
             </p-tabpanel>
 
-            <!-- Tab 3: Redes Sociales -->
+            <!-- Tab 3: Redes Sociales (Deshabilitado temporalmente - no están en el modelo API) -->
+            <!--
             <p-tabpanel value="2">
               <div class="space-y-4 py-4">
-                <!-- LinkedIn -->
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <i class="pi pi-linkedin text-blue-600"></i>
@@ -382,7 +387,6 @@ import { ChipModule } from 'primeng/chip';
                     placeholder="https://linkedin.com/in/usuario" />
                 </div>
 
-                <!-- Twitter -->
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <i class="pi pi-twitter text-sky-500"></i>
@@ -392,7 +396,6 @@ import { ChipModule } from 'primeng/chip';
                     placeholder="https://twitter.com/usuario" />
                 </div>
 
-                <!-- Website -->
                 <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <i class="pi pi-globe text-gray-600"></i>
@@ -403,6 +406,7 @@ import { ChipModule } from 'primeng/chip';
                 </div>
               </div>
             </p-tabpanel>
+            -->
           </p-tabpanels>
         </p-tabs>
       </form>

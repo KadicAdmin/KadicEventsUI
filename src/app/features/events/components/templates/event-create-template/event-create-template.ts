@@ -440,10 +440,6 @@ export class EventCreateTemplateComponent {
       academicDegreesId: [1, Validators.required],
       academicLevelsId: [1, Validators.required],
       areaOfStudyId: [1, Validators.required],
-      educationalInstitutionId: [null],
-      linkedInUrl: [''],
-      twitterUrl: [''],
-      websiteUrl: ['']
     });
   }
 

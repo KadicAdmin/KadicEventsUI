@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Speaker } from '@core/models';
+import { Speaker, CreateSpeakerRequest, UpdateSpeakerRequest } from '@core/models';
 import { SpeakerService } from '../../speakers/services/speaker.service';
 import { EventFormBuilderService } from './event-form-builder.service';
 
@@ -23,7 +23,7 @@ export class EventSpeakerHandlerService {
         form: FormGroup,
         onSuccess?: (speaker: Speaker) => void
     ): void {
-        const createRequest = this.buildSpeakerRequest(speakerData);
+        const createRequest = this.buildCreateSpeakerRequest(speakerData);
 
         this.speakerService.create(createRequest).subscribe({
             next: (response) => {
@@ -62,7 +62,7 @@ export class EventSpeakerHandlerService {
         form: FormGroup,
         onSuccess?: (speaker: Speaker) => void
     ): void {
-        const updateRequest = this.buildSpeakerRequest(speaker, speaker.id);
+        const updateRequest = this.buildUpdateSpeakerRequest(speaker);
 
         this.speakerService.update(updateRequest).subscribe({
             next: (response) => {
@@ -112,10 +112,10 @@ export class EventSpeakerHandlerService {
     }
 
     /**
-     * Construye el objeto de request para crear/actualizar speaker
+     * Construye el objeto de request para crear speaker
      */
-    private buildSpeakerRequest(speakerData: any, id?: number): any {
-        const request: any = {
+    private buildCreateSpeakerRequest(speakerData: any): CreateSpeakerRequest {
+        return {
             name: speakerData.name || '',
             lastName: speakerData.lastName || '',
             birthDay: speakerData.birthDay || '2000-01-01',
@@ -127,17 +127,27 @@ export class EventSpeakerHandlerService {
             academicDegreesId: speakerData.academicDegreesId || 1,
             academicLevelsId: speakerData.academicLevelsId || 1,
             areaOfStudyId: speakerData.areaOfStudyId || 1,
-            educationalInstitutionId: speakerData.educationalInstitutionId || null,
-            linkedInUrl: speakerData.linkedInUrl || '',
-            twitterUrl: speakerData.twitterUrl || '',
-            websiteUrl: speakerData.websiteUrl || '',
         };
+    }
 
-        if (id) {
-            request.id = id;
-        }
-
-        return request;
+    /**
+     * Construye el objeto de request para actualizar speaker
+     */
+    private buildUpdateSpeakerRequest(speakerData: any): UpdateSpeakerRequest {
+        return {
+            id: speakerData.id,
+            name: speakerData.name || '',
+            lastName: speakerData.lastName || '',
+            birthDay: speakerData.birthDay || '2000-01-01',
+            gendersId: speakerData.gendersId || 1,
+            countriesId: speakerData.countriesId || 1,
+            email: speakerData.email || '',
+            phoneNumber: speakerData.phoneNumber || '',
+            commentary: speakerData.commentary || '',
+            academicDegreesId: speakerData.academicDegreesId || 1,
+            academicLevelsId: speakerData.academicLevelsId || 1,
+            areaOfStudyId: speakerData.areaOfStudyId || 1,
+        };
     }
 
     /**
