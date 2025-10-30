@@ -102,8 +102,10 @@ export class EventCreatePage {
     this.formBuilder.removeEventDate(this.myForm, index);
   }
 
-  // editLocation(eventDateIndex: number): void {
-  // }
+  editLocation(eventDateIndex: number): void {
+    // TODO: Implementar lógica para editar ubicación
+    console.log('Edit location for event date index:', eventDateIndex);
+  }
 
   clearLocation(eventDateIndex: number): void {
     this.formBuilder.clearLocation(this.myForm, eventDateIndex);
