@@ -24,7 +24,7 @@ export class AcademicDegreeService extends BaseHttpService<AcademicDegree> {
 })
 export class AcademicLevelService extends BaseHttpService<AcademicLevel> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.events.academicLevels.base;
+    return API_CONFIG.endpoints.events.academicLevels.getAll;
   }
 }
 

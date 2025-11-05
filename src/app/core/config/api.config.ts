@@ -68,12 +68,12 @@ export const API_CONFIG = {
       },
       // Academic Levels
       academicLevels: {
-        base: '/AcademicLevels',
-        getAll: '/AcademicLevels',
-        getById: (id: number) => `/AcademicLevels/${id}`,
-        create: '/AcademicLevels',
-        update: (id: number) => `/AcademicLevels/${id}`,
-        delete: (id: number) => `/AcademicLevels/${id}`,
+        base: '/AcademicLevel',
+        getAll: '/AcademicLevel/GetAll',
+        getById: (id: number) => `/AcademicLevel/${id}`,
+        create: '/AcademicLevel',
+        update: (id: number) => `/AcademicLevel/${id}`,
+        delete: (id: number) => `/AcademicLevel/${id}`,
       },
       // Study Areas
       studyAreas: {
