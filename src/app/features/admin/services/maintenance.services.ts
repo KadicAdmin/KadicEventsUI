@@ -15,7 +15,7 @@ import {
 })
 export class AcademicDegreeService extends BaseHttpService<AcademicDegree> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.academicDegrees.base;
+    return API_CONFIG.endpoints.events.academicDegrees.base;
   }
 }
 
@@ -24,7 +24,7 @@ export class AcademicDegreeService extends BaseHttpService<AcademicDegree> {
 })
 export class AcademicLevelService extends BaseHttpService<AcademicLevel> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.academicLevels.base;
+    return API_CONFIG.endpoints.events.academicLevels.base;
   }
 }
 
@@ -33,7 +33,7 @@ export class AcademicLevelService extends BaseHttpService<AcademicLevel> {
 })
 export class StudyAreaService extends BaseHttpService<StudyArea> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.studyAreas.base;
+    return API_CONFIG.endpoints.events.studyAreas.base;
   }
 }
 
@@ -42,7 +42,7 @@ export class StudyAreaService extends BaseHttpService<StudyArea> {
 })
 export class EducationalInstitutionService extends BaseHttpService<EducationalInstitution> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.educationalInstitutions.base;
+    return API_CONFIG.endpoints.events.educationalInstitutions.base;
   }
 }
 
@@ -51,7 +51,7 @@ export class EducationalInstitutionService extends BaseHttpService<EducationalIn
 })
 export class EventTypeService extends BaseHttpService<EventType> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.eventTypes.base;
+    return API_CONFIG.endpoints.events.eventTypes.base;
   }
 }
 
@@ -60,6 +60,6 @@ export class EventTypeService extends BaseHttpService<EventType> {
 })
 export class ModalityService extends BaseHttpService<Modality> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.modalities.base;
+    return API_CONFIG.endpoints.events.modalities.base;
   }
 }
