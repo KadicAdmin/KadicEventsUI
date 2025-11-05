@@ -57,14 +57,14 @@ export const API_CONFIG = {
         delete: (id: number) => `/Participants/${id}`,
         search: '/Participants/search',
       },
-      // Academic Titles
-      academicTitles: {
-        base: '/AcademicTitles',
-        getAll: '/AcademicTitles',
-        getById: (id: number) => `/AcademicTitles/${id}`,
-        create: '/AcademicTitles',
-        update: (id: number) => `/AcademicTitles/${id}`,
-        delete: (id: number) => `/AcademicTitles/${id}`,
+      // Academic Degrees
+      academicDegrees: {
+        base: '/AcademicDegrees',
+        getAll: '/AcademicDegree',
+        getById: (id: number) => `/AcademicDegrees/${id}`,
+        create: '/AcademicDegrees',
+        update: (id: number) => `/AcademicDegrees/${id}`,
+        delete: (id: number) => `/AcademicDegrees/${id}`,
       },
       // Academic Levels
       academicLevels: {

@@ -40,7 +40,7 @@ export interface UpdateSpeakerRequest extends Partial<CreateSpeakerRequest> {
   id: number;
 }
 
-export interface AcademicTitle extends BaseEntity {
+export interface AcademicDegree extends BaseEntity {
   name: string;
   description?: string;
   isActive: boolean;
