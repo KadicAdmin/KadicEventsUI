@@ -60,10 +60,12 @@ export class EventCreatePage {
   readonly tags = this.stateService.tags;
   readonly categories = this.stateService.categories;
   readonly speakers = this.stateService.speakers;
-  readonly academicTitles = this.stateService.academicTitles;
+  readonly genders = this.stateService.genders;
+  readonly countries = this.stateService.countries;
+  readonly academicDegrees = this.stateService.academicDegrees;
   readonly academicLevels = this.stateService.academicLevels;
-  readonly studyAreas = this.stateService.studyAreas;
-  readonly educationalInstitutions = this.stateService.educationalInstitutions;
+  readonly studyAreas = this.stateService.studiAreas;
+  readonly educationalInstitutions = this.stateService.educationalInstutions;
 
   constructor() {
     this.initializeForm();
@@ -130,11 +132,7 @@ export class EventCreatePage {
 
   onCreateSpeaker(data: { speakerData: any; eventDateIndex: number }): void {
     const { speakerData, eventDateIndex } = data;
-    this.speakerHandler.createSpeaker(
-      speakerData,
-      eventDateIndex,
-      this.myForm
-    );
+    this.speakerHandler.createSpeaker(speakerData, eventDateIndex, this.myForm);
   }
 
   onUpdateSpeaker(data: {
@@ -156,7 +154,11 @@ export class EventCreatePage {
     eventDateIndex: number;
   }): void {
     const { speaker, eventDateIndex } = data;
-    this.speakerHandler.addExistingSpeaker(speaker, eventDateIndex, this.myForm);
+    this.speakerHandler.addExistingSpeaker(
+      speaker,
+      eventDateIndex,
+      this.myForm
+    );
   }
 
   // ========== Talk Management ==========
@@ -231,7 +233,9 @@ export class EventCreatePage {
       this.myForm.markAllAsTouched();
       this.logAllFormErrors();
 
-      const errorMessage = this.validator.getValidationErrorMessage(this.myForm);
+      const errorMessage = this.validator.getValidationErrorMessage(
+        this.myForm
+      );
 
       this.messageService.add({
         severity: 'warn',
@@ -244,9 +248,8 @@ export class EventCreatePage {
 
     try {
       // Transformar datos del formulario al formato del API
-      const eventRequest: CreateEventRequest = await this.payloadTransformer.buildEventPayload(
-        this.myForm.value
-      );
+      const eventRequest: CreateEventRequest =
+        await this.payloadTransformer.buildEventPayload(this.myForm.value);
 
       // Enviar al servidor
       this.eventService.create(eventRequest).subscribe({

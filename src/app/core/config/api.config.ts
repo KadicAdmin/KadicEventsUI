@@ -57,41 +57,61 @@ export const API_CONFIG = {
         delete: (id: number) => `/Participants/${id}`,
         search: '/Participants/search',
       },
-      // Academic Titles
-      academicTitles: {
-        base: '/AcademicTitles',
-        getAll: '/AcademicTitles',
-        getById: (id: number) => `/AcademicTitles/${id}`,
-        create: '/AcademicTitles',
-        update: (id: number) => `/AcademicTitles/${id}`,
-        delete: (id: number) => `/AcademicTitles/${id}`,
+      // Academic Degrees
+      academicDegrees: {
+        base: '/AcademicDegree',
+        getAll: '/AcademicDegree',
+        getById: (id: number) => `/AcademicDegree/${id}`,
+        create: '/AcademicDegrees',
+        update: (id: number) => `/AcademicDegrees/${id}`,
+        delete: (id: number) => `/AcademicDegrees/${id}`,
       },
       // Academic Levels
       academicLevels: {
-        base: '/AcademicLevels',
-        getAll: '/AcademicLevels',
-        getById: (id: number) => `/AcademicLevels/${id}`,
-        create: '/AcademicLevels',
-        update: (id: number) => `/AcademicLevels/${id}`,
-        delete: (id: number) => `/AcademicLevels/${id}`,
+        base: '/AcademicLevel',
+        getAll: '/AcademicLevel/GetAll',
+        getById: (id: number) => `/AcademicLevel/${id}`,
+        create: '/AcademicLevel',
+        update: (id: number) => `/AcademicLevel/${id}`,
+        delete: (id: number) => `/AcademicLevel/${id}`,
       },
       // Study Areas
-      studyAreas: {
-        base: '/StudyAreas',
-        getAll: '/StudyAreas',
-        getById: (id: number) => `/StudyAreas/${id}`,
-        create: '/StudyAreas',
-        update: (id: number) => `/StudyAreas/${id}`,
-        delete: (id: number) => `/StudyAreas/${id}`,
+      areaOfStudys: {
+        base: '/AreaOfStudy',
+        getAll: '/AreaOfStudy',
+        getById: (id: number) => `/AreaOfStudy/${id}`,
+        create: '/AreaOfStudys',
+        update: (id: number) => `/AreaOfStudy/${id}`,
+        delete: (id: number) => `/AreaOfStudy/${id}`,
       },
       // Educational Institutions
       educationalInstitutions: {
-        base: '/EducationalInstitutions',
-        getAll: '/EducationalInstitutions',
-        getById: (id: number) => `/EducationalInstitutions/${id}`,
-        create: '/EducationalInstitutions',
-        update: (id: number) => `/EducationalInstitutions/${id}`,
-        delete: (id: number) => `/EducationalInstitutions/${id}`,
+        base: '/EducationalInstitution',
+        getAll: '/EducationalInstitution',
+        getById: (id: number) => `/EducationalInstitution/${id}`,
+        create: '/EducationalInstitution',
+        update: (id: number) => `/EducationalInstitution/${id}`,
+        delete: (id: number) => `/EducationalInstitution/${id}`,
+      },
+
+      //Gender
+      gender: {
+        base: '/Gender',
+        getAll: '/Gender',
+        getById: (id: number) => `/Gender/${id}`,
+        create: '/Gender',
+        update: (id: number) => `/Gender/${id}`,
+        delete: (id: number) => `/Gender/${id}`,
+      },
+
+      // Country
+      country: {
+        base: '/Country/GetAll',
+        getAll: '/Country/GetAll',
+        getById: (id: number) => `/Country/GetAll${id}`,
+        create: '/Gender',
+        update: (id: number) => `/Country/GetAll${id}`,
+        delete: (id: number) => `/Country/GetAll${id}`,
       },
 
       // Event Categories

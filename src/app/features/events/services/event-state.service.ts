@@ -7,120 +7,136 @@ import { EventCategoryService } from './event.category.service';
 import { SpeakerService } from '../../speakers/services/speaker.service';
 import { extractData } from '@core/utils/api-response.utils';
 import {
-    EventModality,
-    EventType,
-    EventTags,
-    EventCategory,
-    Speaker,
+  EventModality,
+  EventType,
+  EventTags,
+  EventCategory,
+  Speaker,
+  AcademicDegree,
+  AcademicLevel,
+  StudyArea,
+  EducationalInstitution,
+  Gender,
+  Country,
 } from '@core/models';
-
+import { AcademicDegreeService } from '../../../core/services/academic-degree.service';
+import { StudyAreaService } from 'app/features/admin/services/maintenance.services';
+import { AcademicLevelService } from '@core/services/academic-level.service';
+import { EducationalInstitutionService } from '@core/services/educational-institution.service';
+import { GenderService } from '@core/services/gender.service';
+import { CountryService } from '@core/services/country.service';
 
 @Injectable()
 export class EventStateService {
-    private modalityService = inject(EventModalityService);
-    private eventTypeService = inject(EventTypeService);
-    private tagsService = inject(EventTagsService);
-    private categoryService = inject(EventCategoryService);
-    private speakerService = inject(SpeakerService);
+  private modalityService = inject(EventModalityService);
+  private eventTypeService = inject(EventTypeService);
+  private tagsService = inject(EventTagsService);
+  private categoryService = inject(EventCategoryService);
+  private speakerService = inject(SpeakerService);
+  private academicDegreeService = inject(AcademicDegreeService);
+  private academicLevelService = inject(AcademicLevelService);
+  private studiAreaService = inject(StudyAreaService);
+  private educationalInstitutionService = inject(EducationalInstitutionService);
+  private genderService = inject(GenderService);
+  private countryService = inject(CountryService);
 
-    readonly isLoading = signal<boolean>(false);
-    readonly error = signal<string | null>(null);
+  readonly isLoading = signal<boolean>(false);
+  readonly error = signal<string | null>(null);
 
-    readonly modalities = toSignal(
-        this.modalityService.getAll().pipe(extractData()),
-        { initialValue: [] as EventModality[] }
-    );
+  readonly modalities = toSignal(
+    this.modalityService.getAll().pipe(extractData()),
+    { initialValue: [] as EventModality[] }
+  );
 
-    readonly eventTypes = toSignal(
-        this.eventTypeService.getAll().pipe(extractData()),
-        { initialValue: [] as EventType[] }
-    );
+  readonly eventTypes = toSignal(
+    this.eventTypeService.getAll().pipe(extractData()),
+    { initialValue: [] as EventType[] }
+  );
 
-    readonly tags = toSignal(
-        this.tagsService.getAll().pipe(extractData()),
-        { initialValue: [] as EventTags[] }
-    );
+  readonly tags = toSignal(this.tagsService.getAll().pipe(extractData()), {
+    initialValue: [] as EventTags[],
+  });
 
-    readonly categories = toSignal(
-        this.categoryService.getAll().pipe(extractData()),
-        { initialValue: [] as EventCategory[] }
-    );
+  readonly categories = toSignal(
+    this.categoryService.getAll().pipe(extractData()),
+    { initialValue: [] as EventCategory[] }
+  );
 
-    readonly speakers = toSignal(
-        this.speakerService.getAll().pipe(extractData()),
-        { initialValue: [] as Speaker[] }
-    );
+  readonly speakers = toSignal(
+    this.speakerService.getAll().pipe(extractData()),
+    { initialValue: [] as Speaker[] }
+  );
 
-    readonly academicTitles = signal<{ name: string; id: number }[]>([
-        { name: 'Dr.', id: 1 },
-        { name: 'PhD', id: 2 },
-        { name: 'MSc', id: 3 },
-        { name: 'BSc', id: 4 },
-        { name: 'Ing.', id: 5 },
-        { name: 'Lic.', id: 6 },
-    ]);
+  readonly academicDegrees = toSignal(
+    this.academicDegreeService.getAll().pipe(extractData()),
+    { initialValue: [] as AcademicDegree[] }
+  );
 
-    readonly academicLevels = signal<{ name: string; id: number }[]>([
-        { name: 'Doctorado', id: 1 },
-        { name: 'Maestría', id: 2 },
-        { name: 'Licenciatura', id: 3 },
-        { name: 'Técnico Superior', id: 4 },
-        { name: 'Técnico', id: 5 },
-    ]);
+  readonly academicLevels = toSignal(
+    this.academicLevelService.getAll().pipe(extractData()),
+    { initialValue: [] as AcademicLevel[] }
+  );
 
-    readonly studyAreas = signal<{ name: string; id: number }[]>([
-        { name: 'Ingeniería de Software', id: 1 },
-        { name: 'Ciencias de la Computación', id: 2 },
-        { name: 'Sistemas de Información', id: 3 },
-        { name: 'Inteligencia Artificial', id: 4 },
-        { name: 'Ciberseguridad', id: 5 },
-        { name: 'Redes y Telecomunicaciones', id: 6 },
-    ]);
+  readonly studiAreas = toSignal(
+    this.studiAreaService.getAll().pipe(extractData()),
+    { initialValue: [] as StudyArea[] }
+  );
 
-    readonly educationalInstitutions = signal<{ name: string; id: number }[]>([
-        { name: 'Universidad Autónoma de Santo Domingo (UASD)', id: 1 },
-        { name: 'Pontificia Universidad Católica Madre y Maestra (PUCMM)', id: 2 },
-        { name: 'Instituto Tecnológico de Santo Domingo (INTEC)', id: 3 },
-        { name: 'Universidad Iberoamericana (UNIBE)', id: 4 },
-        { name: 'Universidad APEC (UNAPEC)', id: 5 },
-    ]);
+  readonly educationalInstutions = toSignal(
+    this.educationalInstitutionService.getAll().pipe(extractData()),
+    { initialValue: [] as EducationalInstitution[] }
+  );
 
-    // Computed signals útiles
-    readonly hasModalitiesLoaded = computed(() => this.modalities()?.length ?? 0 > 0);
-    readonly hasEventTypesLoaded = computed(() => this.eventTypes()?.length ?? 0 > 0);
-    readonly hasCategoriesLoaded = computed(() => this.categories()?.length ?? 0 > 0);
-    readonly hasSpeakersLoaded = computed(() => this.speakers()?.length ?? 0 > 0);
+  readonly genders = toSignal(this.genderService.getAll().pipe(extractData()), {
+    initialValue: [] as Gender[],
+  });
 
-    readonly allDataLoaded = computed(
-        () =>
-            this.hasModalitiesLoaded() &&
-            this.hasEventTypesLoaded() &&
-            this.hasCategoriesLoaded()
-    );
+  readonly countries = toSignal(
+    this.countryService.getAll().pipe(extractData()),
+    { initialValue: [] as Country[] }
+  );
 
-    /**
-     * Refresca la lista de speakers
-     */
-    refreshSpeakers(): void {
-        // Los speakers se actualizan automáticamente gracias a toSignal
-        // Este método existe para mantener consistencia en la API
-        this.isLoading.set(true);
-        // El observable se refresca automáticamente
-        setTimeout(() => this.isLoading.set(false), 100);
-    }
+  // Computed signals útiles
+  readonly hasModalitiesLoaded = computed(
+    () => this.modalities()?.length ?? 0 > 0
+  );
+  readonly hasEventTypesLoaded = computed(
+    () => this.eventTypes()?.length ?? 0 > 0
+  );
+  readonly hasCategoriesLoaded = computed(
+    () => this.categories()?.length ?? 0 > 0
+  );
+  readonly hasSpeakersLoaded = computed(() => this.speakers()?.length ?? 0 > 0);
 
-    /**
-     * Limpia los errores
-     */
-    clearError(): void {
-        this.error.set(null);
-    }
+  readonly allDataLoaded = computed(
+    () =>
+      this.hasModalitiesLoaded() &&
+      this.hasEventTypesLoaded() &&
+      this.hasCategoriesLoaded()
+  );
 
-    /**
-     * Establece un error
-     */
-    setError(errorMessage: string): void {
-        this.error.set(errorMessage);
-    }
+  /**
+   * Refresca la lista de speakers
+   */
+  refreshSpeakers(): void {
+    // Los speakers se actualizan automáticamente gracias a toSignal
+    // Este método existe para mantener consistencia en la API
+    this.isLoading.set(true);
+    // El observable se refresca automáticamente
+    setTimeout(() => this.isLoading.set(false), 100);
+  }
+
+  /**
+   * Limpia los errores
+   */
+  clearError(): void {
+    this.error.set(null);
+  }
+
+  /**
+   * Establece un error
+   */
+  setError(errorMessage: string): void {
+    this.error.set(errorMessage);
+  }
 }
-
