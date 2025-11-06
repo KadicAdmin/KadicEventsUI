@@ -59,9 +59,9 @@ export const API_CONFIG = {
       },
       // Academic Degrees
       academicDegrees: {
-        base: '/AcademicDegrees',
+        base: '/AcademicDegree',
         getAll: '/AcademicDegree',
-        getById: (id: number) => `/AcademicDegrees/${id}`,
+        getById: (id: number) => `/AcademicDegree/${id}`,
         create: '/AcademicDegrees',
         update: (id: number) => `/AcademicDegrees/${id}`,
         delete: (id: number) => `/AcademicDegrees/${id}`,
@@ -76,13 +76,13 @@ export const API_CONFIG = {
         delete: (id: number) => `/AcademicLevel/${id}`,
       },
       // Study Areas
-      studyAreas: {
-        base: '/StudyAreas',
-        getAll: '/StudyAreas',
-        getById: (id: number) => `/StudyAreas/${id}`,
-        create: '/StudyAreas',
-        update: (id: number) => `/StudyAreas/${id}`,
-        delete: (id: number) => `/StudyAreas/${id}`,
+      areaOfStudys: {
+        base: '/AreaOfStudy',
+        getAll: '/AreaOfStudy',
+        getById: (id: number) => `/AreaOfStudy/${id}`,
+        create: '/AreaOfStudys',
+        update: (id: number) => `/AreaOfStudy/${id}`,
+        delete: (id: number) => `/AreaOfStudy/${id}`,
       },
       // Educational Institutions
       educationalInstitutions: {

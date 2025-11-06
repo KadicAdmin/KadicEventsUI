@@ -62,7 +62,7 @@ export class EventCreatePage {
   readonly speakers = this.stateService.speakers;
   readonly academicDegrees = this.stateService.academicDegrees;
   readonly academicLevels = this.stateService.academicLevels;
-  readonly studyAreas = this.stateService.studyAreas;
+  readonly studyAreas = this.stateService.studiAreas;
   readonly educationalInstitutions = this.stateService.educationalInstitutions;
 
   constructor() {

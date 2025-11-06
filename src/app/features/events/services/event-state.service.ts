@@ -14,9 +14,10 @@ import {
   Speaker,
   AcademicDegree,
   AcademicLevel,
+  StudyArea,
 } from '@core/models';
 import { AcademicDegreeService } from '../../../core/services/academic-degree.service';
-import { AcademicLevelService } from 'app/features/admin';
+import { AcademicLevelService, StudyAreaService } from 'app/features/admin';
 
 @Injectable()
 export class EventStateService {
@@ -27,6 +28,7 @@ export class EventStateService {
   private speakerService = inject(SpeakerService);
   private academicDegreeService = inject(AcademicDegreeService);
   private academicLevelService = inject(AcademicLevelService);
+  private studiAreaService = inject(StudyAreaService);
 
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
@@ -60,27 +62,15 @@ export class EventStateService {
     { initialValue: [] as AcademicDegree[] }
   );
 
-  //   readonly academicLevels = signal<{ name: string; id: number }[]>([
-  //     { name: 'Doctorado', id: 1 },
-  //     { name: 'Maestría', id: 2 },
-  //     { name: 'Licenciatura', id: 3 },
-  //     { name: 'Técnico Superior', id: 4 },
-  //     { name: 'Técnico', id: 5 },
-  //   ]);
-
   readonly academicLevels = toSignal(
     this.academicLevelService.getAll().pipe(extractData()),
     { initialValue: [] as AcademicLevel[] }
   );
 
-  readonly studyAreas = signal<{ name: string; id: number }[]>([
-    { name: 'Ingeniería de Software', id: 1 },
-    { name: 'Ciencias de la Computación', id: 2 },
-    { name: 'Sistemas de Información', id: 3 },
-    { name: 'Inteligencia Artificial', id: 4 },
-    { name: 'Ciberseguridad', id: 5 },
-    { name: 'Redes y Telecomunicaciones', id: 6 },
-  ]);
+  readonly studiAreas = toSignal(
+    this.studiAreaService.getAll().pipe(extractData()),
+    { initialValue: [] as StudyArea[] }
+  );
 
   readonly educationalInstitutions = signal<{ name: string; id: number }[]>([
     { name: 'Universidad Autónoma de Santo Domingo (UASD)', id: 1 },

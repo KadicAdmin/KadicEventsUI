@@ -33,7 +33,7 @@ export class AcademicLevelService extends BaseHttpService<AcademicLevel> {
 })
 export class StudyAreaService extends BaseHttpService<StudyArea> {
   protected get baseEndpoint(): string {
-    return API_CONFIG.endpoints.events.studyAreas.base;
+    return API_CONFIG.endpoints.events.areaOfStudys.base;
   }
 }
 
