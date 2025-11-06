@@ -15,9 +15,16 @@ import {
   AcademicDegree,
   AcademicLevel,
   StudyArea,
+  EducationalInstitution,
+  Gender,
+  Country,
 } from '@core/models';
 import { AcademicDegreeService } from '../../../core/services/academic-degree.service';
-import { AcademicLevelService, StudyAreaService } from 'app/features/admin';
+import { StudyAreaService } from 'app/features/admin/services/maintenance.services';
+import { AcademicLevelService } from '@core/services/academic-level.service';
+import { EducationalInstitutionService } from '@core/services/educational-institution.service';
+import { GenderService } from '@core/services/gender.service';
+import { CountryService } from '@core/services/country.service';
 
 @Injectable()
 export class EventStateService {
@@ -29,6 +36,9 @@ export class EventStateService {
   private academicDegreeService = inject(AcademicDegreeService);
   private academicLevelService = inject(AcademicLevelService);
   private studiAreaService = inject(StudyAreaService);
+  private educationalInstitutionService = inject(EducationalInstitutionService);
+  private genderService = inject(GenderService);
+  private countryService = inject(CountryService);
 
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
@@ -72,13 +82,19 @@ export class EventStateService {
     { initialValue: [] as StudyArea[] }
   );
 
-  readonly educationalInstitutions = signal<{ name: string; id: number }[]>([
-    { name: 'Universidad Autónoma de Santo Domingo (UASD)', id: 1 },
-    { name: 'Pontificia Universidad Católica Madre y Maestra (PUCMM)', id: 2 },
-    { name: 'Instituto Tecnológico de Santo Domingo (INTEC)', id: 3 },
-    { name: 'Universidad Iberoamericana (UNIBE)', id: 4 },
-    { name: 'Universidad APEC (UNAPEC)', id: 5 },
-  ]);
+  readonly educationalInstutions = toSignal(
+    this.educationalInstitutionService.getAll().pipe(extractData()),
+    { initialValue: [] as EducationalInstitution[] }
+  );
+
+  readonly genders = toSignal(this.genderService.getAll().pipe(extractData()), {
+    initialValue: [] as Gender[],
+  });
+
+  readonly countries = toSignal(
+    this.countryService.getAll().pipe(extractData()),
+    { initialValue: [] as Country[] }
+  );
 
   // Computed signals útiles
   readonly hasModalitiesLoaded = computed(

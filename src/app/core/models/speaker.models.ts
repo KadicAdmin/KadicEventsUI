@@ -66,3 +66,15 @@ export interface EducationalInstitution extends BaseEntity {
   website?: string;
   isActive: boolean;
 }
+
+export interface Gender extends BaseEntity {
+  id: number;
+  name: string;
+}
+
+export interface Country extends BaseEntity {
+  id: number;
+  name: string;
+  iso2: string;
+  iso3: string;
+}

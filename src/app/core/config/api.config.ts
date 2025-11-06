@@ -86,12 +86,32 @@ export const API_CONFIG = {
       },
       // Educational Institutions
       educationalInstitutions: {
-        base: '/EducationalInstitutions',
-        getAll: '/EducationalInstitutions',
-        getById: (id: number) => `/EducationalInstitutions/${id}`,
-        create: '/EducationalInstitutions',
-        update: (id: number) => `/EducationalInstitutions/${id}`,
-        delete: (id: number) => `/EducationalInstitutions/${id}`,
+        base: '/EducationalInstitution',
+        getAll: '/EducationalInstitution',
+        getById: (id: number) => `/EducationalInstitution/${id}`,
+        create: '/EducationalInstitution',
+        update: (id: number) => `/EducationalInstitution/${id}`,
+        delete: (id: number) => `/EducationalInstitution/${id}`,
+      },
+
+      //Gender
+      gender: {
+        base: '/Gender',
+        getAll: '/Gender',
+        getById: (id: number) => `/Gender/${id}`,
+        create: '/Gender',
+        update: (id: number) => `/Gender/${id}`,
+        delete: (id: number) => `/Gender/${id}`,
+      },
+
+      // Country
+      country: {
+        base: '/Country/GetAll',
+        getAll: '/Country/GetAll',
+        getById: (id: number) => `/Country/GetAll${id}`,
+        create: '/Gender',
+        update: (id: number) => `/Country/GetAll${id}`,
+        delete: (id: number) => `/Country/GetAll${id}`,
       },
 
       // Event Categories

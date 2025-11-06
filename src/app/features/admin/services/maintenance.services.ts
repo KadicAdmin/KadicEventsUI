@@ -42,6 +42,10 @@ export class StudyAreaService extends BaseHttpService<StudyArea> {
 })
 export class EducationalInstitutionService extends BaseHttpService<EducationalInstitution> {
   protected get baseEndpoint(): string {
+    console.log(
+      'URL: ',
+      API_CONFIG.endpoints.events.educationalInstitutions.base
+    );
     return API_CONFIG.endpoints.events.educationalInstitutions.base;
   }
 }

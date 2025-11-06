@@ -191,7 +191,7 @@ import { ModalComponent, ModalConfig } from './modal.component';
                 </div>
 
                 <!-- Área de Estudio -->
-                <div class="space-y-2">
+                <!-- <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700"
                     >Área de Estudio</label
                   >
@@ -204,10 +204,10 @@ import { ModalComponent, ModalConfig } from './modal.component';
                     class="w-full"
                     styleClass="w-full"
                   />
-                </div>
+                </div> -->
 
                 <!-- Institución Educativa -->
-                <div class="space-y-2">
+                <!-- <div class="space-y-2">
                   <label class="text-sm font-medium text-gray-700"
                     >Institución Educativa</label
                   >
@@ -220,7 +220,21 @@ import { ModalComponent, ModalConfig } from './modal.component';
                     class="w-full"
                     styleClass="w-full"
                   />
-                </div>
+                </div> -->
+                <!-- <div class="space-y-2">
+                  <label class="text-sm font-medium text-gray-700"
+                    >Área de Estudio da</label
+                  >
+                  <p-select
+                    formControlName="studyAreaId"
+                    [options]="educationalInstitutions()"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Selecciona un área"
+                    class="w-full"
+                    styleClass="w-full"
+                  />
+                </div> -->
               </div>
             </p-tabpanel>
 

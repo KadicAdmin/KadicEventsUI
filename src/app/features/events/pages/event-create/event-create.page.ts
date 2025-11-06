@@ -60,10 +60,12 @@ export class EventCreatePage {
   readonly tags = this.stateService.tags;
   readonly categories = this.stateService.categories;
   readonly speakers = this.stateService.speakers;
+  readonly genders = this.stateService.genders;
+  readonly countries = this.stateService.countries;
   readonly academicDegrees = this.stateService.academicDegrees;
   readonly academicLevels = this.stateService.academicLevels;
   readonly studyAreas = this.stateService.studiAreas;
-  readonly educationalInstitutions = this.stateService.educationalInstitutions;
+  readonly educationalInstitutions = this.stateService.educationalInstutions;
 
   constructor() {
     this.initializeForm();
