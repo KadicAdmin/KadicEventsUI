@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ImageFileUpload } from '@shared/components/molecules/image-file-upload/image-file-upload';
-import { ImageGallery } from '@shared/components/organisms/image-galery/image-galery';
+import { ImageGalery } from '@shared/components/organisms/image-galery/image-galery';
 // import { authGuard, adminGuard, guestGuard } from './core'; // Temporalmente desactivado
 
 export const routes: Routes = [
@@ -65,7 +65,7 @@ export const routes: Routes = [
 
   {
     path: 'galery',
-    component: ImageGallery,
+    component: ImageGalery,
   },
 
   {
