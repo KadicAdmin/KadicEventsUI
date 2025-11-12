@@ -19,7 +19,7 @@ import {
 import { Speaker } from '@core/models';
 import { ButtonModule } from 'primeng/button';
 import { RadioButton } from 'primeng/radiobutton';
-import { Carousel } from 'primeng/carousel';
+import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
@@ -42,7 +42,7 @@ import { ChipModule } from 'primeng/chip';
     ModalComponent,
     ButtonModule,
     RadioButton,
-    Carousel,
+    CarouselModule,
     CardModule,
     TagModule,
     AvatarModule,
