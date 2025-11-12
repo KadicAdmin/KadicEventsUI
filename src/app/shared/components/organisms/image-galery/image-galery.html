@@ -1,82 +1,19 @@
-<!-- <div class="card flex justify-center">
-  <div
-    *ngIf="images() && images().length > 0"
-    class="grid grid-cols-12 gap-4"
-    style="max-width: 800px"
-  >
-    <div
-      *ngFor="let image of images(); let index = index"
-      class="col-span-4"
-      key="index"
-    >
-      <img
-        [src]="image.thumbnailImageSrc"
-        [alt]="image.alt"
-        style="cursor: pointer"
-        (click)="imageClick(index)"
-      />
-    </div>
-  </div>
+<div class="card">
   <p-galleria
-    [(value)]="images"
-    [(visible)]="displayCustom"
-    [(activeIndex)]="activeIndex"
-    [responsiveOptions]="responsiveOptions"
-    [containerStyle]="{ 'max-width': '850px' }"
-    [numVisible]="7"
-    [circular]="true"
-    [fullScreen]="true"
+    [value]="images()"
     [showItemNavigators]="true"
-    [showThumbnails]="false"
+    [responsiveOptions]="responsiveOptions"
+    [circular]="true"
+    [numVisible]="5"
+    [containerStyle]="{ 'max-width': '640px'
+    }"
   >
     <ng-template #item let-item>
       <img [src]="item.itemImageSrc" style="width: 100%; display: block" />
     </ng-template>
-  </p-galleria>
-</div> -->
 
-<!-- image-galery.html -->
-<div class="card flex justify-center">
-  <div
-    *ngIf="images().length > 0"
-    class="grid grid-cols-12 gap-4"
-    style="max-width: 800px"
-  >
-    <div
-      *ngFor="let image of images(); let index = index; trackBy: index"
-      class="col-span-4"
-    >
-      <img
-        [src]="image.thumbnailImageSrc"
-        [alt]="image.alt"
-        style="cursor: pointer"
-        (click)="imageClick(index)"
-      />
-    </div>
-  </div>
-
-  <p-galleria
-    [value]="images()"
-    [visible]="displayCustom()"
-    (visibleChange)="displayCustom.set($event)"
-    [activeIndex]="activeIndex()"
-    (activeIndexChange)="activeIndex.set($event)"
-    [responsiveOptions]="responsiveOptions"
-    [containerStyle]="{ 'max-width': '850px' }"
-    [numVisible]="7"
-    [circular]="true"
-    [fullScreen]="true"
-    [showItemNavigators]="true"
-    [showThumbnails]="false"
-  >
-    <ng-template pTemplate="item" let-item>
-      <img
-        [src]="item.itemImageSrc"
-        [alt]="item.alt"
-        style="width: 100%; display: block"
-      />
+    <ng-template #thumbnail let-item>
+      <img [src]="item.thumbnailImageSrc" style="display: block" />
     </ng-template>
   </p-galleria>
 </div>
-
-
