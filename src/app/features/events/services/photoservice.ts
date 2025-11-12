@@ -1,36 +1,299 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class PhotoService {
-//   [x: string]: any;
-
-//   constructor() {
-//     itemImageSrc: 'https://primeng.org/images/galleria/galleria1.jpg';
-//     thumbnailImageSrc: 'https://primeng.org/images/galleria/galleria1s.jpg';
-//     alt: 'Description for Image 1';
-//     title: 'Title 1';
-//   }
-// }
-
 // photo.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-import { GItem } from '@shared/components/organisms/image-galery/image-galery';
+import { GalleryImage } from '@shared/components/organisms/image-galery/image-galery';
 
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
-  constructor(private http: HttpClient) {}
-
-  // Si tu API ya devuelve el shape de Galleria:
-  getImages(): Promise<GItem[]> {
-    return firstValueFrom(this.http.get<GItem[]>('/api/photos'));
+  async getImages(): Promise<GalleryImage[]> {
+    return [
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria1s.jpg',
+        alt: 'Description for Image 1',
+        title: 'Title 1',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria2s.jpg',
+        alt: 'Description for Image 2',
+        title: 'Title 2',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria3s.jpg',
+        alt: 'Description for Image 3',
+        title: 'Title 3',
+      },
+      {
+        itemImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4.jpg',
+        thumbnailImageSrc:
+          'https://primefaces.org/cdn/primeng/images/galleria/galleria4s.jpg',
+        alt: 'Description for Image 4',
+        title: 'Title 4',
+      },
+    ];
   }
-
-  // Si tu API devuelve URLs (strings), descomenta este y adapta el effect para no mapear dos veces.
-  // getImages(): Promise<string[]> {
-  //   return firstValueFrom(this.http.get<string[]>('/api/photos'));
-  // }
 }
