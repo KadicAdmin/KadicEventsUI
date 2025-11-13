@@ -5,7 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-image-file-upload',
+  selector: 'image-file-upload',
   imports: [FileUpload, ToastModule, CommonModule],
   providers: [MessageService],
   template: `
