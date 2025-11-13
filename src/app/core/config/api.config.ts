@@ -141,6 +141,16 @@ export const API_CONFIG = {
         update: (id: number) => `/Modalities/${id}`,
         delete: (id: number) => `/Modalities/${id}`,
       },
+
+      //Gallery Images
+      galleries: {
+        base: '/GalleryImages',
+        getAll: '/GalleryImages/GetAll',
+        getById: (id: number) => `//GalleryImages/17${id}`,
+        create: '/Galleries', // is not created
+        update: (id: number) => `/GalleryImages/Update${id}`,
+        // delete: (id: number) => `${id}`, // is not created
+      },
     },
   },
 } as const;

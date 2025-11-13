@@ -4,7 +4,7 @@ import { PhotoService } from 'app/features/events/services/photoservice';
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageFileUpload } from "@shared/components/molecules/image-file-upload/image-file-upload";
 
-export interface GalleryImage {
+export interface GalleryImages {
   itemImageSrc: string; // imagen grande
   thumbnailImageSrc: string; // miniatura
   alt?: string;
@@ -62,7 +62,7 @@ export class ImageGallery {
   // }
 
   // The galery that is working
-  images = signal<GalleryImage[]>([]);
+  images = signal<GalleryImages[]>([]);
 
   responsiveOptions: any[] = [
     {

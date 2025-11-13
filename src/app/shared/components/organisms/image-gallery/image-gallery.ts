@@ -19,6 +19,8 @@ export interface GalleryImage {
   providers: [PhotoService],
 })
 export class ImageGallery {
+  // Here is the gallery that I need to fix to this bussines logic
+
   // private photoService = inject(PhotoService);
 
   // displayCustom = signal(false);
@@ -61,7 +63,7 @@ export class ImageGallery {
   //   this.displayCustom.set(true);
   // }
 
-  // The galery that is working
+  // The galery that is working to replace the first gallery for now
   images = signal<GalleryImage[]>([]);
 
   responsiveOptions: any[] = [
