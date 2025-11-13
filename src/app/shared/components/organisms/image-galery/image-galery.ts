@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, model, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { PhotoService } from 'app/features/events/services/photoservice';
 import { GalleriaModule } from 'primeng/galleria';
+import { ImageFileUpload } from "@shared/components/molecules/image-file-upload/image-file-upload";
 
 export interface GalleryImage {
   itemImageSrc: string; // imagen grande
@@ -12,7 +13,7 @@ export interface GalleryImage {
 
 @Component({
   selector: 'image-galery',
-  imports: [GalleriaModule, CommonModule],
+  imports: [GalleriaModule, CommonModule, ImageFileUpload],
   templateUrl: './image-galery.html',
   standalone: true,
   providers: [PhotoService],
