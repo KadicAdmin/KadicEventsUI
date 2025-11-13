@@ -1,6 +1,6 @@
 // photo.service.ts
 import { Injectable } from '@angular/core';
-import { GalleryImage } from '@shared/components/organisms/image-galery/image-galery';
+import { GalleryImage } from '@shared/components/organisms/image-gallery/image-gallery';
 
 @Injectable({ providedIn: 'root' })
 export class PhotoService {

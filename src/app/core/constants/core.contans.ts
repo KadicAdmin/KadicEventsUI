@@ -166,7 +166,7 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         label: 'Galeria para eventos',
         icon: 'pi pi-image',
-        routerLink: '/admin/organizers',
+        routerLink: 'gallery',
       },
 
       {
