@@ -1,0 +1,20 @@
+<div class="card flex align-middle justify-around">
+  <image-file-upload />
+  <p-galleria
+    [value]="images()"
+    [showItemNavigators]="true"
+    [responsiveOptions]="responsiveOptions"
+    [circular]="true"
+    [numVisible]="5"
+    [containerStyle]="{ 'max-width': '640px'
+    }"
+  >
+    <ng-template #item let-item>
+      <img [src]="item.itemImageSrc" style="width: 100%; display: block" />
+    </ng-template>
+
+    <ng-template #thumbnail let-item>
+      <img [src]="item.thumbnailImageSrc" style="display: block" />
+    </ng-template>
+  </p-galleria>
+</div>
