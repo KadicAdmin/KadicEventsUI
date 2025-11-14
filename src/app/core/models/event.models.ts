@@ -3,6 +3,8 @@ import { Speaker } from './speaker.models';
 import { Participant } from './participant.models';
 import { StatItem } from './core.models';
 
+//
+
 export interface Event extends BaseEntity {
   name: string;
   description?: string;
