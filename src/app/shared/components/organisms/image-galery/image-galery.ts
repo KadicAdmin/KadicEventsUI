@@ -1,91 +1,44 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect, signal } from '@angular/core';
-import { PhotoService } from 'app/features/events/services/photoservice';
-import { GalleriaModule } from 'primeng/galleria';
-import { ImageFileUpload } from "@shared/components/molecules/image-file-upload/image-file-upload";
+// import { CommonModule } from '@angular/common';
+// import { Component, effect, signal } from '@angular/core';
+// import { GalleriaModule } from 'primeng/galleria';
+// import { ImageFileUpload } from "@shared/components/molecules/image-file-upload/image-file-upload";
 
-export interface GalleryImages {
-  itemImageSrc: string; // imagen grande
-  thumbnailImageSrc: string; // miniatura
-  alt?: string;
-  title?: string;
-}
+// export interface GalleryImages {
+//   itemImageSrc: string; // imagen grande
+//   thumbnailImageSrc: string; // miniatura
+//   alt?: string;
+//   title?: string;
+// }
 
-@Component({
-  selector: 'image-galery',
-  imports: [GalleriaModule, CommonModule, ImageFileUpload],
-  templateUrl: './image-galery.html',
-  standalone: true,
-  providers: [PhotoService],
-})
-export class ImageGallery {
-  // private photoService = inject(PhotoService);
+// @Component({
+//   selector: 'image-galery',
+//   imports: [GalleriaModule, CommonModule, ImageFileUpload],
+//   templateUrl: './image-galery.html',
+//   standalone: true,
+//   providers: [PhotoService],
+// })
+// export class ImageGallery {
+//   images = signal<GalleryImages[]>([]);
+//   responsiveOptions: any[] = [
+//     {
+//       breakpoint: '1300px',
+//       numVisible: 4,
+//     },
+//     {
+//       breakpoint: '575px',
+//       numVisible: 1,
+//     },
+//   ];
 
-  // displayCustom = signal(false);
-  // // activeIndex = signal(0);
-  // DisplayCustom = input(false);
-  // // images = signal([]);
-  // images = signal<GalleryImage[]>([]);
-
-  // // responsiveOptions = [...]; // No necesita ser signal
-  // responsiveOptions: any[] = [
-  //   {
-  //     breakpoint: '1024px',
-  //     numVisible: 5,
-  //   },
-  //   {
-  //     breakpoint: '768px',
-  //     numVisible: 3,
-  //   },
-  //   {
-  //     breakpoint: '560px',
-  //     numVisible: 1,
-  //   },
-  // ];
-  // activeIndex: any;
-
-  // constructor(private photoService: PhotoService) {
-  //   effect(
-  //     () => {
-  //       (async () => {
-  //         const imgs = await this.photoService.getImages();
-  //         this.images.set(imgs);
-  //       })();
-  //     },
-  //     { allowSignalWrites: true }
-  //   );
-  // }
-
-  // imageClick(index: number) {
-  //   this.activeIndex.set(index);
-  //   this.displayCustom.set(true);
-  // }
-
-  // The galery that is working
-  images = signal<GalleryImages[]>([]);
-
-  responsiveOptions: any[] = [
-    {
-      breakpoint: '1300px',
-      numVisible: 4,
-    },
-    {
-      breakpoint: '575px',
-      numVisible: 1,
-    },
-  ];
-
-  constructor(private photoService: PhotoService) {
-    // corre una sola vez (no lee otras señales), y permite escribir en signals
-    effect(
-      () => {
-        //carga inicial
-        this.photoService
-          .getImages()
-          .then((imgs) => this.images.set(imgs))
-          .catch(console.error);
-      },
-      { allowSignalWrites: true }
-    );
-  }
-}
+//   constructor(private photoService: PhotoService) {
+//     effect(
+//       () => {
+//         this.photoService
+//           .getImages()
+//           .then((imgs) => this.images.set(imgs))
+//           .catch(console.error);
+//       },
+//       { allowSignalWrites: true }
+//     );
+//   }
+// }

@@ -1,5 +1,6 @@
 export const API_CONFIG = {
   baseUrl: 'https://dev-eventapi.kadictechnology.com/api',
+  assetsBaseUrl: 'https://dev-eventapi.kadictechnology.com',
   endpoints: {
     // Authentication
     auth: {
