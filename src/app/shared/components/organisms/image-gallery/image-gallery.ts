@@ -1,70 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, signal } from '@angular/core';
-import { PhotoService } from 'app/features/events/services/photoservice';
+// import { PhotoService } from 'app/features/events/services/photoservice';
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageFileUpload } from '@shared/components/molecules/image-file-upload/image-file-upload';
+import { ImageResponse } from '@core/models/event.models';
+import { GalleryImageService } from '@core/services/image-gallery.service';
 
-export interface GalleryImage {
-  itemImageSrc: string; // imagen grande
-  thumbnailImageSrc: string; // miniatura
-  alt?: string;
-  title?: string;
-}
+//this interface is to the gallery mock
+
+// export interface GalleryImage {
+//   itemImageSrc: string; // imagen grande
+//   thumbnailImageSrc: string; // miniatura
+//   alt?: string;
+//   title?: string;
+// }
 
 @Component({
   selector: 'image-galery',
   imports: [GalleriaModule, CommonModule, ImageFileUpload],
   templateUrl: './image-gallery.html',
   standalone: true,
-  providers: [PhotoService],
+  // providers: [PhotoService],
 })
 export class ImageGallery {
-  // Here is the gallery that I need to fix to this bussines logic
-
-  // private photoService = inject(PhotoService);
-
-  // displayCustom = signal(false);
-  // // activeIndex = signal(0);
-  // DisplayCustom = input(false);
-  // // images = signal([]);
-  // images = signal<GalleryImage[]>([]);
-
-  // // responsiveOptions = [...]; // No necesita ser signal
-  // responsiveOptions: any[] = [
-  //   {
-  //     breakpoint: '1024px',
-  //     numVisible: 5,
-  //   },
-  //   {
-  //     breakpoint: '768px',
-  //     numVisible: 3,
-  //   },
-  //   {
-  //     breakpoint: '560px',
-  //     numVisible: 1,
-  //   },
-  // ];
-  // activeIndex: any;
-
-  // constructor(private photoService: PhotoService) {
-  //   effect(
-  //     () => {
-  //       (async () => {
-  //         const imgs = await this.photoService.getImages();
-  //         this.images.set(imgs);
-  //       })();
-  //     },
-  //     { allowSignalWrites: true }
-  //   );
-  // }
-
-  // imageClick(index: number) {
-  //   this.activeIndex.set(index);
-  //   this.displayCustom.set(true);
-  // }
-
   // The galery that is working to replace the first gallery for now
-  images = signal<GalleryImage[]>([]);
+  images = signal<ImageResponse[]>([]);
 
   responsiveOptions: any[] = [
     {
@@ -77,17 +37,39 @@ export class ImageGallery {
     },
   ];
 
-  constructor(private photoService: PhotoService) {
-    // corre una sola vez (no lee otras señales), y permite escribir en signals
+  constructor(private galleryImageService: GalleryImageService) {
     effect(
       () => {
-        //carga inicial
-        this.photoService
-          .getImages()
-          .then((imgs) => this.images.set(imgs))
-          .catch(console.error);
+        this.galleryImageService.getAll().subscribe({
+          next: (res) => {
+            const imgs = (res.data ?? []).filter(
+              (img) => img.status === 'active'
+            );
+
+            this.images.set(imgs);
+          },
+          error: (err) => {
+            console.error('Error cargando imágenes de la galería', err);
+          },
+        });
       },
       { allowSignalWrites: true }
     );
   }
+
+  //Old code of gallery that is working
+
+  // constructor(private photoService: PhotoService) {
+  //   // corre una sola vez (no lee otras señales), y permite escribir en signals
+  //   effect(
+  //     () => {
+  //       //carga inicial
+  //       this.photoService
+  //         .getImages()
+  //         .then((imgs) => this.images.set(imgs))
+  //         .catch(console.error);
+  //     },
+  //     { allowSignalWrites: true }
+  //   );
+  // }
 }
