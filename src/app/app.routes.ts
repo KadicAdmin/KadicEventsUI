@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { ImageFileUpload } from '@shared/components/molecules/image-file-upload/image-file-upload';
+import { ImageGallery } from '@shared/components/organisms/image-gallery/image-gallery';
 // import { authGuard, adminGuard, guestGuard } from './core'; // Temporalmente desactivado
 
 export const routes: Routes = [
@@ -57,27 +59,37 @@ export const routes: Routes = [
   },
 
   {
+    path: 'upload file',
+    component: ImageFileUpload,
+  },
+
+  {
+    path: 'gallery',
+    component: ImageGallery,
+  },
+
+  {
     path: 'productcard',
     loadComponent: () =>
-      import('@shared/components/molecules/card/product-card-component/product.card.component').then(
-        (m) => m.ProductCardComponent
-      ),
+      import(
+        '@shared/components/molecules/card/product-card-component/product.card.component'
+      ).then((m) => m.ProductCardComponent),
   },
 
   {
     path: 'event cards',
     loadComponent: () =>
-      import('@shared/components/organisms/event-card.component/event.card.component.component').then(
-        (m) => m.CardsListComponent
-      ),
+      import(
+        '@shared/components/organisms/event-card.component/event.card.component.component'
+      ).then((m) => m.CardsListComponent),
   },
 
   {
     path: 'category-event',
     loadComponent: () =>
-      import('@shared/components/organisms/category-card/category-card.component').then(
-        (m) => m.CategoryCardComponent
-      ),
+      import(
+        '@shared/components/organisms/category-card/category-card.component'
+      ).then((m) => m.CategoryCardComponent),
   },
 
   {

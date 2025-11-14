@@ -1,5 +1,6 @@
 export const API_CONFIG = {
   baseUrl: 'https://dev-eventapi.kadictechnology.com/api',
+  assetsBaseUrl: 'https://dev-eventapi.kadictechnology.com',
   endpoints: {
     // Authentication
     auth: {
@@ -140,6 +141,16 @@ export const API_CONFIG = {
         create: '/Modalities',
         update: (id: number) => `/Modalities/${id}`,
         delete: (id: number) => `/Modalities/${id}`,
+      },
+
+      //Gallery Images
+      galleries: {
+        base: '/GalleryImages',
+        getAll: '/GalleryImages/GetAll',
+        getById: (id: number) => `//GalleryImages/17${id}`,
+        create: '/Galleries', // is not created
+        update: (id: number) => `/GalleryImages/Update${id}`,
+        // delete: (id: number) => `${id}`, // is not created
       },
     },
   },

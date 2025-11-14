@@ -90,7 +90,35 @@ export interface EventImage {
   imageUrl: string;
   caption: string;
   isMain: boolean;
-  createAt: string
+  createAt: string;
+}
+
+// export interface GalleryImage {
+//   id: string;
+//   title: string;
+//   description: string | null;
+//   imageUrl: string;
+//   thumbnailUrl: string | null;
+//   status: 'active' | 'inactive' | 'deleted';
+//   createdAt: string;
+// }
+
+//new implementation
+export interface CreateImageRequest {
+  userId: string;
+  title: string;
+  description?: string;
+  imageBase64: string;
+}
+
+export interface ImageResponse {
+  id: string;
+  title: string;
+  description: string | null;
+  imageUrl: string;
+  thumbnailUrl: string | null;
+  status: 'active' | 'inactive' | 'deleted';
+  createdAt: string;
 }
 
 export interface CreateEventRequest {
