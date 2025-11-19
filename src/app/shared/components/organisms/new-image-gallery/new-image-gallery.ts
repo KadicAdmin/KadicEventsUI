@@ -3,13 +3,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { extractData } from '@core/index';
 import { ImageResponse } from '@core/models/event.models';
 import { GalleryImageService } from '@core/services/image-gallery.service';
+import { AssetsSrcDirective } from '@shared/directives/assets-src.directive';
 import { GalleriaModule } from 'primeng/galleria';
 import { catchError, map, of } from 'rxjs';
 
 @Component({
   selector: 'new-image-gallery',
   standalone: true,
-  imports: [GalleriaModule],
+  imports: [GalleriaModule, AssetsSrcDirective],
   templateUrl: './new-image-gallery.html',
 })
 export class NewImageGallery {
@@ -34,10 +35,10 @@ export class NewImageGallery {
         console.log(safeImages);
 
         return safeImages
-          .filter((img: ImageResponse) => img.isActive) // solo activas
+          .filter((img: ImageResponse) => img.isActive)
           .map((img: ImageResponse) => ({
             ...img,
-            thumbnailUrl: img.thumbnailUrl ?? img.imageUrl, // aseguramos miniatura
+            thumbnailUrl: img.thumbnailUrl ?? img.imageUrl,
           }));
       }),
       catchError((err: unknown) => {
