@@ -114,12 +114,13 @@ export interface CreateImageRequest {
 }
 
 export interface ImageResponse {
+  status: any;
   id: string;
   title: string;
   description: string | null;
   imageUrl: string;
   thumbnailUrl: string | null;
-  status: 'active' | 'inactive' | 'deleted';
+  isActive: boolean;
   createdAt: string;
 }
 

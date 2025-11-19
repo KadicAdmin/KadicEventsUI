@@ -33,7 +33,7 @@ import { CommonModule } from '@angular/common';
 export class ImageFileUpload {
   uploadedFiles: any[] = [];
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService) {}
 
   onUpload(event: FileUploadEvent) {
     // <- NO uses UploadEvent / Event / HttpSentEvent
