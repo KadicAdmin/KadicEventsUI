@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ImageGallery } from '@shared/components/organisms/image-gallery/image-gallery';
+// import { ImageGallery } from '@shared/components/organisms/image-gallery/image-gallery';
 
 export const adminRoutes: Routes = [
   {
@@ -10,6 +10,6 @@ export const adminRoutes: Routes = [
 
   {
     path: 'gallery',
-    component: ImageGallery,
+    // component: ImageGallery,
   },
 ];

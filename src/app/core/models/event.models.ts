@@ -3,6 +3,8 @@ import { Speaker } from './speaker.models';
 import { Participant } from './participant.models';
 import { StatItem } from './core.models';
 
+//
+
 export interface Event extends BaseEntity {
   name: string;
   description?: string;
@@ -112,12 +114,13 @@ export interface CreateImageRequest {
 }
 
 export interface ImageResponse {
+  status: any;
   id: string;
   title: string;
   description: string | null;
   imageUrl: string;
   thumbnailUrl: string | null;
-  status: 'active' | 'inactive' | 'deleted';
+  isActive: boolean;
   createdAt: string;
 }
 
