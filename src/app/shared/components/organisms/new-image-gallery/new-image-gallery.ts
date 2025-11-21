@@ -14,6 +14,9 @@ import { catchError, map, of } from 'rxjs';
   templateUrl: './new-image-gallery.html',
 })
 export class NewImageGallery {
+tabs() {
+throw new Error('Method not implemented.');
+}
   displayCustom = false;
   activeIndex = 0;
 

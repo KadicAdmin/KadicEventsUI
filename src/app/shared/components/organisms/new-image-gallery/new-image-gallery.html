@@ -1,29 +1,132 @@
-<div class="card flex justify-center">
-  @if (images().length > 0) {
-  <div class="grid grid-cols-12 gap-4" style="max-width: 800px">
-    @for (image of images(); track image.id; let index = $index) {
-    <div class="col-span-4">
-      <div
-        class="relative w-full aspect-square overflow-hidden rounded-lg bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity">
-        <img [assetsSrc]="image.imageUrl || image.imageUrl" [alt]="image.title" class="w-full h-full object-cover"
-          (click)="imageClick(index)" />
-      </div>
-    </div>
-    } @empty {
-    <div class="col-span-12 text-center text-sm text-gray-500">
-      No hay imágenes para mostrar.
-    </div>
-    }
-  </div>
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- BÚSQUEDA Y FILTROS (parte superior de la lista) -->
+    <section class="bg-white rounded-2xl shadow-sm p-6">
+      <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <!-- Barra de búsqueda -->
+        <div class="flex-1 max-w-md w-full">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Buscar imágenes"
+              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+            />
+            <div
+              class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
 
-  <p-galleria [value]="images()" [(visible)]="displayCustom" [(activeIndex)]="activeIndex"
-    [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '850px' }" [numVisible]="7"
-    [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false">
-    <ng-template pTemplate="item" let-item>
-      <img [assetsSrc]="item.imageUrl" [alt]="item.title" style="width: 100%; display: block" />
-    </ng-template>
-  </p-galleria>
-  } @else {
-  <p class="text-center">No hay imágenes disponibles por el momento.</p>
-  }
+        <!-- Filtros / Orden -->
+        <div class="flex gap-3">
+          <button
+            class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
+          >
+            Filtrar
+          </button>
+          <button
+            class="px-6 py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors duration-200 text-sm font-medium"
+          >
+            Ordenar: Última modificación
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA DE IMÁGENES -->
+    <section>
+      @if (images().length > 0) {
+      <div class="w-full">
+        <!-- Grid responsiva tipo cards -->
+        <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          @for (image of images(); track image.id; let index = $index) {
+          <div
+            class="group rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md cursor-pointer overflow-hidden transition-shadow"
+            (click)="imageClick(index)"
+          >
+            <!-- Imagen -->
+            <div class="relative h-32 bg-gray-100 overflow-hidden">
+              <img
+                [assetsSrc]="image.imageUrl || image.imageUrl"
+                [alt]="image.title"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              />
+
+              <!-- Título sobre la imagen -->
+              <div
+                class="absolute left-3 bottom-3 rounded-md bg-black/50 text-white text-[11px] px-2 py-1 truncate max-w-[80%]"
+              >
+                {{ image.title }}
+              </div>
+            </div>
+
+            <!-- Info + botón -->
+            <div class="px-3 py-3 flex items-center justify-between gap-2">
+              <div class="flex flex-col">
+                <span
+                  class="text-[12px] font-medium text-gray-800 leading-snug truncate"
+                >
+                  {{ image.title }}
+                </span>
+                <span class="text-[10px] text-gray-400 mt-1"> Imagen </span>
+              </div>
+
+              <button
+                type="button"
+                class="px-3 py-1 rounded-full bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+          } @empty {
+          <div class="col-span-full text-center text-sm text-gray-500 py-8">
+            No hay imágenes para mostrar.
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Galleria fullscreen para ver grande cuando se hace click -->
+      <p-galleria
+        [value]="images()"
+        [(visible)]="displayCustom"
+        [(activeIndex)]="activeIndex"
+        [responsiveOptions]="responsiveOptions"
+        [containerStyle]="{ 'max-width': '850px' }"
+        [numVisible]="7"
+        [circular]="true"
+        [fullScreen]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="false"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img
+            [assetsSrc]="item.imageUrl"
+            [alt]="item.title"
+            style="width: 100%; display: block"
+          />
+        </ng-template>
+      </p-galleria>
+      } @else {
+      <p class="text-center text-sm text-gray-500 py-8">
+        No hay imágenes disponibles por el momento.
+      </p>
+      }
+    </section>
+  </div>
 </div>
