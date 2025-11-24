@@ -1,0 +1,72 @@
+<div class="relative w-full bg-black overflow-hidden group" [style.height]="height()" [style.min-height]="minHeight()"
+    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+
+    <p-galleria #galleria [value]="images()" [showThumbnails]="false" [showIndicators]="false"
+        [showItemNavigators]="false" [transitionInterval]="galleriaConfig.transitionInterval"
+        [autoPlay]="galleriaConfig.autoPlay" [circular]="galleriaConfig.circular"
+        [containerStyle]="{ 'width': '100%', 'height': '100%', 'border-radius': '0' }" [(activeIndex)]="activeIndex"
+        (onIndexChange)="onIndexChange($event)" class="w-full h-full galleria-container">
+
+        <ng-template #item let-item>
+            <div class="relative w-full h-full overflow-hidden" (click)="onImageClick(item)">
+                <img [src]="item.url" [alt]="item.alt || 'Slide image'"
+                    class="w-full h-full object-cover transition-all duration-800 ease-out group-hover:scale-105"
+                    [attr.data-image-index]="activeIndex" />
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-800 shimmer-effect pointer-events-none"
+                    [class.opacity-100]="true">
+                </div>
+            </div>
+        </ng-template>
+    </p-galleria>
+
+    <div
+        class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 md:p-8 z-20">
+        <div class="text-center text-white max-w-4xl mx-auto">
+
+            @if (showCounter()) {
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium mb-4 transition-all duration-500 ease-out"
+                [style.animation]="'scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)'">
+                <span class="text-lg font-bold transition-all duration-300">{{ activeIndex + 1 }}</span>
+                <span class="text-white/60">/</span>
+                <span class="text-white/80">{{ images().length }}</span>
+            </div>
+            }
+
+            @if (showTitle()) {
+            <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 tracking-tight text-white transition-all duration-700 ease-out"
+                [style.animation]="'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1)'" [attr.data-index]="activeIndex">
+                {{ images()[activeIndex].title || '' }}
+            </h1>
+            }
+
+            @if (showDescription()) {
+            <p class="text-base md:text-lg lg:text-xl text-white/90 mb-6 max-h-0 overflow-hidden transition-all duration-700 ease-out group-hover:max-h-24 opacity-0 group-hover:opacity-100"
+                [class.max-h-24]="isHovering()" [class.opacity-100]="isHovering()"
+                [style.animation]="'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both'"
+                [attr.data-index]="activeIndex">
+                {{ images()[activeIndex].description || '' }}
+            </p>
+            }
+
+        </div>
+    </div>
+
+    @if (showIndicators()) {
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-50">
+        @for (image of images(); track $index) {
+        <button
+            class="w-3 h-3 rounded-full border-2 border-white/60 bg-transparent transition-all duration-500 ease-out hover:border-white hover:scale-125 cursor-pointer relative overflow-hidden"
+            [class.border-white]="$index === activeIndex" [class.bg-white]="$index === activeIndex"
+            [class.scale-110]="$index === activeIndex" (click)="goToSlide($index)">
+            @if ($index === activeIndex) {
+            <div class="absolute inset-0 rounded-full bg-white/30 animate-ping"></div>
+            }
+        </button>
+        }
+    </div>
+    }
+
+</div>

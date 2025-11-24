@@ -1,0 +1,5 @@
+<div class="mt-20 p-4 max-w-8xl mx-auto flex flex-wrap justify-center">
+  @for (event of events(); track event.id) {
+  <app-product-card [event]="event" />
+  }
+</div>

@@ -1,0 +1,8 @@
+<!-- organisms/categories-grid/categories-grid.component.html -->
+<div
+  class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-6 max-w-6xl"
+>
+  @for (cat of categories(); track cat) {
+  <app-category-chip [category]="cat" (select)="select.emit($event)" />
+  }
+</div>

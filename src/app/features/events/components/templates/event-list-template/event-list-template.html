@@ -1,0 +1,140 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <!-- Hero Section con Carousel -->
+    <section class="full-width-element">
+        <!-- Componente slideshows con datos del page -->
+        <app-slideshows [images]="slideshowImages()" />
+    </section>
+
+    <!-- Sección de Categorías -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Explora por Categorías
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Encuentra eventos que se adapten a tus intereses
+                </p>
+            </div>
+
+            <!-- Componente Category Card -->
+            <app-category-card />
+        </div>
+    </section>
+
+    <!-- Sección de Filtros y Navegación -->
+    <section class="bg-gray-50 py-8">
+        <div class="container mx-auto px-4">
+            <!-- Navegación por tabs -->
+            <div class="bg-white rounded-2xl shadow-sm p-2 mb-8">
+                <app-nav-tab [tabs]="tabs()" [activeTab]="activeTab()" (tabChanged)="onTabChanged($event)" />
+            </div>
+
+            <!-- Barra de búsqueda y filtros -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+                <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+                    <!-- Barra de búsqueda -->
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <input type="text" placeholder="Buscar eventos..."
+                                class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="flex gap-3">
+                        <button
+                            class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors duration-200 font-medium">
+                            Filtros
+                        </button>
+                        <button
+                            class="px-6 py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors duration-200 font-medium">
+                            Ordenar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido Principal de Eventos -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            @switch (activeTab()) {
+            @case ('all') {
+            <div class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Todos los Eventos</h2>
+                    <p class="text-gray-600 text-lg">Descubre todos los eventos disponibles</p>
+                </div>
+                <!-- Lista de eventos usando CardsList -->
+                <app-card-list [events]="events()" />
+            </div>
+            }
+            @case ('upcoming') {
+            <div class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Próximos Eventos</h2>
+                    <p class="text-gray-600 text-lg">Eventos que están por venir</p>
+                </div>
+                <!-- Lista de eventos próximos -->
+                <app-card-list [events]="events()" />
+            </div>
+            }
+            @case ('online') {
+            <div class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Eventos Online</h2>
+                    <p class="text-gray-600 text-lg">Eventos virtuales disponibles</p>
+                </div>
+                <!-- Lista de eventos online -->
+                <app-card-list [events]="events()" />
+            </div>
+            }
+            @case ('weekend') {
+            <div class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Eventos de Este Fin de Semana</h2>
+                    <p class="text-gray-600 text-lg">Eventos programados para el fin de semana</p>
+                </div>
+                <!-- Lista de eventos de fin de semana -->
+                <app-card-list [events]="events()" />
+            </div>
+            }
+            }
+        </div>
+    </section>
+
+    <!-- Eventos Destacados -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <app-event-carousel [events]="events()" title="Eventos Destacados"
+                subtitle="Los eventos más populares y recomendados" [numVisible]="4" [circular]="true"
+                [autoplayInterval]="5000" [showViewAll]="true" (eventClicked)="onEventClick($event)"
+                (viewAllClicked)="onViewAllClick()" />
+        </div>
+    </section>
+
+
+    <!-- Footer con CTA -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-700 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-white mb-4">
+                ¿No encuentras lo que buscas?
+            </h2>
+            <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Crea tu propio evento y compártelo con la comunidad
+            </p>
+            <button
+                class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
+                Crear Evento
+            </button>
+        </div>
+    </section>
+</div>

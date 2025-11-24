@@ -1,0 +1,31 @@
+/* Nav fijo siempre visible */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajuste de espaciado para el contenido */
+body {
+  padding-top: 0; /* El padding se maneja en el main con pt-20 */
+}
+
+/* Asegurar que el menú tenga altura consistente */
+.p-menubar {
+  min-height: 60px;
+}
+
+/* Responsive: ajustar padding en móviles */
+@media (max-width: 768px) {
+  .fixed-nav {
+    min-height: 50px;
+  }
+  
+  main {
+    padding-top: 70px !important;
+  }
+}

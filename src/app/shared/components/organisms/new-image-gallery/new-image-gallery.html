@@ -1,0 +1,219 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- BUSQUEDA Y FILTROS (parte superior de la lista) -->
+    <section class="bg-white rounded-2xl shadow-sm p-6">
+      <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <!-- Barra de busqueda -->
+        <div class="flex-1 max-w-md w-full">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Buscar imagenes"
+              class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+            />
+            <div
+              class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros / Orden -->
+        <div class="flex gap-3">
+          <button
+            class="px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
+          >
+            <span class="pi pi-filter text-base"></span>
+            Filtrar
+          </button>
+          <button
+            class="px-6 py-3 rounded-xl text-sm font-semibold text-gray-800 bg-white border border-gray-200 shadow-md hover:border-blue-200 hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
+          >
+            <span class="pi pi-sort-amount-down-alt text-base"></span>
+            Ordenar: Ultima modificacion
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERIA DE IMAGENES -->
+    <section>
+      @if (images().length > 0) {
+      <div class="w-full">
+        <!-- Acciones de selección -->
+        <div class="flex justify-end gap-3 mb-3">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+            [class.bg-blue-50]="isAllSelected()"
+            [class.text-blue-700]="isAllSelected()"
+            [class.border-blue-200]="isAllSelected()"
+            (click)="toggleSelectAll($event)"
+          >
+            {{ isAllSelected() ? 'Deseleccionar todas' : 'Seleccionar todas' }}
+          </button>
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg text-sm font-medium border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:border-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="!hasSelection()"
+            (click)="deleteSelectedImages($event)"
+          >
+            Borrar seleccionadas
+          </button>
+        </div>
+
+        <!-- Grid responsiva tipo cards -->
+        <div
+          class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+        >
+          @for (image of images(); track image.id; let index = $index) {
+          <div
+            class="group rounded-2xl bg-white shadow-sm hover:shadow-md cursor-pointer overflow-hidden transition-shadow"
+            [class.ring-2]="isSelected(image)"
+            [class.ring-blue-500]="isSelected(image)"
+            [class.ring-offset-2]="isSelected(image)"
+            (click)="imageClick(index)"
+          >
+            <!-- Imagen -->
+            <div class="relative h-32 bg-gray-100 overflow-hidden">
+              <img
+                [assetsSrc]="image.imageUrl || image.imageUrl"
+                [alt]="image.title"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              />
+              <div
+                class="absolute inset-0 bg-blue-500/10 opacity-0 transition-opacity pointer-events-none"
+                [class.opacity-100]="isSelected(image)"
+              ></div>
+              <div
+                class="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                [class.opacity-100]="isSelected(image)"
+              >
+                <button
+                  type="button"
+                  aria-label="Seleccionar imagen"
+                  class="h-8 w-8 rounded-full bg-white/90 text-gray-700 shadow border border-gray-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer flex items-center justify-center"
+                  [class.bg-blue-600]="isSelected(image)"
+                  [class.text-white]="isSelected(image)"
+                  [class.border-blue-600]="isSelected(image)"
+                  [attr.aria-pressed]="isSelected(image)"
+                  (click)="toggleSelection(image, $event)"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.2"
+                      d="m5 13 4 4L19 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute right-2 top-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  type="button"
+                  aria-label="Editar imagen"
+                  class="h-8 w-8 rounded-md bg-white/90 text-gray-700 shadow border border-white/70 hover:bg-white hover:text-blue-600 transition-colors cursor-pointer"
+                  (click)="onEditImage(image, $event)"
+                >
+                  <svg
+                    class="w-full h-full"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.8"
+                      d="M15.232 5.232a2.5 2.5 0 1 1 3.536 3.536L9.4 18.136a2 2 0 0 1-.848.51l-3.09.884a.5.5 0 0 1-.62-.62l.884-3.09a2 2 0 0 1 .51-.848l9.996-9.736Z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  aria-label="Eliminar imagen"
+                  class="h-8 w-8 rounded-md bg-red-50/90 text-red-600 shadow border border-red-100 hover:bg-red-100 hover:text-red-700 transition-colors cursor-pointer"
+                  (click)="onDeleteImage(image, $event)"
+                >
+                  <svg
+                    class="w-full h-full"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.8"
+                      d="M6 7h12m-9 0v10m6-10v10M9 7l1-2h4l1 2"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Titulo sobre la imagen -->
+              <div
+                class="absolute left-3 bottom-3 rounded-md bg-black/50 text-white text-[11px] px-2 py-1 truncate max-w-[80%] border-0"
+              >
+                {{ image.title }}
+              </div>
+            </div>
+          </div>
+          } @empty {
+          <div class="col-span-full text-center text-sm text-gray-500 py-8">
+            No hay imagenes para mostrar.
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Galleria fullscreen para ver grande cuando se hace click -->
+      <p-galleria
+        [value]="images()"
+        [(visible)]="displayCustom"
+        [(activeIndex)]="activeIndex"
+        [responsiveOptions]="responsiveOptions"
+        [containerStyle]="{ 'max-width': '850px' }"
+        [numVisible]="7"
+        [circular]="true"
+        [fullScreen]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="false"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img
+            [assetsSrc]="item.imageUrl"
+            [alt]="item.title"
+            style="width: 100%; display: block"
+          />
+        </ng-template>
+      </p-galleria>
+      } @else {
+      <p class="text-center text-sm text-gray-500 py-8">
+        No hay imagenes disponibles por el momento.
+      </p>
+      }
+    </section>
+  </div>
+</div>

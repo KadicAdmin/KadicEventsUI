@@ -1,0 +1,24 @@
+<div class="mb-4 p-4 flex items-center justify-center">
+  <div
+    class="w-72 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transition-transform transform hover:scale-105 hover:shadow-xl"
+    (click)="onCardClick()">
+    <!-- Imagen con overlays -->
+    <div class="relative">
+      <ui-product-image [image]="event()?.images?.[0]" />
+
+      <!-- Contenido -->
+      <div class="p-4">
+        <h3 class="text-base font-bold uppercase leading-tight">
+          {{ event()?.name || 'Título no disponible' }}
+        </h3>
+        <p class="text-sm text-gray-600 mt-1">
+          {{ getEventStartDate() }}
+        </p>
+        <p class="text-sm text-gray-600">
+          {{ getEventLocation() }}
+        </p>
+        <p class="text-sm font-semibold mt-2">Precio no disponible</p>
+      </div>
+    </div>
+  </div>
+</div>
