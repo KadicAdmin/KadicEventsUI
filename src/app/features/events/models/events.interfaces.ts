@@ -9,7 +9,7 @@ export interface EventRequestDto {
   // AddressesToDelete: number[];
   ImagesNew: UploadImage[];
   ImagesToDelete: number[];
-}
+}                                        
 
 export interface UploadImage {
   ID?: number;

@@ -28,6 +28,7 @@ export class NewImageGallery {
   pageSize = 25;
   currentPage = 1;
   isPaging = false;
+  private pagingTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly selectedIds = new Set<ImageResponse['id']>();
 
   private readonly galleryImageService = inject(GalleryImageService);
@@ -172,7 +173,7 @@ export class NewImageGallery {
   }
 
   get totalPages(): number {
-    const total = Math.ceil((this.images()?.length ?? 0) / this.pageSize);
+    const total = Math.ceil(this.images().length / this.pageSize);
     return total > 0 ? total : 1;
   }
 
@@ -209,9 +210,13 @@ export class NewImageGallery {
 
   private triggerPagingEffect(): void {
     this.isPaging = true;
-    setTimeout(() => {
+    if (this.pagingTimeout) {
+      clearTimeout(this.pagingTimeout);
+    }
+    this.pagingTimeout = setTimeout(() => {
       this.isPaging = false;
-    }, 250);
+      this.pagingTimeout = null;
+    }, 200);
   }
 
   private scrollToTop(): void {

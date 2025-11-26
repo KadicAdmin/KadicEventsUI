@@ -11,7 +11,7 @@ import { FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabsModule } from 'primeng/tabs';
 import { Select } from 'primeng/select';
-import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
+// import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 import {
   ModalComponent,
   ModalConfig,
@@ -27,6 +27,7 @@ import { BadgeModule } from 'primeng/badge';
 import { MessageModule } from 'primeng/message';
 import { DividerModule } from 'primeng/divider';
 import { ChipModule } from 'primeng/chip';
+import { GalleryModal } from '@shared/components/atoms/modal/gallery-modal/gallery-modal.component';
 
 @Component({
   selector: 'app-speaker-dialog',
@@ -38,7 +39,7 @@ import { ChipModule } from 'primeng/chip';
     InputTextModule,
     TabsModule,
     Select,
-    ImageGalleryUploadComponent,
+    // ImageGalleryUploadComponent,
     ModalComponent,
     ButtonModule,
     RadioButton,
@@ -50,6 +51,7 @@ import { ChipModule } from 'primeng/chip';
     MessageModule,
     DividerModule,
     ChipModule,
+    GalleryModal,
   ],
   template: `
     <app-modal
@@ -315,10 +317,12 @@ import { ChipModule } from 'primeng/chip';
                   <label class="text-sm font-medium text-gray-700"
                     >Foto del Speaker</label
                   >
-                  <app-image-gallery-upload
+                  <!-- <app-image-gallery-upload
                     [allowMultiple]="false"
                     (onMainImageChange)="handleImageChange($event)"
-                  />
+                  /> -->
+
+                  <gallery-modal />
                 </div>
 
                 <!-- Nombre y Apellido -->

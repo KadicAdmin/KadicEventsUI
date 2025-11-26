@@ -9,7 +9,9 @@
           </h1>
           <p class="text-gray-500">Completa la información de tu evento</p>
         </div>
-        <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+        <div
+          class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center"
+        >
           <i class="pi pi-calendar-plus text-3xl text-blue-600"></i>
         </div>
       </div>
@@ -20,43 +22,82 @@
 
     <form autocomplete="off" [formGroup]="form()" (ngSubmit)="onSubmit.emit()">
       <!-- Información Básica -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
-        <app-section-header icon="pi-info-circle" title="Información Básica" subtitle="Datos generales del evento"
-          bgColor="bg-blue-50" iconColor="text-blue-600" />
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6"
+      >
+        <app-section-header
+          icon="pi-info-circle"
+          title="Información Básica"
+          subtitle="Datos generales del evento"
+          bgColor="bg-blue-50"
+          iconColor="text-blue-600"
+        />
 
         @if (hasFormLevelErrors()) {
         <div class="mb-6">
           @for (error of getFormLevelErrors()(); track error) {
-          <p-message severity="error" [text]="error" class="w-full mb-2"></p-message>
+          <p-message
+            severity="error"
+            [text]="error"
+            class="w-full mb-2"
+          ></p-message>
           }
         </div>
         }
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">Nombre del Evento</label>
-            <input pInputText id="name" formControlName="name" class="w-full"
-              [class.ng-invalid]="isFieldInvalid()('name')" [class.ng-dirty]="isFieldInvalid()('name')"
-              placeholder="Ej: Conferencia Tech 2025" />
+            <label class="text-sm font-medium text-gray-700"
+              >Nombre del Evento</label
+            >
+            <input
+              pInputText
+              id="name"
+              formControlName="name"
+              class="w-full"
+              [class.ng-invalid]="isFieldInvalid()('name')"
+              [class.ng-dirty]="isFieldInvalid()('name')"
+              placeholder="Ej: Conferencia Tech 2025"
+            />
             @if (isFieldInvalid()('name')) {
-            <small class="text-red-500 text-xs">{{ getFieldErrorMessage()('name') }}</small>
+            <small class="text-red-500 text-xs"
+              >{{ getFieldErrorMessage()('name') }}</small
+            >
             }
           </div>
 
           <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">Tipo de Evento</label>
-            <p-select inputId="eventTypeId" [options]="eventTypes()" optionLabel="name" optionValue="id"
-              formControlName="eventTypeId" class="w-full" [class.ng-invalid]="isFieldInvalid()('eventTypeId')"
-              [class.ng-dirty]="isFieldInvalid()('eventTypeId')" placeholder="Selecciona el tipo" />
+            <label class="text-sm font-medium text-gray-700"
+              >Tipo de Evento</label
+            >
+            <p-select
+              inputId="eventTypeId"
+              [options]="eventTypes()"
+              optionLabel="name"
+              optionValue="id"
+              formControlName="eventTypeId"
+              class="w-full"
+              [class.ng-invalid]="isFieldInvalid()('eventTypeId')"
+              [class.ng-dirty]="isFieldInvalid()('eventTypeId')"
+              placeholder="Selecciona el tipo"
+            />
             @if (isFieldInvalid()('eventTypeId')) {
-            <small class="text-red-500 text-xs">{{ getFieldErrorMessage()('eventTypeId') }}</small>
+            <small class="text-red-500 text-xs"
+              >{{ getFieldErrorMessage()('eventTypeId') }}</small
+            >
             }
           </div>
 
           <div class="space-y-2 md:col-span-2">
             <label class="text-sm font-medium text-gray-700">Descripción</label>
-            <textarea pInputTextarea id="description" formControlName="description" rows="4" class="w-full"
-              placeholder="Describe tu evento..."></textarea>
+            <textarea
+              pInputTextarea
+              id="description"
+              formControlName="description"
+              rows="4"
+              class="w-full"
+              placeholder="Describe tu evento..."
+            ></textarea>
           </div>
 
           <div class="space-y-2 md:col-span-2">
@@ -65,51 +106,99 @@
                 <label class="text-sm font-medium text-gray-700">
                   Categoría <span class="text-red-500">*</span>
                 </label>
-                <p-select inputId="categoryId" [options]="categories()" optionLabel="name" optionValue="id"
-                  formControlName="categoryId" class="w-full" [class.ng-invalid]="isFieldInvalid()('categoryId')"
-                  [class.ng-dirty]="isFieldInvalid()('categoryId')" placeholder="Selecciona una categoría" />
+                <p-select
+                  inputId="categoryId"
+                  [options]="categories()"
+                  optionLabel="name"
+                  optionValue="id"
+                  formControlName="categoryId"
+                  class="w-full"
+                  [class.ng-invalid]="isFieldInvalid()('categoryId')"
+                  [class.ng-dirty]="isFieldInvalid()('categoryId')"
+                  placeholder="Selecciona una categoría"
+                />
                 @if (isFieldInvalid()('categoryId')) {
-                <small class="text-red-500 text-xs">{{ getFieldErrorMessage()('categoryId') }}</small>
+                <small class="text-red-500 text-xs"
+                  >{{ getFieldErrorMessage()('categoryId') }}</small
+                >
                 }
               </div>
 
               <div class="space-y-2">
                 <label class="text-sm font-medium text-gray-700">Tags</label>
-                <p-multiSelect inputId="tags" [options]="tags()" optionLabel="name" optionValue="id"
-                  formControlName="tags" class="w-full" placeholder="Selecciona tags relevantes" [showToggleAll]="false"
-                  [showHeader]="false" />
+                <p-multiSelect
+                  inputId="tags"
+                  [options]="tags()"
+                  optionLabel="name"
+                  optionValue="id"
+                  formControlName="tags"
+                  class="w-full"
+                  placeholder="Selecciona tags relevantes"
+                  [showToggleAll]="false"
+                  [showHeader]="false"
+                />
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700">Capacidad Máxima</label>
-                <input type="number" pInputText id="maxParticipants" formControlName="maxParticipants" class="w-full"
-                  placeholder="100" min="1" />
+                <label class="text-sm font-medium text-gray-700"
+                  >Capacidad Máxima</label
+                >
+                <input
+                  type="number"
+                  pInputText
+                  id="maxParticipants"
+                  formControlName="maxParticipants"
+                  class="w-full"
+                  placeholder="100"
+                  min="1"
+                />
               </div>
             </div>
           </div>
 
-          <div class="space-y-2 md:col-span-2">
+          <!-- dropZone of img of event -->
+
+          <!-- <div class="space-y-2 md:col-span-2">
             <label class="text-sm font-medium text-gray-700">Imágenes del Evento</label>
             <app-image-gallery-upload [allowMultiple]="true" (onImagesChange)="onImagesChange.emit($event)"
               (onMainImageChange)="onMainImageChange.emit($event)" />
+          </div> -->
+
+          <!-- Modal of Gallery Images -->
+          <div class="md:col-span-2 flex justify-center">
+            <gallery-modal />
           </div>
         </div>
       </div>
 
       <!-- Fechas del Evento -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
-        <app-section-header icon="pi-calendar" title="Fechas del Evento"
-          [subtitle]="getEventDates().length + ' fecha(s) agregada(s)'" bgColor="bg-indigo-50"
-          iconColor="text-indigo-600" buttonLabel="Agregar Fecha" (onButtonClick)="openEventDateDialog()" />
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6"
+      >
+        <app-section-header
+          icon="pi-calendar"
+          title="Fechas del Evento"
+          [subtitle]="getEventDates().length + ' fecha(s) agregada(s)'"
+          bgColor="bg-indigo-50"
+          iconColor="text-indigo-600"
+          buttonLabel="Agregar Fecha"
+          (onButtonClick)="openEventDateDialog()"
+        />
 
         @if (getEventDates().length > 0) {
         <div class="space-y-4">
           @for (eventDate of getEventDates(); track $index; let i = $index) {
           <div class="border border-gray-200 rounded-xl overflow-hidden">
             <!-- Header de la Fecha con Botones -->
-            <div class="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+            <div
+              class="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200"
+            >
               <div class="flex items-center gap-3">
-                <app-icon-badge icon="pi-calendar" bgColor="bg-indigo-50" iconColor="text-indigo-600" />
+                <app-icon-badge
+                  icon="pi-calendar"
+                  bgColor="bg-indigo-50"
+                  iconColor="text-indigo-600"
+                />
                 <div>
                   <h3 class="font-semibold text-gray-900">
                     {{ eventDate.get('title')?.value || 'Sin título' }}
@@ -121,10 +210,24 @@
                 </div>
               </div>
               <div class="flex gap-2">
-                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" severity="secondary" size="small"
-                  (onClick)="editEventDate(i)" label="Editar" />
-                <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" size="small"
-                  (onClick)="confirmDeleteEventDate(i)" label="Eliminar" />
+                <p-button
+                  icon="pi pi-pencil"
+                  [rounded]="true"
+                  [outlined]="true"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="editEventDate(i)"
+                  label="Editar"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  [rounded]="true"
+                  [outlined]="true"
+                  severity="danger"
+                  size="small"
+                  (onClick)="confirmDeleteEventDate(i)"
+                  label="Eliminar"
+                />
               </div>
             </div>
 
@@ -154,17 +257,25 @@
                 <p-tabpanel value="0">
                   <div class="space-y-4">
                     <div>
-                      <label class="text-sm font-medium text-gray-700 block mb-2">Descripción</label>
+                      <label
+                        class="text-sm font-medium text-gray-700 block mb-2"
+                        >Descripción</label
+                      >
                       <p class="text-gray-600">
                         {{ eventDate.get('description')?.value || 'Sin
                         descripción' }}
                       </p>
                     </div>
                     <div>
-                      <label class="text-sm font-medium text-gray-700 block mb-2">Modalidades</label>
+                      <label
+                        class="text-sm font-medium text-gray-700 block mb-2"
+                        >Modalidades</label
+                      >
                       <div class="flex flex-wrap gap-2">
                         @for (modality of modalities(); track modality.id) {
-                        <span class="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-sm">
+                        <span
+                          class="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-sm"
+                        >
                           {{ modality.name }}
                         </span>
                         }
@@ -178,19 +289,30 @@
                   @if (getEventDateLocation()(i)?.get('name')?.value &&
                   getEventDateLocation()(i)?.get('latitude')?.value) {
                   <div class="space-y-3">
-                    <app-location-card [name]="getEventDateLocation()(i)?.get('name')?.value"
+                    <app-location-card
+                      [name]="getEventDateLocation()(i)?.get('name')?.value"
                       [address]="getEventDateLocation()(i)?.get('address')?.value"
                       [latitude]="getEventDateLocation()(i)?.get('latitude')?.value"
                       [longitude]="getEventDateLocation()(i)?.get('longitude')?.value"
-                      (onDelete)="clearLocation.emit(i)" />
+                      (onDelete)="clearLocation.emit(i)"
+                    />
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                      <p-button label="Cambiar Ubicación" icon="pi pi-map-marker" (onClick)="editEventDateLocation(i)"
-                        [outlined]="true" size="small" />
+                      <p-button
+                        label="Cambiar Ubicación"
+                        icon="pi pi-map-marker"
+                        (onClick)="editEventDateLocation(i)"
+                        [outlined]="true"
+                        size="small"
+                      />
                     </div>
                   </div>
                   } @else {
-                  <app-empty-state icon="pi-map-marker" message="No hay ubicación asignada"
-                    buttonLabel="Agregar Ubicación" (onButtonClick)="editEventDateLocation(i)" />
+                  <app-empty-state
+                    icon="pi-map-marker"
+                    message="No hay ubicación asignada"
+                    buttonLabel="Agregar Ubicación"
+                    (onButtonClick)="editEventDateLocation(i)"
+                  />
                   }
                 </p-tabpanel>
 
@@ -201,21 +323,34 @@
                       <p class="text-sm text-gray-600">
                         Speakers asignados a esta fecha
                       </p>
-                      <p-button label="Agregar" icon="pi pi-plus" (onClick)="openSpeakerDialogForEventDate(i)"
-                        [outlined]="true" size="small" />
+                      <p-button
+                        label="Agregar"
+                        icon="pi pi-plus"
+                        (onClick)="openSpeakerDialogForEventDate(i)"
+                        [outlined]="true"
+                        size="small"
+                      />
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                       @for (speaker of getSpeakers()(i); track $index; let s =
                       $index) {
-                      <app-speaker-card [firstName]="speaker.get('firstName')?.value"
-                        [lastName]="speaker.get('lastName')?.value" [email]="speaker.get('email')?.value"
-                        [imageUrl]="speaker.get('imageUrl')?.value" (onEdit)="editSpeaker(i, s)"
-                        (onDelete)="removeSpeaker.emit({ eventDateIndex: i, speakerIndex: s })" />
+                      <app-speaker-card
+                        [firstName]="speaker.get('firstName')?.value"
+                        [lastName]="speaker.get('lastName')?.value"
+                        [email]="speaker.get('email')?.value"
+                        [imageUrl]="speaker.get('imageUrl')?.value"
+                        (onEdit)="editSpeaker(i, s)"
+                        (onDelete)="removeSpeaker.emit({ eventDateIndex: i, speakerIndex: s })"
+                      />
                       } @empty {
                       <div class="col-span-2 md:col-span-4">
-                        <app-empty-state icon="pi-users" message="No hay speakers asignados"
-                          buttonLabel="Agregar Speaker" (onButtonClick)="openSpeakerDialogForEventDate(i)" />
+                        <app-empty-state
+                          icon="pi-users"
+                          message="No hay speakers asignados"
+                          buttonLabel="Agregar Speaker"
+                          (onButtonClick)="openSpeakerDialogForEventDate(i)"
+                        />
                       </div>
                       }
                     </div>
@@ -229,19 +364,33 @@
                       <p class="text-sm text-gray-600">
                         Charlas programadas para esta fecha
                       </p>
-                      <p-button label="Agregar" icon="pi pi-plus" (onClick)="openTalkDialogForEventDate(i)"
-                        [outlined]="true" size="small" />
+                      <p-button
+                        label="Agregar"
+                        icon="pi pi-plus"
+                        (onClick)="openTalkDialogForEventDate(i)"
+                        [outlined]="true"
+                        size="small"
+                      />
                     </div>
 
                     <div class="space-y-3">
                       @for (talk of getTalks()(i); track $index; let t = $index)
                       {
-                      <app-talk-card [title]="talk.get('title')?.value" [description]="talk.get('description')?.value"
-                        [duration]="talk.get('duration')?.value" [imageUrl]="talk.get('imageUrl')?.value"
-                        (onEdit)="editTalk(i, t)" (onDelete)="removeTalk.emit({ eventDateIndex: i, talkIndex: t })" />
+                      <app-talk-card
+                        [title]="talk.get('title')?.value"
+                        [description]="talk.get('description')?.value"
+                        [duration]="talk.get('duration')?.value"
+                        [imageUrl]="talk.get('imageUrl')?.value"
+                        (onEdit)="editTalk(i, t)"
+                        (onDelete)="removeTalk.emit({ eventDateIndex: i, talkIndex: t })"
+                      />
                       } @empty {
-                      <app-empty-state icon="pi-microphone" message="No hay charlas programadas"
-                        buttonLabel="Agregar Charla" (onButtonClick)="openTalkDialogForEventDate(i)" />
+                      <app-empty-state
+                        icon="pi-microphone"
+                        message="No hay charlas programadas"
+                        buttonLabel="Agregar Charla"
+                        (onButtonClick)="openTalkDialogForEventDate(i)"
+                      />
                       }
                     </div>
                   </div>
@@ -252,40 +401,85 @@
           }
         </div>
         } @else {
-        <app-empty-state icon="pi-calendar" message="No hay fechas agregadas" buttonLabel="Agregar Primera Fecha"
-          (onButtonClick)="openEventDateDialog()" />
+        <app-empty-state
+          icon="pi-calendar"
+          message="No hay fechas agregadas"
+          buttonLabel="Agregar Primera Fecha"
+          (onButtonClick)="openEventDateDialog()"
+        />
         }
       </div>
 
       <!-- Actions -->
       <div class="flex justify-between items-center">
-        <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" routerLink="/events" />
-        <p-button label="Crear Evento" icon="pi pi-check" type="submit" size="large" />
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          [outlined]="true"
+          routerLink="/events"
+        />
+        <p-button
+          label="Crear Evento"
+          icon="pi pi-check"
+          type="submit"
+          size="large"
+        />
       </div>
     </form>
 
     <!-- Dialogs usando componentes organisms -->
-    <app-event-date-dialog [visible]="showEventDateDialog()" [isEditing]="editingEventDateIndex() !== null"
-      [eventDateForm]="getCurrentEventDateForm()" [modalities]="modalities()" [location]="getCurrentEventDateLocation()"
-      (onSave)="saveEventDate()" (onCancel)="cancelEventDate()" (onVisibleChange)="showEventDateDialog.set($event)"
-      (onClearLocation)="clearCurrentEventDateLocation()" />
+    <app-event-date-dialog
+      [visible]="showEventDateDialog()"
+      [isEditing]="editingEventDateIndex() !== null"
+      [eventDateForm]="getCurrentEventDateForm()"
+      [modalities]="modalities()"
+      [location]="getCurrentEventDateLocation()"
+      (onSave)="saveEventDate()"
+      (onCancel)="cancelEventDate()"
+      (onVisibleChange)="showEventDateDialog.set($event)"
+      (onClearLocation)="clearCurrentEventDateLocation()"
+    />
 
-    <app-speaker-dialog [visible]="showSpeakerDialog()" [isEditing]="editingSpeakerIndex() !== null"
-      [speakerForm]="getCurrentSpeakerForm()" [imagePreview]="speakerImagePreview()"
-      [availableSpeakers]="availableSpeakers()" [assignedSpeakers]="getAssignedSpeakers()"
-      [speakerToEdit]="speakerToEdit()" [academicTitles]="academicTitles()" [academicLevels]="academicLevels()"
-      [studyAreas]="studyAreas()" [educationalInstitutions]="educationalInstitutions()" (onSave)="saveSpeaker()"
-      (onCancel)="cancelSpeaker()" (onSelectExistingSpeaker)="selectExistingSpeaker($event)"
-      (onUpdateSpeaker)="updateSpeakerToEdit($event)" (onVisibleChange)="onSpeakerDialogVisibleChange($event)"
-      (onImageSelect)="onSpeakerImageSelect($event)" />
+    <app-speaker-dialog
+      [visible]="showSpeakerDialog()"
+      [isEditing]="editingSpeakerIndex() !== null"
+      [speakerForm]="getCurrentSpeakerForm()"
+      [imagePreview]="speakerImagePreview()"
+      [availableSpeakers]="availableSpeakers()"
+      [assignedSpeakers]="getAssignedSpeakers()"
+      [speakerToEdit]="speakerToEdit()"
+      [academicTitles]="academicTitles()"
+      [academicLevels]="academicLevels()"
+      [studyAreas]="studyAreas()"
+      [educationalInstitutions]="educationalInstitutions()"
+      (onSave)="saveSpeaker()"
+      (onCancel)="cancelSpeaker()"
+      (onSelectExistingSpeaker)="selectExistingSpeaker($event)"
+      (onUpdateSpeaker)="updateSpeakerToEdit($event)"
+      (onVisibleChange)="onSpeakerDialogVisibleChange($event)"
+      (onImageSelect)="onSpeakerImageSelect($event)"
+    />
 
-    <app-talk-dialog [visible]="showTalkDialog()" [isEditing]="editingTalkIndex() !== null"
-      [talkForm]="getCurrentTalkForm()" [imagePreview]="talkImagePreview()" [availableSpeakers]="availableSpeakers()"
-      (onSave)="saveTalk()" (onCancel)="cancelTalk()" (onVisibleChange)="onTalkDialogVisibleChange($event)"
-      (onImageSelect)="onTalkImageSelect($event)" />
+    <app-talk-dialog
+      [visible]="showTalkDialog()"
+      [isEditing]="editingTalkIndex() !== null"
+      [talkForm]="getCurrentTalkForm()"
+      [imagePreview]="talkImagePreview()"
+      [availableSpeakers]="availableSpeakers()"
+      (onSave)="saveTalk()"
+      (onCancel)="cancelTalk()"
+      (onVisibleChange)="onTalkDialogVisibleChange($event)"
+      (onImageSelect)="onTalkImageSelect($event)"
+    />
 
-    <app-location-dialog [visible]="showLocationDialog()" [isEditing]="editingLocationEventDateIndex() !== null"
-      [locationForm]="getCurrentLocationForm()" (onSave)="saveLocation()" (onCancel)="showLocationDialog.set(false)"
-      (onVisibleChange)="showLocationDialog.set($event)" />
+    <app-location-dialog
+      [visible]="showLocationDialog()"
+      [isEditing]="editingLocationEventDateIndex() !== null"
+      [locationForm]="getCurrentLocationForm()"
+      (onSave)="saveLocation()"
+      (onCancel)="showLocationDialog.set(false)"
+      (onVisibleChange)="showLocationDialog.set($event)"
+    />
   </div>
 </div>
