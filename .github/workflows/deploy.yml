@@ -34,6 +34,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/kadic-events-ui/browser/
           server-dir: /  
-          dangerous-clean-slate: true 
-          
+          dangerous-clean-slate: true
+          exclude: |
+            **/.git*
+            **/.git*/**
+          dry-run: false 
+
 
