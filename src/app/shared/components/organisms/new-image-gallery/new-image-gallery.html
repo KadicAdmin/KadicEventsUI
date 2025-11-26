@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 image-gallery-container">
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
     <!-- BUSQUEDA Y FILTROS (parte superior de la lista) -->
     <section class="bg-white rounded-2xl shadow-sm p-6">
@@ -34,13 +34,13 @@
         <!-- Filtros / Orden -->
         <div class="flex gap-3">
           <button
-            class="px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
+            class="px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
           >
             <span class="pi pi-filter text-base"></span>
             Filtrar
           </button>
           <button
-            class="px-6 py-3 rounded-xl text-sm font-semibold text-gray-800 bg-white border border-gray-200 shadow-md hover:border-blue-200 hover:bg-blue-50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
+            class="px-5 py-3 rounded-xl text-sm font-semibold text-blue-800 bg-blue-50 border border-blue-100 shadow-md hover:border-blue-200 hover:bg-blue-100 transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 inline-flex items-center gap-2"
           >
             <span class="pi pi-sort-amount-down-alt text-base"></span>
             Ordenar: Ultima modificacion
@@ -52,52 +52,53 @@
     <!-- GALERIA DE IMAGENES -->
     <section>
       @if (images().length > 0) {
-      <div class="w-full">
+      <div class="w-full image-gallery-section">
         <!-- Acciones de selección -->
-        <div class="flex justify-end gap-3 mb-3">
+        <div
+          class="flex justify-end gap-3 mb-3 image-gallery-actions scroll-mt-16 sm:scroll-mt-24"
+        >
           <button
             type="button"
-            class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+            class="px-4 py-2 rounded-lg text-sm font-semibold border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
             [class.bg-blue-50]="isAllSelected()"
             [class.text-blue-700]="isAllSelected()"
             [class.border-blue-200]="isAllSelected()"
             (click)="toggleSelectAll($event)"
           >
+            <span class="pi pi-check-square text-base"></span>
             {{ isAllSelected() ? 'Deseleccionar todas' : 'Seleccionar todas' }}
           </button>
           <button
             type="button"
-            class="px-4 py-2 rounded-lg text-sm font-medium border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:border-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 rounded-lg text-sm font-semibold border border-red-200 bg-red-600 text-white hover:bg-red-700 hover:border-red-300 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
             [disabled]="!hasSelection()"
             (click)="deleteSelectedImages($event)"
           >
+            <span class="pi pi-trash text-base"></span>
             Borrar seleccionadas
           </button>
         </div>
 
         <!-- Grid responsiva tipo cards -->
         <div
-          class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4 image-gallery-grid"
         >
-          @for (image of images(); track image.id; let index = $index) {
+          @for (image of paginatedImages(); track image.id; let index = $index)
+          {
           <div
-            class="group rounded-2xl bg-white shadow-sm hover:shadow-md cursor-pointer overflow-hidden transition-shadow"
+            class="group rounded-md bg-white shadow-none hover:shadow-sm cursor-pointer overflow-hidden transition-shadow"
             [class.ring-2]="isSelected(image)"
             [class.ring-blue-500]="isSelected(image)"
             [class.ring-offset-2]="isSelected(image)"
             (click)="imageClick(index)"
           >
             <!-- Imagen -->
-            <div class="relative h-32 bg-gray-100 overflow-hidden">
+            <div class="relative aspect-square bg-gray-100 overflow-hidden">
               <img
                 [assetsSrc]="image.imageUrl || image.imageUrl"
                 [alt]="image.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               />
-              <div
-                class="absolute inset-0 bg-blue-500/10 opacity-0 transition-opacity pointer-events-none"
-                [class.opacity-100]="isSelected(image)"
-              ></div>
               <div
                 class="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
                 [class.opacity-100]="isSelected(image)"
@@ -105,7 +106,7 @@
                 <button
                   type="button"
                   aria-label="Seleccionar imagen"
-                  class="h-8 w-8 rounded-full bg-white/90 text-gray-700 shadow border border-gray-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer flex items-center justify-center"
+                  class="h-7 w-7 rounded-full bg-white/90 text-gray-700 shadow border border-gray-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer flex items-center justify-center"
                   [class.bg-blue-600]="isSelected(image)"
                   [class.text-white]="isSelected(image)"
                   [class.border-blue-600]="isSelected(image)"
@@ -113,7 +114,7 @@
                   (click)="toggleSelection(image, $event)"
                 >
                   <svg
-                    class="w-4 h-4"
+                    class="w-3 h-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -128,16 +129,16 @@
                 </button>
               </div>
               <div
-                class="absolute right-2 top-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                class="absolute right-2 top-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <button
                   type="button"
                   aria-label="Editar imagen"
-                  class="h-8 w-8 rounded-md bg-white/90 text-gray-700 shadow border border-white/70 hover:bg-white hover:text-blue-600 transition-colors cursor-pointer"
+                  class="h-7 w-7 rounded-md bg-white/90 text-gray-700 shadow border border-white/70 hover:bg-white hover:text-blue-600 transition-colors cursor-pointer flex items-center justify-center"
                   (click)="onEditImage(image, $event)"
                 >
                   <svg
-                    class="w-full h-full"
+                    class="w-3.5 h-3.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -153,11 +154,11 @@
                 <button
                   type="button"
                   aria-label="Eliminar imagen"
-                  class="h-8 w-8 rounded-md bg-red-50/90 text-red-600 shadow border border-red-100 hover:bg-red-100 hover:text-red-700 transition-colors cursor-pointer"
+                  class="h-7 w-7 rounded-md bg-red-50/90 text-red-600 shadow border border-red-100 hover:bg-red-100 hover:text-red-700 transition-colors cursor-pointer flex items-center justify-center"
                   (click)="onDeleteImage(image, $event)"
                 >
                   <svg
-                    class="w-full h-full"
+                    class="w-3.5 h-3.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -186,6 +187,37 @@
           </div>
           }
         </div>
+
+        <!-- Paginación -->
+        @if (images().length > pageSize) {
+        <div
+          class="mt-4 flex items-center justify-center gap-2 sm:gap-3 text-sm text-gray-600"
+        >
+          <button
+            type="button"
+            class="h-9 px-3 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+            [disabled]="currentPage === 1"
+            (click)="prevPage()"
+          >
+            <span class="pi pi-angle-left text-base"></span>
+            Anterior
+          </button>
+
+          <span class="px-2">
+            Página {{ currentPage }} de {{ totalPages }}
+          </span>
+
+          <button
+            type="button"
+            class="h-9 px-3 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+            [disabled]="currentPage === totalPages"
+            (click)="nextPage()"
+          >
+            Siguiente
+            <span class="pi pi-angle-right text-base"></span>
+          </button>
+        </div>
+        }
       </div>
 
       <!-- Galleria fullscreen para ver grande cuando se hace click -->
@@ -200,6 +232,7 @@
         [fullScreen]="true"
         [showItemNavigators]="true"
         [showThumbnails]="false"
+        [transitionOptions]="'800ms ease'"
       >
         <ng-template pTemplate="item" let-item>
           <img
