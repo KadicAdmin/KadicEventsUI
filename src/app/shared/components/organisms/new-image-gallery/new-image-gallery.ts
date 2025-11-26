@@ -25,6 +25,9 @@ export class NewImageGallery {
 
   displayCustom = false;
   activeIndex = 0;
+  pageSize = 25;
+  currentPage = 1;
+  isPaging = false;
   private readonly selectedIds = new Set<ImageResponse['id']>();
 
   private readonly galleryImageService = inject(GalleryImageService);
@@ -60,7 +63,8 @@ export class NewImageGallery {
   );
 
   imageClick(index: number): void {
-    this.activeIndex = index;
+    const absoluteIndex = (this.currentPage - 1) * this.pageSize + index;
+    this.activeIndex = absoluteIndex;
     this.displayCustom = true;
   }
 
@@ -155,5 +159,83 @@ export class NewImageGallery {
     return currentImages.filter(
       (img) => img?.id !== undefined && this.selectedIds.has(img.id)
     );
+  }
+
+  paginatedImages(): ImageResponse[] {
+    const all = this.images() ?? [];
+    const total = this.totalPages;
+    if (this.currentPage > total) {
+      this.currentPage = total;
+    }
+    const start = (this.currentPage - 1) * this.pageSize;
+    return all.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    const total = Math.ceil((this.images()?.length ?? 0) / this.pageSize);
+    return total > 0 ? total : 1;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage += 1;
+      this.triggerPagingEffect();
+      this.scrollToTop();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage -= 1;
+      this.triggerPagingEffect();
+      this.scrollToTop();
+    }
+  }
+
+  goToPage(page: number): void {
+    const target = Math.min(Math.max(page, 1), this.totalPages);
+    this.currentPage = target;
+    this.triggerPagingEffect();
+    this.scrollToTop();
+  }
+
+  goToFirstPage(): void {
+    this.goToPage(1);
+  }
+
+  goToLastPage(): void {
+    this.goToPage(this.totalPages);
+  }
+
+  private triggerPagingEffect(): void {
+    this.isPaging = true;
+    setTimeout(() => {
+      this.isPaging = false;
+    }, 250);
+  }
+
+  private scrollToTop(): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    // Defer scroll para asegurar que la vista se renderice antes de moverla
+    setTimeout(() => {
+      const target =
+        document.querySelector('.image-gallery-actions') ??
+        document.querySelector('.image-gallery-header') ??
+        document.querySelector('.image-gallery-section') ??
+        document.querySelector('.image-gallery-grid') ??
+        document.querySelector('.image-gallery-container');
+
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 0);
   }
 }

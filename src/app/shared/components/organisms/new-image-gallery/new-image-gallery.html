@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-gray-50 image-gallery-container">
   <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
     <!-- BUSQUEDA Y FILTROS (parte superior de la lista) -->
-    <section class="bg-white rounded-2xl shadow-sm p-6 image-gallery-header">
+    <section class="bg-white rounded-2xl shadow-sm p-6">
       <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
         <!-- Barra de busqueda -->
         <div class="flex-1 max-w-md w-full">
@@ -54,7 +54,9 @@
       @if (images().length > 0) {
       <div class="w-full image-gallery-section">
         <!-- Acciones de selección -->
-        <div class="flex justify-end gap-3 mb-3 image-gallery-actions">
+        <div
+          class="flex justify-end gap-3 mb-3 image-gallery-actions scroll-mt-16 sm:scroll-mt-24"
+        >
           <button
             type="button"
             class="px-4 py-2 rounded-lg text-sm font-semibold border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
@@ -97,10 +99,6 @@
                 [alt]="image.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               />
-              <div
-                class="absolute inset-0 bg-blue-500/10 opacity-0 transition-opacity pointer-events-none"
-                [class.opacity-100]="isSelected(image)"
-              ></div>
               <div
                 class="absolute left-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
                 [class.opacity-100]="isSelected(image)"
@@ -191,50 +189,35 @@
         </div>
 
         <!-- Paginación -->
+        @if (images().length > pageSize) {
         <div
           class="mt-4 flex items-center justify-center gap-2 sm:gap-3 text-sm text-gray-600"
-          *ngIf="(images()?.length ?? 0) > pageSize"
         >
           <button
             type="button"
-            class="h-9 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5 sm:gap-2"
-            [disabled]="currentPage === 1"
-            (click)="goToFirstPage()"
-          >
-            <span class="pi pi-angle-double-left text-base"></span>
-            Primera
-          </button>
-          <button
-            type="button"
-            class="h-9 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5 sm:gap-2"
+            class="h-9 px-3 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
             [disabled]="currentPage === 1"
             (click)="prevPage()"
           >
             <span class="pi pi-angle-left text-base"></span>
             Anterior
           </button>
+
           <span class="px-2">
             Página {{ currentPage }} de {{ totalPages }}
           </span>
+
           <button
             type="button"
-            class="h-9 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5 sm:gap-2"
+            class="h-9 px-3 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
             [disabled]="currentPage === totalPages"
             (click)="nextPage()"
           >
             Siguiente
             <span class="pi pi-angle-right text-base"></span>
           </button>
-          <button
-            type="button"
-            class="h-9 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5 sm:gap-2"
-            [disabled]="currentPage === totalPages"
-            (click)="goToLastPage()"
-          >
-            Última
-            <span class="pi pi-angle-double-right text-base"></span>
-          </button>
         </div>
+        }
       </div>
 
       <!-- Galleria fullscreen para ver grande cuando se hace click -->
@@ -249,6 +232,7 @@
         [fullScreen]="true"
         [showItemNavigators]="true"
         [showThumbnails]="false"
+        [transitionOptions]="'800ms ease'"
       >
         <ng-template pTemplate="item" let-item>
           <img
