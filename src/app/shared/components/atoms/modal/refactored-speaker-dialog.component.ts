@@ -4,8 +4,9 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabsModule } from 'primeng/tabs';
 import { Select } from 'primeng/select';
-import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
+// import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
 import { ModalComponent, ModalConfig } from './modal.component';
+import { GalleryModal } from './gallery-modal/gallery-modal.component';
 
 @Component({
   selector: 'app-refactored-speaker-dialog',
@@ -16,8 +17,9 @@ import { ModalComponent, ModalConfig } from './modal.component';
     InputTextModule,
     TabsModule,
     Select,
-    ImageGalleryUploadComponent,
+    // ImageGalleryUploadComponent,
     ModalComponent,
+    GalleryModal,
   ],
   template: `
     <app-modal
@@ -77,10 +79,12 @@ import { ModalComponent, ModalConfig } from './modal.component';
                   <label class="text-sm font-medium text-gray-700"
                     >Foto del Speaker</label
                   >
-                  <app-image-gallery-upload
+                  <!-- <app-image-gallery-upload
                     [allowMultiple]="false"
                     (onMainImageChange)="handleImageChange($event)"
-                  />
+                  /> -->
+
+                  <gallery-modal />
                 </div>
 
                 <!-- Nombre y Apellido -->

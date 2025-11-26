@@ -3,9 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
-import { ModalComponent, ModalConfig } from '@shared/components/atoms/modal/modal.component';
+// import { ImageGalleryUploadComponent } from '@shared/components/molecules/image-gallery-upload';
+import {
+  ModalComponent,
+  ModalConfig,
+} from '@shared/components/atoms/modal/modal.component';
 import { Speaker } from '@core/models';
+import { GalleryModal } from '@shared/components/atoms/modal/gallery-modal/gallery-modal.component';
 
 @Component({
   selector: 'app-talk-dialog',
@@ -15,64 +19,95 @@ import { Speaker } from '@core/models';
     ReactiveFormsModule,
     InputTextModule,
     MultiSelectModule,
-    ImageGalleryUploadComponent,
+    // ImageGalleryUploadComponent,
     ModalComponent,
+    GalleryModal,
   ],
   template: `
-    <app-modal 
-      [visible]="visible()" 
+    <app-modal
+      [visible]="visible()"
       [config]="modalConfig()"
       [showFooter]="true"
       [cancelLabel]="'Cancelar'"
       [saveLabel]="'Guardar'"
       (onVisibleChange)="onVisibleChange.emit($event)"
       (onCancel)="onCancel.emit()"
-      (onSave)="onSave.emit()">
-      
+      (onSave)="onSave.emit()"
+    >
       @if (talkForm()) {
       <form [formGroup]="talkForm()!" class="space-y-6 pt-4">
         <!-- Imagen -->
         <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700">Imagen de la Charla</label>
-          <app-image-gallery-upload
+          <label class="text-sm font-medium text-gray-700"
+            >Imagen de la Charla</label
+          >
+          <!-- <app-image-gallery-upload
             [allowMultiple]="false"
             (onMainImageChange)="handleImageChange($event)"
-          />
+          /> -->
+
+          <gallery-modal />
         </div>
 
         <!-- Título -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">Título</label>
-          <input pInputText formControlName="title" class="w-full" 
-            placeholder="Ej: Introducción a Angular 19" />
+          <input
+            pInputText
+            formControlName="title"
+            class="w-full"
+            placeholder="Ej: Introducción a Angular 19"
+          />
         </div>
 
         <!-- Descripción -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">Descripción</label>
-          <textarea pInputTextarea formControlName="description" rows="3" 
-            placeholder="Describe el contenido de la charla..."></textarea>
+          <textarea
+            pInputTextarea
+            formControlName="description"
+            rows="3"
+            placeholder="Describe el contenido de la charla..."
+          ></textarea>
         </div>
 
         <!-- Horarios -->
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Hora Inicio</label>
-            <input type="time" pInputText formControlName="startHour" class="w-full" 
-              placeholder="08:00" />
+            <input
+              type="time"
+              pInputText
+              formControlName="startHour"
+              class="w-full"
+              placeholder="08:00"
+            />
           </div>
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Hora Fin</label>
-            <input type="time" pInputText formControlName="endHour" class="w-full" 
-              placeholder="09:00" />
+            <input
+              type="time"
+              pInputText
+              formControlName="endHour"
+              class="w-full"
+              placeholder="09:00"
+            />
           </div>
         </div>
 
         <!-- Duración -->
         <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700">Duración (minutos)</label>
-          <input pInputText type="number" formControlName="duration" class="w-full" 
-            placeholder="60" min="1" />
+          <label class="text-sm font-medium text-gray-700"
+            >Duración (minutos)</label
+          >
+          <input
+            pInputText
+            type="number"
+            formControlName="duration"
+            class="w-full"
+            placeholder="60"
+            min="1"
+          />
         </div>
 
         <!-- Speakers -->
@@ -126,7 +161,7 @@ export class TalkDialogComponent {
     resizable: false,
     closable: true,
     modal: true,
-    styleClass: 'rounded-2xl'
+    styleClass: 'rounded-2xl',
   }));
 
   handleImageChange(image: any) {

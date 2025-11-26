@@ -1,4 +1,11 @@
-import { Component, input, output, signal, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  signal,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GalleriaModule } from 'primeng/galleria';
 import { ButtonModule } from 'primeng/button';
@@ -12,7 +19,7 @@ import { IMAGES_SLIDESHOW } from '@core/constants/core.contans';
   standalone: true,
   imports: [CommonModule, GalleriaModule, ButtonModule, TooltipModule],
   templateUrl: './slideshows.html',
-  styleUrl: './slideshows.css'
+  styleUrl: './slideshows.css',
 })
 export class Slideshows implements OnInit {
   @ViewChild('galleria') galleria!: Galleria;
@@ -38,7 +45,6 @@ export class Slideshows implements OnInit {
     console.log('Transition Interval:', this.transitionInterval());
   }
 
-
   get galleriaConfig() {
     return {
       showThumbnails: false,
@@ -50,22 +56,22 @@ export class Slideshows implements OnInit {
       numVisible: 1,
       transitionOptions: {
         easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        duration: 800
+        duration: 800,
       },
       responsiveOptions: [
         {
           breakpoint: '1024px',
-          numVisible: 1
+          numVisible: 1,
         },
         {
           breakpoint: '768px',
-          numVisible: 1
+          numVisible: 1,
         },
         {
           breakpoint: '560px',
-          numVisible: 1
-        }
-      ]
+          numVisible: 1,
+        },
+      ],
     };
   }
 
@@ -82,27 +88,38 @@ export class Slideshows implements OnInit {
 
   private triggerContentAnimation(): void {
     setTimeout(() => {
-      const titleElement = document.querySelector('h1[data-index]') as HTMLElement;
-      const descElement = document.querySelector('p[data-index]') as HTMLElement;
-      const imageElement = document.querySelector('img[data-image-index]') as HTMLElement;
-      const shimmerElement = document.querySelector('.shimmer-effect') as HTMLElement;
+      const titleElement = document.querySelector(
+        'h1[data-index]'
+      ) as HTMLElement;
+      const descElement = document.querySelector(
+        'p[data-index]'
+      ) as HTMLElement;
+      const imageElement = document.querySelector(
+        'img[data-image-index]'
+      ) as HTMLElement;
+      const shimmerElement = document.querySelector(
+        '.shimmer-effect'
+      ) as HTMLElement;
 
       if (titleElement) {
         titleElement.style.animation = 'none';
         titleElement.offsetHeight;
-        titleElement.style.animation = 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        titleElement.style.animation =
+          'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
       }
 
       if (descElement) {
         descElement.style.animation = 'none';
         descElement.offsetHeight;
-        descElement.style.animation = 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both';
+        descElement.style.animation =
+          'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both';
       }
 
       if (imageElement) {
         imageElement.style.animation = 'none';
         imageElement.offsetHeight;
-        imageElement.style.animation = 'scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        imageElement.style.animation =
+          'scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
       }
 
       if (shimmerElement) {
@@ -119,7 +136,6 @@ export class Slideshows implements OnInit {
     this.triggerContentAnimation();
   }
 
-
   onMouseEnter(): void {
     this.isHovering.set(true);
   }
@@ -127,5 +143,4 @@ export class Slideshows implements OnInit {
   onMouseLeave(): void {
     this.isHovering.set(false);
   }
-
 }
