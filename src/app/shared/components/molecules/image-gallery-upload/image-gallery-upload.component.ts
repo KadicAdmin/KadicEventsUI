@@ -2,6 +2,8 @@ import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 interface ImagePreview {
   id: string;
@@ -13,8 +15,11 @@ interface ImagePreview {
 @Component({
   selector: 'app-image-gallery-upload',
   standalone: true,
-  imports: [CommonModule, ButtonModule, TooltipModule],
+  imports: [CommonModule, ButtonModule, TooltipModule, ToastModule],
+  providers: [MessageService],
   template: `
+    <p-toast></p-toast>
+
     <div class="space-y-4">
       <!-- Upload Area -->
       <div
@@ -52,7 +57,9 @@ interface ImagePreview {
 
       <!-- Image Gallery -->
       @if (images().length > 0) {
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div
+        class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-2"
+      >
         @for (image of images(); track image.id; let idx = $index) {
         <div
           class="group relative bg-gray-50 rounded-xl overflow-hidden border border-gray-200 hover:border-blue-400 transition-all"
@@ -126,14 +133,29 @@ interface ImagePreview {
       <div class="flex items-center justify-between text-sm text-gray-600 pt-2">
         <span>{{ images().length }} imagen(es) cargada(s)</span>
         @if (allowMultiple()) {
-        <p-button
-          label="Limpiar todo"
-          icon="pi pi-trash"
-          size="small"
-          [text]="true"
-          severity="danger"
-          (onClick)="clearAll()"
-        />
+        <div class="flex items-center gap-2">
+          <div class="card flex justify-center">
+            <p-toast
+              [breakpoints]="{
+                '920px': { width: '100%', right: '0', left: '0' }
+              }"
+            />
+            <p-button
+              icon="pi pi-save"
+              (click)="show()"
+              label="Guardar en la galeria"
+            />
+          </div>
+
+          <p-button
+            label="Limpiar todo"
+            icon="pi pi-trash"
+            size="small"
+            [text]="true"
+            severity="danger"
+            (onClick)="clearAll()"
+          />
+        </div>
         }
       </div>
       }
@@ -141,11 +163,12 @@ interface ImagePreview {
   `,
 })
 export class ImageGalleryUploadComponent {
-  readonly allowMultiple = input<boolean>(false);
+  readonly allowMultiple = input<boolean>(true);
   readonly maxFileSize = input<number>(5000000);
 
   readonly onImagesChange = output<ImagePreview[]>();
   readonly onMainImageChange = output<ImagePreview | null>();
+  readonly onSave = output<ImagePreview[]>();
 
   images = signal<ImagePreview[]>([]);
 
@@ -210,6 +233,16 @@ export class ImageGalleryUploadComponent {
     this.onMainImageChange.emit(mainImage || null);
   }
 
+  constructor(private messageService: MessageService) {}
+
+  show() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Guardado con exito!',
+    });
+  }
+
   removeImage(index: number) {
     const currentImages = this.images();
     const removedImage = currentImages[index];
@@ -230,5 +263,11 @@ export class ImageGalleryUploadComponent {
     this.images.set([]);
     this.onImagesChange.emit([]);
     this.onMainImageChange.emit(null);
+  }
+
+  saveToGallery() {
+    const imgs = this.images();
+    if (!imgs.length) return;
+    this.onSave.emit(imgs);
   }
 }

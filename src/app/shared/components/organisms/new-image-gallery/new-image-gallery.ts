@@ -6,11 +6,15 @@ import { GalleryImageService } from '@core/services/image-gallery.service';
 import { AssetsSrcDirective } from '@shared/directives/assets-src.directive';
 import { GalleriaModule } from 'primeng/galleria';
 import { catchError, map, of } from 'rxjs';
+import { Button } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'new-image-gallery',
   standalone: true,
-  imports: [GalleriaModule, AssetsSrcDirective],
+  imports: [GalleriaModule, AssetsSrcDirective, Button, ToastModule],
+  providers: [MessageService],
   templateUrl: './new-image-gallery.html',
 })
 export class NewImageGallery {
@@ -242,5 +246,15 @@ export class NewImageGallery {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }, 0);
+  }
+
+  constructor(private messageService: MessageService) {}
+
+  show() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Guardado con exito!',
+    });
   }
 }
